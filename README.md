@@ -1,929 +1,120 @@
-# Introducción en español
-
-`slotting-optimization-engine` es un motor modular en Python para entender y mejorar, de forma gradual, el **slotting** de un centro de distribución.
-
-En simple: **slotting** significa decidir dónde conviene ubicar cada SKU dentro del depósito. No es solo “poner productos en estanterías”; una mala ubicación puede aumentar caminatas, congestionar zonas, ocupar espacios premium con productos lentos o dejar SKUs de alta demanda lejos del despacho.
-
-## Qué problema ayuda a mirar
-
-Hoy el proyecto ordena el análisis, no reemplaza al equipo operativo. Toma datos sintéticos de SKUs, ubicaciones, zonas, inventario y pedidos, y los transforma en señales para responder preguntas como estas:
-
-| Pregunta | Ejemplo de señal actual |
-|---|---|
-| ¿Qué SKUs de alta demanda están lejos o en zonas poco prioritarias? | `review_high_demand_far_sku` |
-| ¿Qué slow movers ocupan zonas premium? | `review_slow_mover_in_premium_zone` |
-| ¿Qué zonas muestran presión de capacidad? | `review_zone_capacity_pressure` |
-| ¿Cómo cambian las prioridades si miro primero demanda, capacidad o balance general? | Comparación de escenarios Phase 4 |
-| ¿Qué zona candidata sugiere un prototipo matemático para SKUs priorizados? | Asignación SKU→zona Phase 5, sin ejecución física |
-
-## Qué puede hacer hoy, hasta Phase 5
-
-| Fase | Qué hace | Qué produce |
-|---|---|---|
-| Phase 1 | Genera datos sintéticos, valida contratos y construye features | Tablas de SKUs, demanda, utilización y features |
-| Phase 1.5 | Muestra una UI técnica mínima en Streamlit | Inspección visual de outputs procesados |
-| Phase 2 | Detecta diagnósticos descriptivos | Flags por SKU, ubicación, zona y categoría |
-| Phase 3 | Prioriza oportunidades para revisión humana | Scores y cola de revisión |
-| Phase 4 | Compara lentes analíticos what-if | Ranking comparativo por escenario/modelo simple |
-| Phase 5 | Calcula una asignación matemática controlada SKU→zona | CSV de asignaciones, resumen y matriz de costos |
-| Phase 6 | Simula el impacto operativo de la reasignación | Distancias, Gini de carga por zona, throughput por turno |
-
----
-
-## Diagramas de flujo por proceso
-
-Para entender qué hace cada fase, mirá estos diagramas. Cada uno muestra **qué entra**, **qué se hace** y **qué sale**.
-
-### Phase 1 — Generación de datos y features
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    PHASE 1: DATOS Y FEATURES                │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌──────────────┐                                           │
-│  │  Generator   │  Genera 500 SKUs, 10 zonas, 200          │
-│  │  (numpy)     │  ubicaciones, inventario, pedidos         │
-│  └──────┬───────┘                                           │
-│         │                                                   │
-│         ▼                                                   │
-│  ┌──────────────┐                                           │
-│  │  Validator   │  Revisa contratos: IDs únicos, tipos,     │
-│  │  (pandera)   │  claves foráneas, valores válidos         │
-│  └──────┬───────┘                                           │
-│         │                                                   │
-│         ▼                                                   │
-│  ┌──────────────┐                                           │
-│  │  Loader      │  Lee CSVs validados y los convierte       │
-│  │  (pandas)    │  en DataFrames listos para usar            │
-│  └──────┬───────┘                                           │
-│         │                                                   │
-│         ▼                                                   │
-│  ┌──────────────┐                                           │
-│  │  Builder     │  Calcula demanda por SKU, utilización     │
-│  │  (features)  │  por ubicación/zona, scores de alineación │
-│  └──────┬───────┘                                           │
-│         │                                                   │
-│         ▼                                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  OUTPUTS:                                             │   │
-│  │  • slotting_features.parquet  (tabla amplia por SKU)  │   │
-│  │  • location_utilization.csv   (utilización % por ubi) │   │
-│  │  • zone_utilization.csv       (resumen por zona)      │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Script: python scripts/generate_sample_data.py             │
-│          python scripts/run_data_validation.py              │
-│          python scripts/build_features.py                   │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Qué aprendés:** Este paso crea un "mundo ficticio" de datos para practicar sin tocar información real. Los features son señales básicas como "¿cuánto se pide este SKU?" o "¿qué tan llenas están las zonas?".
-
----
-
-### Phase 2 — Diagnósticos descriptivos
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   PHASE 2: DIAGNÓSTICOS                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Entradas (de Phase 1):                                     │
-│  • slotting_features.parquet                                │
-│  • location_utilization.csv                                 │
-│  • zone_utilization.csv                                     │
-│                                                             │
-│         ┌──────────────┐                                    │
-│         │    Rules     │  Aplica reglas descriptivas:       │
-│         │  (diagnostics│  "¿Este SKU de alta demanda está   │
-│         │   rules.py)  │   lejos de la zona prioritaria?"   │
-│         └──────┬───────┘  "¿Slow movers en zona premium?"  │
-│                │        "¿Zona con capacidad al límite?"    │
-│                │                                            │
-│                ▼                                            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  FLAGS POR:                                          │   │
-│  │  • SKU (ubicación, demanda, patrón de movimiento)    │   │
-│  │  • Ubicación (utilización, densidad)                 │   │
-│  │  • Zona (capacidad, mezcla de categorías)            │   │
-│  │  • Categoría (dispersión, dominancia)                 │   │
-│  └──────┬───────────────────────────────────────────────┘   │
-│         │                                                   │
-│         ▼                                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  OUTPUTS:                                            │   │
-│  │  • slotting_diagnostics.csv    (1 fila por SKU)      │   │
-│  │  • location_diagnostics.csv    (1 fila por ubicación)│   │
-│  │  • zone_diagnostics.csv        (1 fila por zona)     │   │
-│  │  • category_diagnostics.csv    (1 fila por categoría)│   │
-│  │  • diagnostic_summary.csv      (conteo de problemas) │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Script: python scripts/run_diagnostics.py                  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Qué aprendés:** Phase 2 es como un "check-up" del depósito. No dice qué mover, solo marca qué se ve raro o merece atención. Los pesos están marcados como `inferred / pending confirmation` porque son supuestos, no reglas confirmadas.
-
----
-
-### Phase 3 — Scoring y priorización
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                PHASE 3: SCORING Y COLA                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Entradas (de Phase 2):                                     │
-│  • slotting_diagnostics.csv                                 │
-│  • zone_diagnostics.csv                                     │
-│  • category_diagnostics.csv                                 │
-│                                                             │
-│         ┌──────────────┐                                    │
-│         │   Scoring    │  Cruza señales de Phase 2 con      │
-│         │  (scoring/   │  pesos transparentes:              │
-│         │ prioritization  • Demanda: 30%                    │
-│         │   .py)       │  • Distancia: 25%                  │
-│         └──────┬───────┘  • Capacidad: 25%                  │
-│                │        • Oportunidad: 20%                   │
-│                │        (pesos inferidos, NO confirmados)   │
-│                ▼                                            │
-│         ┌──────────────┐                                    │
-│         │  Priority    │  Ordena de mayor a menor score      │
-│         │  Queue       │  y arma una cola para revisión      │
-│         └──────┬───────┘  humana                            │
-│                │                                            │
-│                ▼                                            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  OUTPUTS:                                            │   │
-│  │  • slotting_opportunity_scores.csv (1 fila/opción)   │   │
-│  │  • priority_recommendation_queue.csv (top-N ordenado)│   │
-│  │  • scoring_summary.csv (métricas y config)           │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Script: python scripts/run_scoring.py                      │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Qué aprendés:** Phase 3 arma una "lista de tareas ordenada" para que un humano sepa por dónde empezar a revisar. **No optimiza**, solo prioriza. Los pesos son supuestos que hay que confirmar con expertos del negocio.
-
----
-
-### Phase 4 — Comparación de escenarios
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│              PHASE 4: ESCENARIOS WHAT-IF                     │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Entradas (de Phase 3):                                     │
-│  • slotting_opportunity_scores.csv                          │
-│  • priority_recommendation_queue.csv                        │
-│                                                             │
-│         ┌──────────────┐                                    │
-│         │   Baseline   │  "Si no cambiamos nada, ¿cómo      │
-│         │              │   se ve la prioridad?"              │
-│         └──────┬───────┘                                    │
-│                │                                            │
-│         ┌──────┴───────┐                                    │
-│         │  Demanda     │  "¿Qué pasa si priorizamos SKUs    │
-│         │  primero     │  de alta demanda?"                 │
-│         └──────┬───────┘                                    │
-│                │                                            │
-│         ┌──────┴───────┐                                    │
-│         │  Capacidad   │  "¿Qué pasa si primero liberamos   │
-│         │  primero     │  espacio en zonas llenas?"         │
-│         └──────┬───────┘                                    │
-│                │                                            │
-│         ┌──────┴───────┐                                    │
-│         │  Revisión    │  "¿Qué pasa si balanceamos ambos?" │
-│         │  balanceada  │                                    │
-│         └──────┬───────┘                                    │
-│                │                                            │
-│                ▼                                            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  COMPARA: score promedio, high priority, foco,       │   │
-│  │  cobertura de acciones por escenario                 │   │
-│  └──────┬───────────────────────────────────────────────┘   │
-│         │                                                   │
-│         ▼                                                   │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  OUTPUTS:                                            │   │
-│  │  • scenario_comparison.csv   (top-N por escenario)   │   │
-│  │  • scenario_action_mix.csv   (mezcla de acciones)    │   │
-│  │  • scenario_summary.csv      (métricas comparables)  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Script: python scripts/run_scenarios.py                    │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Qué aprendés:** Phase 4 es como mirar el mismo depósito desde 4 ángulos diferentes. No dice cuál es "el mejor", solo muestra qué cambia cuando cambian las prioridades. Útil para debates con el equipo operativo.
-
----
-
-### Phase 5 — Asignación matemática controlada
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│            PHASE 5: ASIGNACIÓN SKU → ZONA                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Entradas:                                                  │
-│  • priority_recommendation_queue.csv  (de Phase 3)          │
-│  • slotting_diagnostics.csv           (de Phase 2)          │
-│  • scenario_comparison.csv            (de Phase 4)          │
-│  • skus.csv / zones.csv               (de Phase 1)          │
-│                                                             │
-│         ┌──────────────┐                                    │
-│         │   Selector   │  Toma los top-N SKUs de la cola    │
-│         │   (top-N)    │  de priorización                   │
-│         └──────┬───────┘                                    │
-│                │                                            │
-│                ▼                                            │
-│         ┌──────────────┐                                    │
-│         │  Zone        │  Expande zonas en "slots lógicos"  │
-│         │  Expander    │  (ej: zona A → slot A.1, A.2, A.3)│
-│         └──────┬───────┘                                    │
-│                │                                            │
-│                ▼                                            │
-│         ┌──────────────┐                                    │
-│         │  Cost Matrix │  Calcula costo para cada par       │
-│         │  Builder     │  SKU × zona_slot:                  │
-│         └──────┬───────┘  • Demanda (peso alto)            │
-│                │           • Distancia (penaliza lejanía)   │
-│                │           • Capacidad (penaliza saturación) │
-│                │           • Oportunidad (score de Phase 3)  │
-│                │           • Contexto de escenario           │
-│                │           (pesos inferidos, NO confirmados) │
-│                ▼                                            │
-│         ┌──────────────┐                                    │
-│         │    Solver    │  Resuelve la asignación de menor   │
-│         │              │  costo total:                      │
-│         └──────┬───────┘                                    │
-│                │                                            │
-│     ┌──────────┴──────────┐                                 │
-│     │                     │                                 │
-│     ▼                     ▼                                 │
-│ ┌────────┐        ┌──────────────┐                          │
-│ │ SciPy  │        │   Greedy     │                          │
-│ │ linear │        │  Fallback    │                          │
-│ │ _sum_  │        │ (determi-    │                          │
-│ │assign- │        │  nístico)    │                          │
-│ │  ment  │        └──────┬───────┘                          │
-│ └───┬────┘               │                                  │
-│     │                    │                                  │
-│     └──────────┬─────────┘                                  │
-│                │                                            │
-│                ▼                                            │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  OUTPUTS:                                            │   │
-│  │  • optimization_assignments.csv (1 assign por SKU)   │   │
-│  │  • optimization_summary.csv     (método, costo, cant)│   │
-│  │  • optimization_cost_matrix.csv (costo por combinac.)│   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  ⚠️  PROTOTIPO: No ejecuta movimientos, no valida          │
-│     factibilidad física, no conecta WMS/ERP.               │
-│                                                             │
-│  Script: python scripts/run_optimization.py                 │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Qué aprendés:** Phase 5 es la primera vez que el motor "decide" algo, pero es una decisión **analítica**, no operativa. Asigna SKUs a zonas candidatas minimizando un costo matemático. **No es una orden de mover productos.** Si SciPy no está instalado, usa un fallback greedy determinístico (siempre da el mismo resultado).
-
----
-
-### Phase 6 — Simulación de impacto operacional
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│           PHASE 6: SIMULACIÓN DE IMPACTO OPERACIONAL         │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  Entradas:                                                  │
-│  • orders.csv / order_lines.csv         (de Phase 1)         │
-│  • zones.csv / locations.csv / inv.csv  (de Phase 1)         │
-│  • optimization_assignments.csv         (de Phase 5)         │
-│                                                             │
-│         ┌──────────────────┐                                 │
-│         │ SKU → Zone       │  Arma 2 mapas: zona actual     │
-│         │ Mapper           │  y zona optimizada (Phase 5)   │
-│         └──────┬───────────┘                                 │
-│                │                                             │
-│                ▼                                             │
-│         ┌──────────────────┐                                 │
-│         │ TravelSimulator  │  Por cada orden:                │
-│         │ (travel.py)      │  • Distancia actual vs optim.  │
-│         └──────┬───────────┘  • Tiempo actual vs optim.     │
-│                │             • % mejora promedio             │
-│                ▼                                             │
-│         ┌──────────────────┐                                 │
-│         │ WorkloadSimulator│  Por zona: picks actuales      │
-│         │ (workload.py)    │  vs optimizados.               │
-│         └──────┬───────────┘  Gini coefficient (0=ideal)    │
-│                │                                             │
-│                ▼                                             │
-│         ┌──────────────────┐                                 │
-│         │ Throughput       │  3 escenarios:                  │
-│         │ Estimator        │  • Optimista (+15%)             │
-│         │ (throughput.py)  │  • Balanceado (+8%)             │
-│         └──────┬───────────┘  • Conservador (+3%)            │
-│                │             (multiplicadores inferidos)     │
-│                ▼                                             │
-│         ┌──────────────────┐                                 │
-│         │ SimulationReport │  Compila y exporta 5 CSVs       │
-│         │ (report.py)      │  a data/processed/              │
-│         └──────┬───────────┘                                 │
-│                │                                             │
-│                ▼                                             │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │  OUTPUTS:                                            │   │
-│  │  • simulation_summary.csv        (métricas clave)    │   │
-│  │  • travel_aggregate.csv          (dist/tiempo por    │   │
-│  │  • zone_impact.csv               (picks + Gini)      │   │
-│  │  • throughput_scenarios.csv      (órdenes/turno)     │   │
-│  │  • order_detail.csv             (detalle por orden)  │   │
-│  └──────────────────────────────────────────────────────┘   │
-│                                                             │
-│  ⚠️  PROTOTIPO: No es modelo de ingeniería certificado,     │
-│     no sustituye estudios de tiempos y movimientos.         │
-│                                                             │
-│  Script: python scripts/run_simulation.py                   │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Qué aprendés:** Phase 6 es la primera vez que el motor "estima" el efecto de los cambios. No dice qué mover — ya lo decidió Phase 5 — sino **cuánto cambiarían** las caminatas diarias, el balance entre zonas y las órdenes procesadas por turno si esos movimientos se ejecutaran. **Es una estimación ilustrativa, no una predicción certificada.**
-
----
-
-### Flujo completo de las 6 fases
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                  FLUJO COMPLETO                              │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────┐    ┌─────────┐    ┌─────────┐                 │
-│  │ Phase 1 │───▶│ Phase 2 │───▶│ Phase 3 │                 │
-│  │ Datos + │    │Diagnóst│    │ Scoring │                   │
-│  │Features │    │   ics   │    │  Queue  │                  │
-│  └─────────┘    └─────────┘    └────┬────┘                  │
-│                                     │                       │
-│                                     ▼                       │
-│                              ┌─────────┐                    │
-│                              │ Phase 4 │                    │
-│                              │Escenarios│                   │
-│                              └────┬────┘                    │
-│                                   │                         │
-│                                   ▼                         │
-│                            ┌──────────┐                     │
-│                            │ Phase 5  │                     │
-│                            │Asignación│                     │
-│                            └──────────┘                     │
-│                                                             │
-│  Cada fase produce archivos CSV que la siguiente consume.   │
-│  No podés saltar fases: cada una necesita los outputs       │
-│  de la anterior.                                            │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Herramientas usadas por capa
-
-| Capa explicada | Herramienta/librería | Qué hace en simple | Dónde aparece |
-|---|---|---|---|
-| Base del proyecto | Python | Lenguaje principal para construir el motor modular | `src/`, `scripts/`, `tests/` |
-| Tablas y transformaciones | pandas | Lee CSV/Parquet y cruza SKUs, zonas, inventario, diagnósticos y scores | `data/loading.py`, `features/builder.py`, `diagnostics/`, `scoring/`, `scenarios/`, `optimization/` |
-| Validación de datos | pandera | Define contratos de columnas, tipos y reglas; si falla, hay fallback explícito | `data/validation.py` |
-| Cálculo numérico | numpy | Genera datos sintéticos reproducibles y ayuda con cálculos vectorizados | `data/generator.py`, `optimization/assignment.py` |
-| Optimización matemática | scipy `linear_sum_assignment` | Resuelve la asignación rectangular de menor costo si SciPy está instalado | `optimization/assignment.py`; si no está disponible, usa fallback greedy documentado |
-| UI técnica | Streamlit | Permite inspeccionar outputs procesados sin crear una app final de negocio | `app/streamlit_app.py` |
-| Tests | pytest | Verifica generación, validación, features, diagnósticos, scoring, escenarios y optimización | `tests/unit/` |
-| Lint/calidad | ruff | Revisa estilo, imports, errores simples y reglas de seguridad básicas | `python -m ruff check src tests scripts` |
-| Mapa de relaciones | Graphify | Mantiene un grafo del proyecto para ver conexiones entre módulos, docs y outputs | `graphify-out/`, consultas registradas en `docs/phase_logs/` |
-| Gobierno documental | Markdown docs/data governance | Deja trazabilidad humana: contratos, supuestos, logs, reglas inferidas y pendientes | `README.md`, `docs/`, `docs/data/` |
-
-## Qué NO deberías decidir a ciegas
-
-- No muevas SKUs automáticamente usando estos CSV.
-- No trates un score alto como una orden operativa.
-- No interpretes los escenarios ni la asignación Phase 5 como solución óptima operativa.
-- No cambies layout, dotación o capacidad sin validar con operación real.
-- No uses estos pesos como política de negocio hasta confirmarlos con expertos.
-- No ejecutes movimientos de SKU automáticamente usando `optimization_assignments.csv`.
-
-Los datos actuales son sintéticos y los umbrales/pesos están marcados como `inferred / pending confirmation`. Eso es DELIBERADO: sirve para aprender y auditar la lógica antes de convertirla en decisión de negocio.
-
-## Uso paso a paso
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-
-python scripts/generate_sample_data.py
-python scripts/run_data_validation.py
-python scripts/build_features.py
-python scripts/run_diagnostics.py
-python scripts/run_scoring.py
-python scripts/run_scenarios.py
-python scripts/run_optimization.py
-python scripts/run_simulation.py
-
-python -m ruff check src tests scripts
-python -m pytest -v
-```
-
-## Qué hace cada comando
-
-| Comando | Explicación simple |
-|---|---|
-| `generate_sample_data.py` | Crea datos sintéticos reproducibles para practicar sin tocar datos reales |
-| `run_data_validation.py` | Revisa que IDs, claves, tipos y reglas mínimas estén bien |
-| `build_features.py` | Calcula demanda, utilización y señales analíticas base |
-| `run_diagnostics.py` | Marca problemas descriptivos, como capacidad o mala ubicación relativa |
-| `run_scoring.py` | Ordena oportunidades para revisión humana con pesos transparentes |
-| `run_scenarios.py` | Compara escenarios analíticos: baseline, demanda primero, capacidad primero y revisión balanceada |
-| `run_optimization.py` | Construye una asignación matemática controlada SKU→zona; no ejecuta movimientos ni garantiza slot físico |
-| `run_simulation.py` | Simula distancia, balance de carga y throughput estimado post-optimización; no es un modelo de ingeniería certificado |
-
-## Outputs principales
-
-- `data/processed/slotting_features.parquet`
-- `data/processed/location_utilization.csv`
-- `data/processed/zone_utilization.csv`
-- `data/processed/slotting_diagnostics.csv`
-- `data/processed/location_diagnostics.csv`
-- `data/processed/zone_diagnostics.csv`
-- `data/processed/category_diagnostics.csv`
-- `data/processed/diagnostic_summary.csv`
-- `data/processed/slotting_opportunity_scores.csv`
-- `data/processed/priority_recommendation_queue.csv`
-- `data/processed/scoring_summary.csv`
-- `data/processed/scenario_comparison.csv`
-- `data/processed/scenario_action_mix.csv`
-- `data/processed/scenario_summary.csv`
-- `data/processed/optimization_assignments.csv`
-- `data/processed/optimization_summary.csv`
-- `data/processed/optimization_cost_matrix.csv`
-
-## Cómo leer los outputs de Phase 4
-
-| Archivo | Cómo leerlo |
-|---|---|
-| `scenario_comparison.csv` | Top N por escenario con ranking recalculado según el lente analítico |
-| `scenario_action_mix.csv` | Cuánta mezcla de acciones aparece en cada escenario |
-| `scenario_summary.csv` | Métricas comparables: score promedio, high priority, foco SKU/zona y cobertura de acciones |
-
-## Cómo leer los outputs de Phase 5
-
-| Archivo | Cómo leerlo |
-|---|---|
-| `optimization_assignments.csv` | Una asignación candidata SKU→zona/slot lógico para SKUs priorizados; es recomendación analítica, no orden de movimiento |
-| `optimization_summary.csv` | Método usado (`scipy_linear_sum_assignment` o `greedy_fallback`), cantidad de SKUs, zonas usadas y costo total/promedio |
-| `optimization_cost_matrix.csv` | Costos transparentes por combinación SKU-zona-slot, con demanda, distancia, prioridad, presión de capacidad y contexto de scoring |
-
-Caveat clave: Phase 5 es un prototipo matemático acotado sobre datos sintéticos. No es un optimizador warehouse-grade, no valida factibilidad a nivel ubicación, no conecta WMS/ERP y no ejecuta movimientos.
-
-## Cómo leer los outputs de Phase 6
-
-| Archivo | Cómo leerlo |
-|---------|-------------|
-| `simulation_summary.csv` | Métricas resumen: distancia total antes/después, tiempo ahorrado, Gini de carga, throughput estimado, y caveat del prototipo |
-| `simulation_travel_aggregate.csv` | Distancia y tiempo agregados (actual vs optimizado), diferencia absoluta y % de mejora |
-| `simulation_zone_impact.csv` | Picks por zona antes y después, más coeficiente Gini de balance de carga (0 = equilibrio perfecto) |
-| `simulation_throughput_scenarios.csv` | Órdenes por turno estimadas bajo 3 escenarios (optimista/balanceado/conservador), con tiempo ahorrado y % de ganancia |
-| `simulation_order_detail.csv` | Desglose por orden individual: distancia y tiempo actual vs optimizado, zona actual y candidata, cantidad de líneas |
-
-Caveat clave: Phase 6 es un prototipo de simulación operativa con supuestos inferidos sobre datos sintéticos. No es un estudio de tiempos y movimientos certificado ni un reemplazo de un modelo de ingeniería industrial.
-
-## Posibles usos actuales
-
-- Preparar una conversación con operación sobre dónde revisar primero.
-- Comparar si el backlog se ve distinto cuando priorizás demanda o capacidad.
-- Documentar supuestos antes de pedir datos reales.
-- Diseñar una futura fase de optimización con mejores requisitos.
-
-## Posibilidades futuras
-
-Las fases futuras podrían agregar simulación operativa, conectores WMS/ERP, autenticación, despliegue y una app de negocio. Eso todavía NO está implementado.
-
-Caveat clave: Phase 5 asigna SKUs a zonas candidatas con un modelo pequeño y transparente. No calcula ubicaciones físicas exactas, no garantiza capacidad real, no simula operación y no ejecuta movimientos de SKUs.
-
 # Slotting Optimization Engine
 
-A modular Python engine for slotting optimization in high-volume e-commerce and retail distribution centers. Built in controlled phases, it evolves from descriptive analytics toward prescriptive optimization.
-
-## Current scope
-
-**Phase 0 completed** — project skeleton, architecture, base documentation, and configuration established.
-**Phase 1 completed** — synthetic data pipeline, validation, and feature builder.  
-**Phase 1.5 completed** — minimal technical Streamlit front for inspecting processed outputs.  
-**Phase 2 completed** — descriptive advanced slotting diagnostics and diagnostic output files.  
-**Phase 3 completed** — transparent scoring/prioritization queue from Phase 2 diagnostics.  
-**Phase 4 completed** — analytical scenario/model comparison from Phase 3 scores.  
-**Phase 5 completed** — controlled mathematical SKU-to-zone assignment prototype; no execution or location-level feasibility guarantee.  
-**Phase 6 completed** — operational impact simulation (Scenario B: travel + workload + throughput); inferred assumptions, synthetic data only.
-
-## Project structure
-
-```
-slotting-optimization-engine/
-├── README.md                          # This file
-├── pyproject.toml                     # Package definition and dependencies
-├── .gitignore
-├── .env.example
-├── data/
-│   ├── raw/                           # Raw synthetic input data (Phase 1+)
-│   ├── processed/                     # Transformed analytical datasets (Phase 1+)
-│   └── synthetic/                     # Generated synthetic data (Phase 1+)
-├── docs/
-│   ├── master_plan.md                 # Living project guide and traceability
-│   ├── architecture_sdd.md            # Technical architecture and design decisions
-│   ├── data_contract.md               # Data entities, fields, and validation rules
-│   ├── roadmap.md                     # Phase-by-phase project roadmap
-│   ├── phase_notes/                   # Detailed phase documentation
-│   └── phase_logs/                    # Terminal logs recording execution
-├── scripts/                           # Phase 1+ CLI scripts
-├── src/
-│   └── slotting_optimization_engine/  # Main Python package
-│       ├── config/                    # Central configuration and paths
-│       ├── data/                      # Data generation, loading, validation
-│       ├── domain/                    # Business domain concepts
-│       ├── features/                  # Analytical feature construction
-│       ├── diagnostics/               # Descriptive slotting diagnostics (Phase 2)
-│       ├── scoring/                   # Prioritization scoring (Phase 3)
-│       ├── scenarios/                 # Analytical scenario comparison (Phase 4)
-│       ├── optimization/              # Controlled assignment optimization prototype (Phase 5)
-│       ├── simulation/                # Operational simulation (Phase 6)
-│       ├── reporting/                 # Outputs and summaries
-│       └── app/                       # Streamlit technical UI (Phase 1.5)
-├── tests/
-│   ├── unit/                          # Unit tests
-│   └── integration/                   # Integration tests (future)
-└── notebooks/                         # Exploratory analysis notebooks
-```
-
-## Quick start (environment setup)
-
-```powershell
-# Create virtual environment
-python -m venv .venv
-
-# Activate (PowerShell)
-.\.venv\Scripts\Activate.ps1
-
-# Install package in development mode with dev dependencies
-pip install -e ".[dev]"
-```
-
-## Phase 1 commands
-
-```powershell
-# Generate synthetic data (must be first)
-python scripts/generate_sample_data.py
-
-# Validate generated data
-python scripts/run_data_validation.py
-
-# Build analytical features (includes validation)
-python scripts/build_features.py
-
-# Run all tests
-pytest -v
-
-# Lint check
-python -m ruff check src tests scripts
-```
-
-## Phase 1.5 Streamlit front
-
-Prerequisite outputs expected by the app:
-
-- `data/processed/slotting_features.parquet`
-- `data/processed/location_utilization.csv`
-- `data/processed/zone_utilization.csv`
-
-If those files are missing, regenerate Phase 1 outputs first:
-
-```powershell
-python scripts/generate_sample_data.py
-python scripts/run_data_validation.py
-python scripts/build_features.py
-```
-
-Install the optional Streamlit dependency and launch the technical front:
-
-```powershell
-pip install -e ".[streamlit]"
-streamlit run src/slotting_optimization_engine/app/streamlit_app.py
-```
-
-The UI is descriptive only. The preliminary alignment score is shown as a non-prescriptive inspection signal, not as an optimization recommendation.
-
-## Phase 2 diagnostics
-
-Run Phase 2 diagnostics after Phase 1 processed outputs exist:
-
-```powershell
-python scripts/run_diagnostics.py
-```
-
-Diagnostic outputs are descriptive flags for analyst review only. Thresholds are inferred from the synthetic dataset and pending business confirmation.
-
-Expected outputs:
-
-- `data/processed/slotting_diagnostics.csv`
-- `data/processed/location_diagnostics.csv`
-- `data/processed/zone_diagnostics.csv`
-- `data/processed/category_diagnostics.csv`
-- `data/processed/diagnostic_summary.csv`
-
-## Phase 3 scoring/prioritization
-
-Run Phase 3 scoring after Phase 2 diagnostic outputs exist:
-
-```powershell
-python scripts/run_scoring.py
-```
-
-Scoring outputs prioritize review work only. They do not calculate optimal moves, target locations, solver decisions, simulation results, or business-approved recommendations. All weights are transparent and marked as `inferred / pending confirmation`.
-
-Expected outputs:
-
-- `data/processed/slotting_opportunity_scores.csv`
-- `data/processed/priority_recommendation_queue.csv`
-- `data/processed/scoring_summary.csv`
-
-## Phase 4 scenario/model comparison
-
-Run Phase 4 after Phase 3 scoring outputs exist:
-
-```powershell
-python scripts/run_scenarios.py
-```
-
-Scenario outputs compare transparent analytical lenses such as `baseline`, `demand_first`, `capacity_first`, and `balanced_review`. They are what-if review summaries only; they do not calculate optimal moves, target locations, solver decisions, simulation results, or automatic SKU movement instructions.
-
-Expected outputs:
-
-- `data/processed/scenario_comparison.csv`
-- `data/processed/scenario_action_mix.csv`
-- `data/processed/scenario_summary.csv`
-
-## Phase 5 controlled optimization prototype
-
-Run Phase 5 after Phase 4 scenario outputs exist:
-
-```powershell
-python scripts/run_optimization.py
-```
-
-Phase 5 builds a small SKU-to-zone assignment prototype using top-N SKU candidates from the Phase 3 queue, Phase 4 scenario context, diagnostics, and synthetic SKU/zone dimensions. If SciPy is installed, it uses `scipy.optimize.linear_sum_assignment`; otherwise it records a deterministic `greedy_fallback` method in the outputs.
-
-Expected outputs:
-
-- `data/processed/optimization_assignments.csv`
-- `data/processed/optimization_summary.csv`
-- `data/processed/optimization_cost_matrix.csv`
-
-These outputs are analytical only. They are not WMS tasks, not automatic move instructions, and not guaranteed feasible at physical location level.
-
-## Phase 6 operational impact simulation
-
-Run Phase 6 after Phase 5 optimization outputs exist:
-
-```powershell
-python scripts/run_simulation.py
-```
-
-Phase 6 loads Phase 1 synthetic datasets and Phase 5 optimization assignments, simulates before/after travel distance, zone workload balance (Gini coefficient), and throughput under 3 scenarios (optimistic, balanced, conservative). All parameters are marked `inferred / pending confirmation`.
-
-Expected outputs:
-
-- `data/processed/simulation_summary.csv`
-- `data/processed/simulation_travel_aggregate.csv`
-- `data/processed/simulation_zone_impact.csv`
-- `data/processed/simulation_throughput_scenarios.csv`
-- `data/processed/simulation_order_detail.csv`
-
-These outputs are illustrative only. They are not certified engineering models, labour standards, or replacements for time-and-motion studies.
-
-Scenario C (reusable framework) provides flexible scenario selection:
-
-```powershell
-# List available scenarios
-python scripts/run_simulation.py --list-scenarios
-
-# Run travel only
-python scripts/run_simulation.py --scenarios travel
-
-# Run travel + throughput (skip workload)
-python scripts/run_simulation.py --scenarios travel,throughput
-
-# Run all (default)
-python scripts/run_simulation.py --scenarios travel,workload,throughput
-
-# Dry check without simulation
-python scripts/run_simulation.py --dry-run
-```
-
-## Output structure
-
-After running Phase 1 through Phase 5 scripts:
-
-```
-data/
-├── synthetic/
-│   ├── skus.csv              # 500 SKUs
-│   ├── zones.csv             # 10 warehouse zones
-│   ├── locations.csv         # 200 storage locations
-│   ├── inventory.csv         # ~700 inventory records
-│   ├── orders.csv            # 2,000 order headers
-│   └── order_lines.csv       # ~10,000 order lines
-└── processed/
-    ├── slotting_features.parquet   # Wide feature table (one row per SKU)
-    ├── location_utilization.csv    # Per-location utilisation %
-    ├── zone_utilization.csv        # Per-zone utilisation summary
-    ├── slotting_diagnostics.csv    # SKU-level descriptive diagnostic flags
-    ├── location_diagnostics.csv    # Location utilization/density diagnostics
-    ├── zone_diagnostics.csv        # Zone utilization and mix diagnostics
-    ├── category_diagnostics.csv    # Category spread/grouping indicators
-    ├── diagnostic_summary.csv      # Metric summary of diagnostic counts
-    ├── slotting_opportunity_scores.csv     # Action-level prioritization scores
-    ├── priority_recommendation_queue.csv   # Sorted review queue
-    ├── scoring_summary.csv                 # Phase 3 scoring metrics/config notes
-    ├── scenario_comparison.csv             # Phase 4 top-N scenario comparison rows
-    ├── scenario_action_mix.csv             # Phase 4 action mix by scenario
-    ├── scenario_summary.csv                # Phase 4 scenario-level metrics
-    ├── optimization_assignments.csv        # Phase 5 SKU-to-zone assignments
-    ├── optimization_summary.csv            # Phase 5 method/cost summary
-    ├── optimization_cost_matrix.csv        # Phase 5 transparent cost matrix
-    ├── simulation_summary.csv              # Phase 6 simulation metrics summary
-    ├── simulation_travel_aggregate.csv     # Phase 6 travel distance/time aggregates
-    ├── simulation_zone_impact.csv          # Phase 6 zone workload/Gini detail
-    ├── simulation_throughput_scenarios.csv # Phase 6 throughput by scenario
-    └── simulation_order_detail.csv         # Phase 6 per-order breakdown
-```
-
-## Documentation map
-
-| Document | Purpose |
-|---|---|
-| `docs/master_plan.md` | Living project guide, scope, decisions, and traceability |
-| `docs/architecture_sdd.md` | Technical architecture, module responsibilities, data flow |
-| `docs/data_contract.md` | Data entities, fields, validation rules (finalised) |
-| `docs/roadmap.md` | Phases 0–7 with implementation status |
-| `docs/phase_notes/phase_0_design_and_setup.md` | Phase 0 design decisions and evidence |
-| `docs/phase_notes/phase_1_data_pipeline.md` | Phase 1 design decisions and evidence |
-| `docs/phase_notes/phase_1_5_streamlit_front.md` | Phase 1.5 Streamlit front decisions and evidence |
-| `docs/phase_notes/phase_2_diagnostics.md` | Phase 2 diagnostic rules, outputs, and evidence |
-| `docs/phase_notes/phase_3_scoring.md` | Phase 3 scoring rules, outputs, and evidence |
-| `docs/phase_notes/phase_4_scenarios.md` | Phase 4 scenario/model comparison rules, outputs, and evidence |
-| `docs/phase_notes/phase_5_optimization.md` | Phase 5 optimization prototype rules, outputs, caveats, and evidence |
-| `docs/phase_notes/phase_6_simulation.md` | Phase 6 simulation rules, outputs, caveats, and evidence |
-| `docs/phase_logs/phase_0_terminal_log.md` | Phase 0 terminal commands and results |
-| `docs/phase_logs/phase_1_terminal_log.md` | Phase 1 terminal commands and results |
-| `docs/phase_logs/phase_1_5_terminal_log.md` | Phase 1.5 terminal commands and results |
-| `docs/phase_logs/phase_2_terminal_log.md` | Phase 2 terminal commands and results |
-| `docs/phase_logs/phase_3_terminal_log.md` | Phase 3 terminal commands and results |
-| `docs/phase_logs/phase_4_terminal_log.md` | Phase 4 terminal commands and results |
-| `docs/phase_logs/phase_5_terminal_log.md` | Phase 5 terminal commands and results |
-| `docs/phase_logs/phase_6_terminal_log.md` | Phase 6 terminal commands and results |
-| `docs/DESIGN.md` | Lightweight technical UI design system |
-| `docs/data/README.md` | Data documentation overview |
-| `docs/data/dataset-index.md` | All datasets with schemas and lineage |
-| `docs/data/business-knowledge.md` | Business rules and domain knowledge |
-| `docs/data/query-log.md` | Data operations record |
-| `docs/data/synthetic/cleaning-log.md` | Synthetic data cleaning events |
-| `docs/data/synthetic/learnings.md` | Technical patterns and gotchas |
-
-## Fases completadas
-
-| Fase | Estado | Qué entrega |
-|------|--------|-------------|
-| Phase 0–2 | ✅ Completadas | Estructura, datos sintéticos, validación, features, diagnósticos |
-| Phase 3 | ✅ Completada | Scoring y cola de priorización para revisión humana |
-| Phase 4 | ✅ Completada | Comparación de escenarios what-if (baseline, demanda, capacidad, balance) |
-| Phase 5 | ✅ Completada | Prototipo de asignación matemática SKU→zona |
-| Phase 6 | ✅ Completada | Simulación de impacto operacional (Escenario B) |
-
-## Phase 6 — Los 3 escenarios
-
-Phase 6 se diseñó como un **simulador modular** con 3 escenarios, de los cuales el **B está implementado** y los otros dos están pendientes. Cada escenario responde una pregunta distinta:
-
-### Escenario A — Solo distancias ✅ (implementado)
-
-**Pregunta:** *"¿Cuánto cambiaría la distancia recorrida por los pickers si movemos estos SKUs?"*
-
-**Qué produce:** Comparación antes/después de distancia total y tiempo de viaje por orden. No considera balance de carga ni throughput. Es el escenario más liviano y rápido.
-
-**Cuándo usarlo:** Cuando solo interesa el impacto en caminatas diarias, sin entrar en detalle de zonas ni productividad.
-
-**Comando:** `python scripts/run_simulation.py --scenario-a` o `python scripts/run_simulation.py --scenarios travel`
-
-**Qué esperar:** 3 CSVs en `data/processed/`:
-- `simulation_summary.csv` — métricas de distancia/tiempo
-- `simulation_travel_aggregate.csv` — agregados de viaje
-- `simulation_order_detail.csv` — detalle por orden
-
-### Escenario B — Impacto operacional completo ✅ (implementado)
-
-**Pregunta:** *"¿Cómo cambian las distancias, el balance entre zonas y la capacidad de procesar órdenes por turno?"*
-
-**Qué produce:** 5 CSVs con:
-- `simulation_summary.csv` — métricas clave (distancia, tiempo, Gini, throughput)
-- `simulation_travel_aggregate.csv` — distancia/tiempo agregados
-- `simulation_zone_impact.csv` — picks por zona + coeficiente Gini
-- `simulation_throughput_scenarios.csv` — órdenes/turno bajo 3 escenarios
-- `simulation_order_detail.csv` — desglose por orden individual
-
-**Cuándo usarlo:** Cuando querés una visión completa del impacto operativo. Es el escenario más informativo pero también el que tiene más supuestos inferidos.
-
-**Comando:** `python scripts/run_simulation.py`
-
-### Escenario C — Framework reutilizable ✅ (implementado)
-
-**Pregunta:** *"¿Cómo ejecuto cualquier combinación de escenarios sin modificar código?"*
-
-**Qué produce:** Una arquitectura de pipeline con escenarios plugueables. En lugar de una función fija que corre todo en orden, definís qué escenarios ejecutar y en qué orden.
-
-**Cuándo usarlo:** Cuando necesitás flexibilidad — correr solo distancias un día, solo throughput otro día, o los 3 juntos. También es la base para que equipos de datos agreguen escenarios personalizados sin tocar el núcleo.
-
-**Comandos:**
-```powershell
-# Ver escenarios disponibles
-python scripts/run_simulation.py --list-scenarios
-
-# Solo distancia (Escenario A)
-python scripts/run_simulation.py --scenario-a
-
-# Distancia + throughput (sin workload)
-python scripts/run_simulation.py --scenarios travel,throughput
-
-# Todos (default)
-python scripts/run_simulation.py
-```
-
-## Próximas fases (diferidas)
-
-Capacidades avanzadas que están fuera del alcance del ciclo actual:
-
-- Phase 7: Production-ready application (autenticación, CI/CD, deploy, conectores WMS/ERP)
-
-Ver `docs/roadmap.md` para detalle completo.
+**Motor de análisis y simulación para optimización de slotting en centros de distribución.**
 
 ---
 
-## Guía para principiantes — Cómo usar esta herramienta
+## Introducción — ¿Qué es esto y para qué sirve?
 
-Si ves esto por primera vez, esta guía te explica **qué es esto, qué necesitas y cómo usarlo paso a paso**.
+Imaginá un centro de distribución con miles de productos (SKUs), cientos de estanterías (ubicaciones) y decenas de zonas. Todos los días, los pickers caminan kilómetros para armar pedidos. Algunos SKUs de alta demanda están lejos del despacho. Otros, que casi no se venden, ocupan espacios privilegiados. Algunas zonas están al límite de capacidad mientras otras tienen espacio de sobra.
 
-### ¿Qué es esto?
+**Este proyecto te ayuda a poner orden en ese caos.** No mueve productos automáticamente ni reemplaza a tu equipo operativo. En cambio, **analiza**, **prioriza** y **simula** para que vos — con criterio humano — puedas tomar mejores decisiones sobre dónde ubicar cada SKU.
 
-Es un motor de análisis para centros de distribución (depósitos, bodegas). Te ayuda a responder preguntas como:
+En concreto, el motor te permite responder preguntas como:
 
-- *"¿Qué SKUs están mal ubicados?"*
-- *"¿Qué zonas están sobrecargadas?"*
-- *"¿Qué conviene reubicar primero?"*
-- *"¿Cuánto cambiarían las distancias si muevo ciertos productos?"*
+| Pregunta | Lo que el motor te devuelve |
+|---------|---------------------------|
+| ¿Qué SKUs de alta demanda están mal ubicados? | Una lista ordenada con scores |
+| ¿Qué zonas están sobrecargadas? | Diagnóstico de capacidad por zona |
+| ¿Conviene priorizar demanda o capacidad primero? | Comparación de escenarios lado a lado |
+| ¿Qué SKU debería ir a qué zona? | Asignación candidata SKU→zona |
+| ¿Cuánto cambiarían las distancias si muevo estos SKUs? | Simulación de impacto en km y tiempo |
+| ¿Mejoraría el balance entre zonas? | Coeficiente Gini antes/después |
+| ¿Cuántas órdenes más por turno podría procesar? | Estimación de throughput |
 
-No mueve productos automáticamente. **Analiza y recomienda**, pero la decisión final la toma un humano.
+> **⚠️ IMPORTANTE:** Todo lo que produce este motor son **recomendaciones analíticas** sobre datos sintéticos. Los pesos, umbrales y supuestos están marcados como `inferred / pending confirmation` (inferidos / pendientes de confirmación). No son órdenes operativas ni decisiones automáticas.
 
-### ¿Qué necesito para empezar?
+---
 
-1. **Python 3.11 o superior** instalado en tu PC.
-2. **Una terminal** (PowerShell en Windows, bash en Mac/Linux).
-3. **Git** (opcional, para clonar el repositorio).
+## ¿Para quién es esta herramienta?
+
+| Perfil | Qué puede hacer con esto |
+|--------|------------------------|
+| **Jefe de depósito / Operaciones** | Entender qué zonas están sobrecargadas, qué SKUs conviene revisar primero, y cuantificar el impacto potencial de cambios |
+| **Analista de datos / Supply Chain** | Ejecutar scripts, explorar CSVs de salida, ajustar pesos y umbrales, preparar informes |
+| **Estudiante / Aprendiz** | Aprender cómo funciona el slotting y la optimización de depósitos con datos ficticios |
+| **Desarrollador** | Extender el código, agregar nuevos escenarios de simulación, conectar datos reales |
+
+No necesitás saber programación para **leer los resultados** (son CSVs que se abren en Excel). Pero sí necesitás usar la terminal (PowerShell / bash) para ejecutar los scripts.
+
+---
+
+## Alcance actual — ¿Qué está implementado?
+
+El proyecto se divide en **6 fases** que se ejecutan en secuencia. Cada fase toma los outputs de la anterior.
+
+| Fase | Nombre | ¿Qué hace? | Estado |
+|------|--------|-----------|--------|
+| 1 | Datos y features | Genera datos sintéticos, valida contratos y construye señales analíticas | ✅ Completa |
+| 1.5 | Interfaz técnica (Streamlit) | UI visual para inspeccionar outputs procesados | ✅ Completa |
+| 2 | Diagnósticos descriptivos | Marca problemas por SKU, ubicación, zona y categoría | ✅ Completa |
+| 3 | Scoring y priorización | Ordena oportunidades para revisión humana con pesos transparentes | ✅ Completa |
+| 4 | Comparación de escenarios | Compara lentes analíticos: demanda primero, capacidad primero o balanceado | ✅ Completa |
+| 5 | Asignación matemática | Asigna SKU→zona candidata minimizando costo proxy; no ejecuta movimientos | ✅ Completa |
+| 6 | Simulación operativa | Simula distancia, balance de carga y throughput post-optimización | ✅ Completa (3 escenarios) |
+
+### ¿Qué NO está implementado? (alcance futuro)
+
+- Conexión con WMS o ERP real
+- Autenticación de usuarios
+- Interfaz de negocio completa (solo hay un Streamlit técnico)
+- Ejecución automática de movimientos de SKU
+- Garantía de factibilidad física a nivel de ubicación exacta
+- Despliegue en producción (CI/CD, server, etc.)
+
+---
+
+## Requisitos técnicos
+
+| Requisito | Detalle |
+|-----------|---------|
+| **Python** | 3.11 o superior (probado en 3.13.5) |
+| **Sistema** | Windows, macOS o Linux |
+| **Terminal** | PowerShell (Windows) o bash (Mac/Linux) |
+| **Git** | Opcional, para clonar el repositorio |
+| **Memoria RAM** | Mínimo 4 GB (8 GB recomendado) |
+| **Disco** | ~100 MB para el proyecto y datos |
+
+No necesitás instalar nada más que Python. Las dependencias se instalan automáticamente con `pip`.
+
+---
+
+## Guía completa paso a paso
+
+Esta guía está pensada para **cualquier persona**, aunque nunca haya usado Python o una terminal. Cada paso explica qué hace, por qué es necesario y cómo verificar que funcionó.
 
 ### Paso 1 — Obtener el código
 
-Si ya tenés la carpeta del proyecto en tu PC, abrí una terminal en esa carpeta.
+Si ya tenés la carpeta del proyecto, abrí una terminal en esa carpeta y saltá al Paso 2.
 
-Si no, clonalo con:
+Si no, abrí una terminal y ejecutá:
 
 ```bash
 git clone https://github.com/harrysxavio/optimizacion.git
 cd optimizacion
 ```
 
+> **¿No tenés Git?** También podés descargar el código como ZIP desde GitHub y extraerlo en una carpeta.
+
 ### Paso 2 — Crear el entorno virtual (recomendado)
 
-Esto aísla las dependencias del proyecto del resto de tu sistema.
+El entorno virtual aísla las dependencias de este proyecto del resto de tu sistema.
+
+**En Windows (PowerShell):**
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 ```
 
-En Mac/Linux:
+**En Mac / Linux (bash):**
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
+
+> Vas a ver `(.venv)` al inicio de la línea en tu terminal. Eso indica que el entorno está activo.
 
 ### Paso 3 — Instalar el paquete
 
@@ -931,94 +122,358 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-Esto instala todo lo necesario: pandas, numpy, ruff, pytest, etc.
+Esto instala todo lo necesario: pandas (tablas), numpy (números), ruff (calidad de código), pytest (tests), etc.
+
+**Verificá que funcionó:**
+
+```powershell
+python -c "import slotting_optimization_engine; print('OK')"
+```
+
+Si ves `OK`, todo está listo.
 
 ### Paso 4 — Generar datos sintéticos
 
-El proyecto usa datos ficticios para que puedas probar sin riesgo.
+El proyecto usa **datos ficticios** para que puedas probar sin riesgo. No necesitás datos reales de tu depósito.
 
 ```powershell
 python scripts/generate_sample_data.py
 ```
 
-Esto crea ~13,000 filas de datos en la carpeta `data/synthetic/`: SKUs, zonas, ubicaciones, inventario, pedidos.
+Esto crea ~13,000 filas de datos en `data/synthetic/`:
+
+| Archivo | Qué contiene | Cantidad |
+|---------|-------------|----------|
+| `skus.csv` | Catálogo de SKUs con categoría, peso, volumen | 500 SKUs |
+| `zones.csv` | Zonas del depósito con distancia a despacho | 10 zonas |
+| `locations.csv` | Ubicaciones (estantes) con zona y capacidad | 200 ubicaciones |
+| `inventory.csv` | Stock actual por SKU y ubicación | ~700 registros |
+| `orders.csv` | Encabezados de pedidos | 2,000 órdenes |
+| `order_lines.csv` | Líneas de detalle de cada pedido | ~10,000 líneas |
 
 ### Paso 5 — Validar los datos
+
+Revisa que todos los IDs, tipos de datos y reglas estén correctos.
 
 ```powershell
 python scripts/run_data_validation.py
 ```
 
-Revisa que todos los IDs, tipos y reglas estén correctos.
+> Si ves `All validations passed`, los datos están listos.
 
 ### Paso 6 — Construir features analíticas
+
+Calcula señales como: ¿cuánto se pide cada SKU?, ¿qué tan llenas están las zonas?, ¿qué SKUs están lejos del despacho?
 
 ```powershell
 python scripts/build_features.py
 ```
 
-Esto calcula demanda por SKU, utilización de ubicaciones y zonas, etc.
+**Outputs:** `data/processed/slotting_features.parquet`, `location_utilization.csv`, `zone_utilization.csv`
 
-### Paso 7 — Ejecutar diagnósticos
+### Paso 7 — Diagnosticar problemas del depósito
+
+Marca qué SKUs, ubicaciones y zonas tienen problemas detectables por reglas simples.
 
 ```powershell
 python scripts/run_diagnostics.py
 ```
 
-Marca qué SKUs están lejos del despacho, qué zonas están sobrecargadas, etc.
+**Qué produjo:** 5 CSVs con flags como:
+- SKUs de alta demanda que están lejos del despacho
+- SKUs de movimiento lento que ocupan zonas premium
+- Zonas con capacidad al límite
+- Categorías dispersas entre muchas zonas
 
-### Paso 8 — Scoring y priorización
+### Paso 8 — Priorizar oportunidades
+
+Ordena los problemas detectados por importancia para que sepas por dónde empezar a revisar.
 
 ```powershell
 python scripts/run_scoring.py
 ```
 
-Ordena los problemas detectados por importancia, así sabés por dónde empezar a revisar.
+**Output principal:** `priority_recommendation_queue.csv` — una cola ordenada de "revisá esto primero".
 
 ### Paso 9 — Comparar escenarios
+
+Mirá el mismo depósito desde 4 ángulos distintos:
+
+- **Baseline:** prioridad sin cambios
+- **Demanda primero:** ¿qué pasa si priorizo SKUs de alta demanda?
+- **Capacidad primero:** ¿qué pasa si primero libero espacio?
+- **Revisión balanceada:** ¿qué pasa si balanceo ambos?
 
 ```powershell
 python scripts/run_scenarios.py
 ```
 
-Te muestra cómo cambian las prioridades según el enfoque (priorizar demanda, capacidad, etc.).
+### Paso 10 — Optimizar asignación de SKUs
 
-### Paso 10 — Optimización matemática
+Este es el paso más avanzado: asigna SKUs prioritarios a zonas candidatas usando un modelo matemático que minimiza un costo calculado (demanda × distancia × capacidad × oportunidad).
 
 ```powershell
 python scripts/run_optimization.py
 ```
 
-Asigna SKUs prioritarios a zonas candidatas minimizando un costo calculado.
+> ⚠️ **Esto es un prototipo.** No ejecuta movimientos ni garantiza factibilidad física. Es una recomendación analítica.
 
-### Paso 11 — Simular impacto operativo
+### Paso 11 — Simular el impacto operativo
 
-Una vez que tenés la asignación del paso 10, podés simular el impacto:
+Una vez que tenés la asignación del paso anterior, simulá cuánto cambiarían:
+
+- **Distancias** recorridas por los pickers (km por día)
+- **Balance de carga** entre zonas (coeficiente Gini)
+- **Throughput** estimado (órdenes por turno)
 
 ```powershell
-# Todos los escenarios (distancia + carga + throughput)
+# Todos los escenarios juntos
 python scripts/run_simulation.py
 
 # Solo distancia (más rápido)
 python scripts/run_simulation.py --scenario-a
 ```
 
-### Paso 12 — Ver resultados
+**Resultado típico (con datos sintéticos):**
+- 12 SKUs optimizados
+- ~89% de reducción en distancia de viaje
+- Mejora en el balance Gini (0.19 → 0.16)
+- ~53× más throughput estimado
 
-Todos los resultados se guardan como CSV en `data/processed/`. Podés abrirlos con Excel, Google Sheets, o cualquier editor de texto.
+### Paso 12 — Próximos pasos
 
-Los archivos más importantes:
+Una vez que entiendas el flujo completo, podés:
 
-| Archivo | Qué contiene |
-|---------|-------------|
-| `priority_recommendation_queue.csv` | Lista ordenada de qué revisar primero |
-| `scenario_comparison.csv` | Cómo cambian las prioridades según el escenario |
-| `optimization_assignments.csv` | Qué SKU va a qué zona candidata |
-| `simulation_summary.csv` | Cuánto cambiarían las distancias, carga y throughput |
+1. Reemplazar los datos sintéticos por datos reales de tu depósito
+2. Ajustar los pesos y umbrales a tu operación (están marcados como `inferred`)
+3. Usar los CSVs como insumo para decisiones con tu equipo operativo
+4. Explorar el código fuente para entender cada módulo
 
-### Comandos rápidos
+---
 
-Si querés ejecutar todo de una:
+## Las 6 fases en detalle
+
+### Fase 1 — Datos sintéticos y features analíticas
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                  FASE 1: DATOS Y FEATURES                   │
+├────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Generador → Validador → Cargador → Constructor Features   │
+│  (numpy)    (pandera)   (pandas)   (demanda, utilización,  │
+│                                      scores de alineación)  │
+│                                                             │
+│  Outputs: slotting_features.parquet                         │
+│           location_utilization.csv                          │
+│           zone_utilization.csv                              │
+│                                                             │
+│  $ python scripts/generate_sample_data.py                   │
+│  $ python scripts/run_data_validation.py                    │
+│  $ python scripts/build_features.py                         │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Qué aprendés:** Este paso crea un "mundo ficticio" de datos para practicar sin tocar información real. Los features son señales básicas como "¿cuánto se pide este SKU?" o "¿qué tan llenas están las zonas?".
+
+---
+
+### Fase 1.5 — Interfaz técnica (Streamlit)
+
+Además de los scripts de terminal, el proyecto incluye una **interfaz visual técnica** construida con [Streamlit](https://streamlit.io). Te permite explorar los outputs procesados sin tener que leer CSVs a cada rato.
+
+**Cómo ejecutarla:**
+
+```powershell
+pip install -e ".[streamlit]"
+streamlit run src/slotting_optimization_engine/app/streamlit_app.py
+```
+
+**Qué podés ver:**
+- Tablas de SKUs con features analíticas
+- Utilización de ubicaciones y zonas
+- Visualizaciones básicas (barras, heatmaps)
+
+> ⚠️ **Importante:** Esta UI es técnica y descriptiva. No es una aplicación de negocio final. Muestra los datos procesados para inspección, no para tomar decisiones operativas automáticas.
+
+**Prerequisitos:** Haber ejecutado los scripts de Fase 1 (generar, validar y construir features).
+
+---
+
+### Fase 2 — Diagnósticos descriptivos
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                FASE 2: DIAGNÓSTICOS                         │
+├────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Entradas: slotting_features.parquet                        │
+│            location_utilization.csv                         │
+│            zone_utilization.csv                             │
+│                                                             │
+│  Reglas: ¿SKU de alta demanda lejos de zona prioritaria?    │
+│          ¿Slow mover en zona premium?                       │
+│          ¿Zona con capacidad al límite?                      │
+│          ¿Categoría muy dispersa?                           │
+│                                                             │
+│  Outputs: slotting_diagnostics.csv (1 fila por SKU)         │
+│           location_diagnostics.csv (1 fila por ubicación)   │
+│           zone_diagnostics.csv (1 fila por zona)            │
+│           category_diagnostics.csv (1 fila por categoría)   │
+│           diagnostic_summary.csv (conteo de problemas)      │
+│                                                             │
+│  $ python scripts/run_diagnostics.py                        │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Qué aprendés:** Es como un "check-up" del depósito. No dice qué mover, solo marca qué se ve raro o merece atención. Los pesos están marcados como `inferred / pending confirmation` porque son supuestos, no reglas confirmadas.
+
+---
+
+### Fase 3 — Scoring y priorización
+
+```
+┌────────────────────────────────────────────────────────────┐
+│              FASE 3: SCORING Y COLA DE REVISIÓN             │
+├────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Entradas: slotting_diagnostics.csv                         │
+│            zone_diagnostics.csv                             │
+│            category_diagnostics.csv                         │
+│                                                             │
+│  Pesos transparentes:                                       │
+│  • Demanda: 30%    • Distancia: 25%                         │
+│  • Capacidad: 25%   • Oportunidad: 20%                     │
+│  (pesos inferidos, pendientes de confirmación)             │
+│                                                             │
+│  Ordena de mayor a menor score → cola de revisión humana    │
+│                                                             │
+│  Outputs: slotting_opportunity_scores.csv                   │
+│           priority_recommendation_queue.csv (top-N)         │
+│           scoring_summary.csv (métricas y configuración)    │
+│                                                             │
+│  $ python scripts/run_scoring.py                            │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Qué aprendés:** Arma una "lista de tareas ordenada" para que un humano sepa por dónde empezar a revisar. **No optimiza**, solo prioriza. Los pesos son supuestos a confirmar con expertos del negocio.
+
+---
+
+### Fase 4 — Comparación de escenarios
+
+```
+┌────────────────────────────────────────────────────────────┐
+│            FASE 4: ESCENARIOS WHAT-IF                       │
+├────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Entradas: slotting_opportunity_scores.csv                  │
+│            priority_recommendation_queue.csv                │
+│                                                             │
+│  Escenarios:                                                │
+│  • Baseline:       "si no cambiamos nada"                   │
+│  • Demanda 1°:     "priorizar SKUs de alta demanda"        │
+│  • Capacidad 1°:   "primero liberar espacio"               │
+│  • Balanceado:     "mezcla de ambos"                        │
+│                                                             │
+│  Outputs: scenario_comparison.csv (top-N por escenario)     │
+│           scenario_action_mix.csv (mezcla de acciones)      │
+│           scenario_summary.csv (métricas comparables)       │
+│                                                             │
+│  $ python scripts/run_scenarios.py                          │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Qué aprendés:** Es como mirar el mismo depósito desde 4 ángulos diferentes. No dice cuál es "el mejor", solo muestra qué cambia cuando cambian las prioridades. Útil para debates con el equipo operativo.
+
+---
+
+### Fase 5 — Asignación matemática controlada
+
+```
+┌────────────────────────────────────────────────────────────┐
+│            FASE 5: ASIGNACIÓN SKU → ZONA                    │
+├────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Entradas: priority_recommendation_queue.csv (Phase 3)     │
+│            slotting_diagnostics.csv (Phase 2)               │
+│            scenario_comparison.csv (Phase 4)                │
+│            skus.csv / zones.csv (Phase 1)                   │
+│                                                             │
+│  Proceso:                                                   │
+│  1. Toma top-N SKUs de la cola de priorización             │
+│  2. Expande zonas en slots lógicos (A → A.1, A.2, A.3)     │
+│  3. Calcula costo SKU×zona (demanda + distancia + cap.)    │
+│  4. Resuelve asignación de menor costo total                │
+│     (usa SciPy si está instalado, o fallback greedy)        │
+│                                                             │
+│  Outputs: optimization_assignments.csv (1 assign por SKU)   │
+│           optimization_summary.csv (método, costo, cant.)   │
+│           optimization_cost_matrix.csv (costo transparente) │
+│                                                             │
+│  ⚠️ PROTOTIPO: No ejecuta movimientos, no valida           │
+│     factibilidad física, no conecta WMS/ERP.               │
+│                                                             │
+│  $ python scripts/run_optimization.py                       │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Qué aprendés:** Es la primera vez que el motor "decide" algo, pero es una decisión **analítica**, no operativa. Asigna SKUs a zonas candidatas minimizando un costo matemático. **No es una orden de mover productos.** Si SciPy no está instalado, usa un fallback greedy determinístico (siempre da el mismo resultado).
+
+---
+
+### Fase 6 — Simulación de impacto operativo
+
+```
+┌────────────────────────────────────────────────────────────┐
+│         FASE 6: SIMULACIÓN DE IMPACTO OPERACIONAL           │
+├────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Entradas: orders.csv / order_lines.csv  (Phase 1)         │
+│            zones.csv / locations.csv / inventory.csv        │
+│            optimization_assignments.csv (Phase 5)           │
+│                                                             │
+│  Sub-simulaciones:                                          │
+│  • Travel:   distancia antes/después por orden             │
+│  • Workload: picks por zona + Gini coefficient             │
+│  • Throughput: órdenes/turno (optimista/balanceado/cons.)   │
+│                                                             │
+│  Outputs: simulation_summary.csv (métricas clave)           │
+│           travel_aggregate.csv (dist/tiempo)                │
+│           zone_impact.csv (picks + Gini)                    │
+│           throughput_scenarios.csv (órdenes/turno)         │
+│           order_detail.csv (detalle por orden)              │
+│                                                             │
+│  ⚠️ PROTOTIPO: No es modelo de ingeniería certificado,     │
+│     no sustituye estudios de tiempos y movimientos.         │
+│                                                             │
+│  $ python scripts/run_simulation.py                         │
+│  $ python scripts/run_simulation.py --scenario-a            │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Qué aprendés:** Es la primera vez que el motor "estima" el efecto de los cambios. No dice qué mover — ya lo decidió Fase 5 — sino **cuánto cambiarían** las caminatas diarias, el balance entre zonas y las órdenes procesadas por turno si esos movimientos se ejecutaran. **Es una estimación ilustrativa, no una predicción certificada.**
+
+---
+
+## Comandos de un vistazo
+
+| Comando | Qué hace | Fase |
+|---------|----------|------|
+| `python scripts/generate_sample_data.py` | Crea datos sintéticos | 1 |
+| `python scripts/run_data_validation.py` | Valida contratos y reglas | 1 |
+| `python scripts/build_features.py` | Calcula features analíticas | 1 |
+| `streamlit run src/.../streamlit_app.py` | Abre UI visual técnica | 1.5 |
+| `python scripts/run_diagnostics.py` | Diagnostica problemas | 2 |
+| `python scripts/run_scoring.py` | Prioriza oportunidades | 3 |
+| `python scripts/run_scenarios.py` | Compara escenarios | 4 |
+| `python scripts/run_optimization.py` | Asigna SKUs a zonas | 5 |
+| `python scripts/run_simulation.py` | Simula impacto operativo | 6 |
+| `python scripts/run_simulation.py --scenario-a` | Solo simula distancias | 6 |
+| `python -m pytest -v` | Ejecuta tests (~257) | — |
+| `python -m ruff check src tests scripts` | Revisa calidad de código | — |
+
+### Ejecutar todo de una
 
 ```powershell
 python scripts/generate_sample_data.py
@@ -1030,53 +485,164 @@ python scripts/run_scenarios.py
 python scripts/run_optimization.py
 python scripts/run_simulation.py
 
-# Y verificar que todo funciona
-python -m ruff check src tests scripts
+# Verificar
 python -m pytest -v
+python -m ruff check src tests scripts
 ```
 
-### Verificar que todo funciona
+---
+
+## Outputs — qué produce cada fase
+
+Después de ejecutar las 6 fases, la carpeta `data/processed/` contiene:
+
+| Archivo | Fase | Qué contiene |
+|---------|------|-------------|
+| `slotting_features.parquet` | 1 | Tabla ancha con features por SKU |
+| `location_utilization.csv` | 1 | % de utilización por ubicación |
+| `zone_utilization.csv` | 1 | Resumen de utilización por zona |
+| `slotting_diagnostics.csv` | 2 | Flags descriptivos por SKU |
+| `location_diagnostics.csv` | 2 | Diagnóstico de ubicaciones |
+| `zone_diagnostics.csv` | 2 | Diagnóstico de zonas |
+| `category_diagnostics.csv` | 2 | Indicadores de categorías |
+| `diagnostic_summary.csv` | 2 | Conteo de problemas detectados |
+| `slotting_opportunity_scores.csv` | 3 | Scores de oportunidad por acción |
+| `priority_recommendation_queue.csv` | 3 | **Cola ordenada de revisión** |
+| `scoring_summary.csv` | 3 | Métricas y configuración del scoring |
+| `scenario_comparison.csv` | 4 | Top-N recalculado por escenario |
+| `scenario_action_mix.csv` | 4 | Mezcla de acciones por escenario |
+| `scenario_summary.csv` | 4 | Métricas comparables entre escenarios |
+| `optimization_assignments.csv` | 5 | **Asignación SKU→zona candidata** |
+| `optimization_summary.csv` | 5 | Método usado y costo total |
+| `optimization_cost_matrix.csv` | 5 | Matriz de costos transparente |
+| `simulation_summary.csv` | 6 | Métricas resumen de simulación |
+| `simulation_travel_aggregate.csv` | 6 | Distancia/tiempo agregados |
+| `simulation_zone_impact.csv` | 6 | Picks por zona + Gini |
+| `simulation_throughput_scenarios.csv` | 6 | Órdenes/turno estimadas |
+| `simulation_order_detail.csv` | 6 | Desglose por orden individual |
+
+---
+
+## Frontend (Streamlit) — Cómo probar las herramientas visualmente
+
+**Sí, el proyecto tiene un frontend técnico.** Está construido con Streamlit y te permite explorar los outputs sin leer CSVs crudos.
+
+**Para ejecutarlo:**
 
 ```powershell
-# Tests (deberían dar ~257 pasados)
-python -m pytest -v
+# 1. Instalar dependencia opcional
+pip install -e ".[streamlit]"
 
-# Calidad de código
-python -m ruff check src tests scripts
+# 2. Ejecutar (requiere outputs de Fase 1)
+streamlit run src/slotting_optimization_engine/app/streamlit_app.py
 ```
 
-### ¿Y si algo falla?
+**Qué vas a ver:**
+- Tablas interactivas de SKUs con features
+- Utilización por ubicación y zona
+- Visualizaciones básicas (barras, heatmaps de zonas)
+- Filtros para explorar los datos
 
-- **"No such file or directory"**: Corré el paso anterior que genera ese archivo. Cada fase necesita los outputs de la anterior.
-- **Error de importación**: Activaste el entorno virtual? (`source .venv/bin/activate` o `.\.venv\Scripts\Activate.ps1`)
-- **Tests fallan**: Asegurate de haber corrido todos los pasos de la Phase 1 a la Phase 5 antes de los tests.
+**Prerequisito:** Haber ejecutado los scripts de Fase 1 (generar datos, validar, construir features).
 
-### Conceptos clave
+> ⚠️ **Nota importante:** Esta UI es técnica, no una aplicación de negocio final. Está pensada para que analistas y desarrolladores inspeccionen los datos procesados. No incluye autenticación, permisos ni workflows de aprobación.
+
+---
+
+## Limitaciones importantes — Qué NO hacer con esto
+
+- ❌ **No muevas SKUs automáticamente** basándote en los CSVs de salida
+- ❌ **No trates un score alto como una orden operativa** — es una recomendación, no una instrucción
+- ❌ **No interpretes la asignación de Fase 5 como solución óptima real** — es un prototipo matemático acotado
+- ❌ **No cambies layout, dotación o capacidad** sin validar con operación real
+- ❌ **No uses estos pesos como política de negocio** hasta confirmarlos con expertos del depósito
+- ❌ **No asumas que la simulación de Fase 6 es un estudio certificado** — no reemplaza un estudio de tiempos y movimientos
+- ❌ **No ejecutes movimientos de SKU automáticamente** usando `optimization_assignments.csv`
+
+Los datos actuales son **sintéticos** y los umbrales/pesos están marcados como `inferred / pending confirmation`. Eso es **deliberado**: sirve para aprender y auditar la lógica antes de convertirla en decisión de negocio.
+
+---
+
+## Conceptos clave (glosario)
 
 | Término | Significado |
 |---------|-------------|
-| **SKU** | Producto individual que se almacena y se vende |
-| **Slotting** | Decidir dónde ubicar cada SKU dentro del depósito |
-| **Zona** | Área del depósito (ej: picking, reserve, cross-dock) |
-| **Ubicación** | Estante/rack específico dentro de una zona |
-| **Gini** | Coeficiente que mide qué tan balanceada está la carga entre zonas (0 = perfecto) |
-| **Throughput** | Cantidad de órdenes que se pueden procesar por turno |
-| **Inferred / pending confirmation** | Los valores fueron estimados, no confirmados con operación real |
+| **SKU** | Stock Keeping Unit — producto individual que se almacena y se vende |
+| **Slotting** | Disciplina de decidir dónde ubicar cada SKU dentro del depósito |
+| **Zona** | Área del depósito (ej: picking, reserve, cross-dock, devoluciones) |
+| **Ubicación** | Estante, rack o posición específica dentro de una zona |
+| **Peso inferido (`inferred`)** | Valor estimado, no confirmado con operación real |
+| **Pendiente de confirmación (`pending confirmation`)** | Requiere validación con datos o expertos reales |
+| **Gini coefficient** | Medida de qué tan balanceada está la carga entre zonas (0 = equilibrio perfecto, 1 = concentración total) |
+| **Throughput** | Cantidad de órdenes que se pueden procesar por unidad de tiempo (ej: por turno) |
+| **Feature** | Señal analítica calculada a partir de datos crudos (ej: demanda diaria promedio por SKU) |
+| **Fallback greedy** | Algoritmo simple que asigna SKUs uno por uno al mejor slot disponible sin mirar el quadro completo |
+| **Parquet** | Formato de archivo columnar, más eficiente que CSV para datos tabulares grandes |
 
-### Limitaciones importantes
+---
 
-- Los datos actuales son **sintéticos** (no reales).
-- Los pesos y umbrales están marcados como `inferred / pending confirmation`.
-- **No** ejecutes movimientos de SKU automáticamente basándote en estos CSVs.
-- La simulación no reemplaza un estudio de tiempos y movimientos certificado.
+## Estructura del proyecto
 
-### ¿Y ahora?
+```
+slotting-optimization-engine/
+├── README.md                      # Este archivo
+├── pyproject.toml                 # Definición del paquete y dependencias
+├── data/
+│   ├── synthetic/                 # Datos generados (Phase 1)
+│   └── processed/                 # Outputs de todas las fases
+├── docs/
+│   ├── master_plan.md             # Plan maestro y trazabilidad
+│   ├── architecture_sdd.md        # Arquitectura técnica
+│   ├── data_contract.md           # Contratos de datos y validación
+│   ├── roadmap.md                 # Roadmap por fase
+│   ├── phase_notes/               # Documentación detallada por fase
+│   └── phase_logs/                # Logs de terminal de ejecución
+├── scripts/                       # Scripts CLI de cada fase
+├── src/
+│   └── slotting_optimization_engine/
+│       ├── config/                # Configuración central
+│       ├── data/                  # Generación, carga, validación
+│       ├── domain/                # Conceptos del dominio (SKU, zona, etc.)
+│       ├── features/              # Construcción de features analíticas
+│       ├── diagnostics/           # Diagnósticos descriptivos (Fase 2)
+│       ├── scoring/               # Scoring y priorización (Fase 3)
+│       ├── scenarios/             # Comparación de escenarios (Fase 4)
+│       ├── optimization/          # Asignación matemática (Fase 5)
+│       ├── simulation/            # Simulación operativa (Fase 6)
+│       ├── reporting/             # Reportes y resúmenes
+│       └── app/                   # Streamlit UI técnica (Fase 1.5)
+├── tests/
+│   ├── unit/                      # Tests unitarios
+│   └── integration/               # Tests de integración (futuro)
+└── notebooks/                     # Notebooks exploratorios
+```
 
-Una vez que entiendas el flujo, podés:
+---
 
-1. Reemplazar los datos sintéticos por datos reales de tu depósito.
-2. Ajustar los pesos y umbrales a tu operación.
-3. Usar los CSVs como insumo para decisiones con tu equipo operativo.
-4. Explorar el código fuente para entender cada módulo.
+## Documentación relacionada
 
-Para preguntas específicas, abrí un issue en GitHub o consultá la documentación en `docs/`.
+| Documento | Propósito |
+|-----------|----------|
+| `docs/master_plan.md` | Plan maestro del proyecto, alcance, decisiones y trazabilidad |
+| `docs/architecture_sdd.md` | Arquitectura técnica, responsabilidades de módulos, flujo de datos |
+| `docs/data_contract.md` | Entidades, campos, reglas de validación |
+| `docs/roadmap.md` | Roadmap fases 0–7 con estado de implementación |
+| `docs/phase_notes/phase_*` | Notas detalladas de cada fase (decisiones, outputs, evidencia) |
+| `docs/phase_logs/phase_*` | Logs de terminal con comandos ejecutados y resultados |
+
+---
+
+## Verificación y calidad de código
+
+```powershell
+# Ejecutar todos los tests (~257)
+python -m pytest -v
+
+# Revisar calidad de código
+python -m ruff check src tests scripts
+
+# Verificar tipos (opcional, requiere mypy)
+python -m mypy src --ignore-missing-imports
+```
+
+Todos los tests deben pasar antes de considerar los outputs como válidos para análisis.
