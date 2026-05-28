@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data files — generated or sensitive
+data/raw/*
+data/processed/*
+data/synthetic/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/synthetic/.gitkeep
+
+# Pytest
+.pytest_cache/
+htmlcov/
+
+# Ruff
+.ruff_cache/
+
+# Streamlit
+.streamlit/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Coverage
+coverage/
+coverage.xml
+.coverage
+# Local agent artifacts
+.atl/
+
+# Generated graph outputs
+graphify-out/
