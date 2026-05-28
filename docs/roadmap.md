@@ -14,7 +14,8 @@
 | 1-D | Phase 1 documentation & traceability | ✅ **Completed** | Phase notes, logs, contract updates, data governance docs |
 | 1.5 | Minimal Streamlit technical front-end | ✅ **Completed** | Dataset inspection, KPIs, basic visualisations |
 | 1.5-D | Phase 1.5 documentation & traceability | ✅ **Completed** | Phase notes, logs, README, architecture, design docs |
-| 2 | Advanced slotting diagnostics | 🔜 Future | SKU–location misalignment, zone analysis, density diagnostics |
+| 2 | Advanced slotting diagnostics | ✅ **Completed** | Descriptive SKU placement, zone, location, category, and capacity diagnostics |
+| 2-D | Phase 2 documentation & traceability | ✅ **Completed** | Phase notes, logs, contracts, data governance docs, Graphify evidence |
 | 3 | Prescriptive scoring and prioritisation | 🔜 Future | Scoring models, prioritisation rules |
 | 4 | Scenario/model comparison | 🔜 Future | What-if modelling, alternative slotting evaluation |
 | 5 | Mathematical optimisation | 🔜 Future | OR-Tools/Pyomo, zone resizing, SKU relocation |
@@ -77,6 +78,22 @@
 - [x] `docs/phase_notes/phase_1_5_streamlit_front.md` — Phase note and evidence
 - [x] `docs/phase_logs/phase_1_5_terminal_log.md` — Terminal log with verification and Graphify use
 - [x] `docs/master_plan.md` — Updated with Phase 1.5 completion
+
+### Phase 2 — Complete
+
+- [x] `src/slotting_optimization_engine/diagnostics/rules.py` — Descriptive diagnostic rules and CSV output writer
+- [x] `scripts/run_diagnostics.py` — CLI entrypoint for Phase 2 outputs
+- [x] `data/processed/slotting_diagnostics.csv` — SKU-level descriptive diagnostic flags
+- [x] `data/processed/location_diagnostics.csv` — Location utilization, density, and category-mix diagnostics
+- [x] `data/processed/zone_diagnostics.csv` — Zone utilization and premium-zone slow-mover diagnostics
+- [x] `data/processed/category_diagnostics.csv` — Category spread and grouping indicators
+- [x] `data/processed/diagnostic_summary.csv` — Summary counts and threshold notes
+- [x] `tests/unit/test_diagnostics_rules.py` — Unit and script-level missing-input tests
+- [x] `tests/unit/test_project_structure.py` — Updated required files
+- [x] `src/slotting_optimization_engine/app/dashboard_data.py` — Low-risk diagnostic output availability support
+- [x] `src/slotting_optimization_engine/app/streamlit_app.py` — Diagnostic summary preview only
+- [x] `docs/phase_notes/phase_2_diagnostics.md` — Phase 2 decisions and evidence
+- [x] `docs/phase_logs/phase_2_terminal_log.md` — Terminal log with verification and Graphify use
 
 ## Legend
 

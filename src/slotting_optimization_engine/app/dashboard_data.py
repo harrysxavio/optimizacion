@@ -24,12 +24,18 @@ EXPECTED_OUTPUT_FILES: dict[str, str] = {
     "SKU features": "slotting_features.parquet",
     "Location utilization": "location_utilization.csv",
     "Zone utilization": "zone_utilization.csv",
+    "Slotting diagnostics": "slotting_diagnostics.csv",
+    "Location diagnostics": "location_diagnostics.csv",
+    "Zone diagnostics": "zone_diagnostics.csv",
+    "Category diagnostics": "category_diagnostics.csv",
+    "Diagnostic summary": "diagnostic_summary.csv",
 }
 
 PREREQUISITE_COMMANDS: tuple[str, ...] = (
     "python scripts/generate_sample_data.py",
     "python scripts/run_data_validation.py",
     "python scripts/build_features.py",
+    "python scripts/run_diagnostics.py",
 )
 
 
@@ -52,6 +58,11 @@ class DashboardData:
     sku_features: pd.DataFrame | None
     location_utilization: pd.DataFrame | None
     zone_utilization: pd.DataFrame | None
+    slotting_diagnostics: pd.DataFrame | None
+    location_diagnostics: pd.DataFrame | None
+    zone_diagnostics: pd.DataFrame | None
+    category_diagnostics: pd.DataFrame | None
+    diagnostic_summary: pd.DataFrame | None
     statuses: tuple[DatasetStatus, ...]
 
 
@@ -107,6 +118,11 @@ def load_dashboard_data(processed_dir: Path | None = None) -> DashboardData:
         sku_features=loaded["SKU features"],
         location_utilization=loaded["Location utilization"],
         zone_utilization=loaded["Zone utilization"],
+        slotting_diagnostics=loaded["Slotting diagnostics"],
+        location_diagnostics=loaded["Location diagnostics"],
+        zone_diagnostics=loaded["Zone diagnostics"],
+        category_diagnostics=loaded["Category diagnostics"],
+        diagnostic_summary=loaded["Diagnostic summary"],
         statuses=tuple(statuses),
     )
 

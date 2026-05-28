@@ -31,7 +31,7 @@ def main() -> None:
 
     st.title("Slotting Control Tower")
     st.caption(
-        "Technical Phase 1.5 inspection front for processed slotting outputs. "
+        "Technical inspection front for processed slotting outputs. "
         "This view is descriptive only and does not generate recommendations."
     )
 
@@ -76,6 +76,10 @@ def main() -> None:
     st.subheader("SKU feature preview")
     st.caption("Bounded preview of the wide feature table generated in Phase 1.")
     st.dataframe(preview_table(data.sku_features, rows=50), use_container_width=True)
+
+    st.subheader("Diagnostics availability")
+    st.caption("Phase 2 diagnostic outputs are descriptive flags for analyst review only.")
+    st.dataframe(preview_table(data.diagnostic_summary), use_container_width=True)
 
 
 def _render_kpis(kpis: dict[str, int | float | None]) -> None:

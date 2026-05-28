@@ -39,3 +39,15 @@ Records of data operations executed against the project datasets.
 **Sources:** `data/synthetic/*.csv` → `data/processed/*`
 
 **Results:** See `docs/phase_logs/phase_1_terminal_log.md` for full output.
+
+---
+
+## 2026-05-27 — Phase 2 diagnostic generation
+
+**Action:** Built descriptive slotting diagnostics from Phase 1 processed outputs and validated synthetic placement context.
+
+**Command:** `python scripts/run_diagnostics.py`
+
+**Sources:** `data/processed/slotting_features.parquet`, `data/processed/location_utilization.csv`, `data/processed/zone_utilization.csv`, and read-only `data/synthetic/*.csv` for placement/category context.
+
+**Results:** Wrote `slotting_diagnostics.csv`, `location_diagnostics.csv`, `zone_diagnostics.csv`, `category_diagnostics.csv`, and `diagnostic_summary.csv` to `data/processed/`. See `docs/phase_logs/phase_2_terminal_log.md`.

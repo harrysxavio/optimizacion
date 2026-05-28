@@ -35,6 +35,11 @@ def test_compute_kpis_from_loaded_outputs() -> None:
             "over_capacity": [False, True, False],
         }),
         zone_utilization=pd.DataFrame({Zones.ZONE_ID: ["Z-1", "Z-2"]}),
+        slotting_diagnostics=None,
+        location_diagnostics=None,
+        zone_diagnostics=None,
+        category_diagnostics=None,
+        diagnostic_summary=None,
         statuses=(),
     )
 

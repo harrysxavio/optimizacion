@@ -1,7 +1,7 @@
 # Architecture — Slotting Optimization Engine
 
-**Version:** 0.3.0  
-**Status:** Phase 1.5 — Technical inspection UI implemented  
+**Version:** 0.4.0  
+**Status:** Phase 2 — Descriptive diagnostics implemented  
 **Last updated:** 2026-05-27
 
 ---
@@ -28,7 +28,7 @@ The engine follows a **modular layered architecture** designed for incremental e
 | `domain` | Business entities (SKU, Zone, Location, Inventory) | Placeholder stub | Pydantic models, domain services, business invariants |
 | `data` | Generation, loading, validation | Placeholder stub | Synthetic data, pandera schemas, CSV/Parquet I/O |
 | `features` | Derived analytical features | Placeholder stub | Demand, rotation, utilisation, distance indicators |
-| `diagnostics` | Slotting quality diagnostics | Placeholder stub (Phase 2) | Misalignment detection, zone analysis |
+| `diagnostics` | Slotting quality diagnostics | Implemented in Phase 2 | Descriptive diagnostic flags; prescriptive recommendations remain deferred |
 | `optimization` | Mathematical optimisation models | Placeholder stub (Phase 5) | OR-Tools/Pyomo, zone resizing, SKU relocation |
 | `simulation` | Operational impact simulation | Placeholder stub (Phase 6) | Labour modelling, what-if scenarios |
 | `reporting` | Output generation and summaries | Placeholder stub | PDF/Excel, BI exports |
@@ -36,7 +36,7 @@ The engine follows a **modular layered architecture** designed for incremental e
 
 ---
 
-## 3. Data flow (implemented through Phase 1.5)
+## 3. Data flow (implemented through Phase 2)
 
 ```text
 Synthetic/raw data (CSV)
@@ -66,14 +66,14 @@ Synthetic/raw data (CSV)
     │   Analytical dataset │  (data/processed/)
     └─────────┬───────────┘
               │
-       ┌──────┴──────┐
-       ▼             ▼
-  diagnostics    app/dashboard_data.py
-  (Phase 2+)    pure loading/KPI helpers
-                       │
-                       ▼
-               app/streamlit_app.py
-               technical inspection UI
+        ┌──────┴───────────────┐
+        ▼                      ▼
+ diagnostics/rules.py    app/dashboard_data.py
+ descriptive flags       pure loading/KPI helpers
+        │                      │
+        ▼                      ▼
+ data/processed/*       app/streamlit_app.py
+ diagnostic CSVs        technical inspection UI
 ```
 
 ---
@@ -90,6 +90,7 @@ Synthetic/raw data (CSV)
 | UI framework | Streamlit (planned for Phase 1.5) | Fastest path to a visual interface for technical users |
 | UI logic split | `dashboard_data.py` owns loading/status/KPI helpers; `streamlit_app.py` renders only | Keeps business and data inspection logic out of the Streamlit script |
 | UI design system | `docs/DESIGN.md` | Documents the operational control-tower aesthetic and prevents arbitrary visual drift |
+| Diagnostics scope | `diagnostics/rules.py` produces flags and evidence, not recommendations | Phase 2 must remain descriptive and avoid Phase 3 scoring/optimization behavior |
 | Solver | Deferred | OR-Tools, Pyomo, scipy — decision blocked until Phase 5 requirements are clear |
 
 ---
@@ -102,6 +103,7 @@ Synthetic/raw data (CSV)
 | Structure tests | pytest | Package imports, expected files/dirs | Phase 0 |
 | Integration tests | pytest | Cross-module data pipeline | Phase 1+ |
 | Manual verification | Streamlit inspection | Visual data quality check | Phase 1.5+ |
+| CLI verification | `scripts/run_diagnostics.py` | Diagnostic output generation | Phase 2 |
 
 ### Phase 0 tests
 
@@ -120,7 +122,8 @@ The following architectural items are intentionally deferred:
 - **API layer**: No FastAPI/Flask in the first cycle. The Streamlit app is the only interface.
 - **Database connectors**: All data in Phase 1 comes from CSV. Real WMS/ERP connectors are Phase 7.
 - **Authentication/authorization**: Deferred to Phase 7.
-- **Production application UX**: Phase 1.5 is a technical inspection surface only; diagnostics, recommendations, scenario simulation, auth, and deployment remain deferred.
+- **Production application UX**: The app remains a technical inspection surface only; recommendations, scenario simulation, auth, and deployment remain deferred.
+- **Prescriptive scoring**: Phase 2 diagnostics are descriptive flags only. Scoring, prioritization, scenario comparison, mathematical optimization, and simulation remain deferred.
 
 ---
 

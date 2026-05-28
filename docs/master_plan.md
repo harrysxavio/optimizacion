@@ -1,10 +1,10 @@
 # Master Plan — slotting-optimization-engine
 
 **Project:** `slotting-optimization-engine`  
-**Plan version:** `v0.2.0`  
+**Plan version:** `v0.4.0`  
 **Last updated:** 2026-05-27  
-**Status:** Phase 0, Phase 0-D, Phase 1, Phase 1-D, Phase 1.5, and Phase 1.5-D completed.  
-**Scope of this update:** Phase 1.5 technical Streamlit front and Phase 1.5-D documentation.
+**Status:** Phase 0, Phase 0-D, Phase 1, Phase 1-D, Phase 1.5, Phase 1.5-D, Phase 2, and Phase 2-D completed.  
+**Scope of this update:** Phase 2 advanced descriptive diagnostics and Phase 2-D documentation.
 
 ---
 
@@ -60,6 +60,8 @@ Only the following phases are in scope for the first implementation cycle:
 | 1-D | Documentation, explanation, and traceability for Phase 1 | In scope | Completed |
 | 1.5 | Minimal technical Streamlit front | In scope | Completed |
 | 1.5-D | Documentation, explanation, and traceability for Phase 1.5 | In scope | Completed |
+| 2 | Advanced slotting diagnostics | In scope | Completed |
+| 2-D | Documentation, explanation, and traceability for Phase 2 | In scope | Completed |
 
 Phase 0 (design, architecture, base docs) and Phase 0-D (documentation and traceability) have been completed. No functional implementation beyond project structure and configuration was performed.
 
@@ -71,7 +73,6 @@ The following capabilities are intentionally deferred and must not be implemente
 
 | Future phase | Capability | Status |
 |---|---|---|
-| 2 | Advanced slotting diagnostics | Future |
 | 3 | Prescriptive scoring and prioritization | Future |
 | 4 | Scenario/model comparison | Future |
 | 5 | Mathematical optimization | Future |
@@ -86,7 +87,7 @@ Deferred capabilities include advanced recommendations, real optimization, simul
 
 | Principle | Decision |
 |---|---|
-| Controlled scope | Implement only Phases 0, 1, and 1.5 in the first cycle. |
+| Controlled scope | Implement only the currently requested phase; Phase 2 is descriptive diagnostics only. |
 | Modular architecture | Keep data, domain, features, diagnostics, optimization, simulation, reporting, and app concerns separated. |
 | Production evolution | Start simple, but avoid structures that block future production hardening. |
 | Traceability | Every relevant decision must update this master plan. |
@@ -176,7 +177,7 @@ Future diagnostics, scenarios, optimization, simulation, recommendations
 | `domain` | Business/domain concepts | SKU, zone, location concepts and future domain rules. |
 | `data` | Data generation, loading, validation | Synthetic data and contract validation. |
 | `features` | Analytical feature construction | Initial demand, rotation, utilization, and density features. |
-| `diagnostics` | Slotting diagnostics | Future stub only in first cycle. |
+| `diagnostics` | Slotting diagnostics | Descriptive diagnostic flags and CSV outputs. |
 | `optimization` | Mathematical optimization | Future stub only in first cycle. |
 | `simulation` | Operational simulation | Future stub only in first cycle. |
 | `reporting` | Outputs and summaries | Basic reusable summaries if needed. |
@@ -366,6 +367,44 @@ This ensures validation never silently degrades.
 - `docs/roadmap.md`
 - `docs/DESIGN.md`
 
+### Phase 2 — Advanced slotting diagnostics
+
+**Goal:** Produce descriptive slotting quality diagnostics from Phase 1 outputs without creating recommendations, prescriptive scores, scenarios, optimization, simulation, auth, deploy, or a final business app.
+
+**Expected deliverables:**
+
+- `src/slotting_optimization_engine/diagnostics/rules.py`
+- `scripts/run_diagnostics.py`
+- CSV diagnostic outputs under `data/processed/`
+- Unit tests for diagnostic functions and practical script behavior
+- Low-risk dashboard availability/preview support only
+
+**Acceptance criteria:**
+
+- Detect high-demand SKUs with long-distance or low-priority placement.
+- Detect low-demand/slow-rotation SKUs occupying premium zones.
+- Detect overutilized and underutilized zones/locations.
+- Detect category spread/misgrouping indicators when fields exist.
+- Detect capacity/density concerns using utilization outputs.
+- Mark all thresholds/business rules as `inferred / pending confirmation`.
+- Keep outputs descriptive and non-prescriptive.
+
+### Phase 2-D — Documentation and traceability
+
+**Required updates:**
+
+- `docs/master_plan.md`
+- `README.md`
+- `docs/data_contract.md`
+- `docs/data/dataset-index.md`
+- `docs/data/business-knowledge.md`
+- `docs/data/query-log.md`
+- `docs/data/synthetic/learnings.md`
+- `docs/phase_notes/phase_2_diagnostics.md`
+- `docs/phase_logs/phase_2_terminal_log.md`
+- `docs/architecture_sdd.md`
+- `docs/roadmap.md`
+
 ---
 
 ## 12. Required phase-note template
@@ -431,12 +470,13 @@ If a command cannot be executed, the log must explicitly say so.
 | `docs/phase_logs/phase_0_terminal_log.md` | Created. Phase 0 setup and structure tests were executed and recorded. |
 | `docs/phase_logs/phase_1_terminal_log.md` | Created. Phase 1 generation, validation, feature build, lint, and tests were executed and recorded. |
 | `docs/phase_logs/phase_1_5_terminal_log.md` | Created. Phase 1.5 feature build, lint, tests, smoke import, Streamlit dependency check, and Graphify commands were recorded. |
+| `docs/phase_logs/phase_2_terminal_log.md` | Created. Phase 2 diagnostics, lint, tests, and Graphify commands were recorded. |
 
 ---
 
 ## 14. Planned commands
 
-These commands describe the standard project workflow. Phase 0, Phase 1, and Phase 1.5 verification commands were executed and recorded in their phase logs.
+These commands describe the standard project workflow. Phase 0, Phase 1, Phase 1.5, and Phase 2 verification commands were executed and recorded in their phase logs.
 
 ### Environment setup
 
@@ -479,6 +519,12 @@ pytest
 
 ```bash
 streamlit run src/slotting_optimization_engine/app/streamlit_app.py
+```
+
+### Run descriptive diagnostics
+
+```bash
+python scripts/run_diagnostics.py
 ```
 
 ---
@@ -529,14 +575,15 @@ The code should be understandable to someone learning Python without sacrificing
 
 | Document | Purpose | Status |
 |---|---|---|
-| `docs/master_plan.md` | Living project guide and traceability source | Updated (Phase 1.5) |
-| `README.md` | Project usage and quick start | Updated (Phase 1.5) |
-| `docs/architecture_sdd.md` | Technical architecture and SDD decisions | Updated (Phase 1.5) |
-| `docs/data_contract.md` | Data entities, fields, validations, assumptions | Updated (Phase 1 — finalised) |
-| `docs/roadmap.md` | Detailed project roadmap | Updated (Phase 1.5) |
+| `docs/master_plan.md` | Living project guide and traceability source | Updated (Phase 2) |
+| `README.md` | Project usage and quick start | Updated (Phase 2) |
+| `docs/architecture_sdd.md` | Technical architecture and SDD decisions | Updated (Phase 2) |
+| `docs/data_contract.md` | Data entities, fields, validations, assumptions, diagnostic schemas | Updated (Phase 2) |
+| `docs/roadmap.md` | Detailed project roadmap | Updated (Phase 2) |
 | `docs/phase_notes/phase_0_design_and_setup.md` | Phase 0 explanation and evidence | Created (Phase 0) |
 | `docs/phase_notes/phase_1_data_pipeline.md` | Phase 1 explanation and evidence | Created (Phase 1) |
 | `docs/phase_notes/phase_1_5_streamlit_front.md` | Phase 1.5 explanation and evidence | Created (Phase 1.5) |
+| `docs/phase_notes/phase_2_diagnostics.md` | Phase 2 explanation and evidence | Created (Phase 2) |
 | `docs/DESIGN.md` | Lightweight technical UI design system | Created (Phase 1.5) |
 | `docs/data/README.md` | Data documentation overview | Created (Phase 1) |
 | `docs/data/dataset-index.md` | All datasets with schemas and lineage | Created (Phase 1) |
@@ -571,15 +618,15 @@ The code should be understandable to someone learning Python without sacrificing
 | 2026-05-27 | v0.1.1 | Added Ruff verification to Phase 0 and documented the test-only `S101` exception for pytest assertions | Manager verification found lint issues after the initial Phase 0 apply | Phase 0 now passes both structure tests and lint checks |
 | 2026-05-27 | v0.2.0 | Implemented Phase 1 and Phase 1-D: synthetic data generator, validation, loading, feature builder, scripts, tests, data governance docs, terminal log | User requested Phase 1 implementation after Phase 0 was verified | Delivers the complete Phase 1 data pipeline with 6 synthetic datasets and 7 feature builders |
 | 2026-05-27 | v0.3.0 | Implemented Phase 1.5 and Phase 1.5-D: technical Streamlit front, dashboard helpers, UI design system, tests, docs, terminal log, and Graphify update/query evidence | User requested only Phase 1.5 after Phase 1 was completed and verified | Delivers a minimal descriptive UI for inspecting Phase 1 processed outputs without adding diagnostics, optimization, simulation, auth, or deployment |
+| 2026-05-27 | v0.4.0 | Implemented Phase 2 and Phase 2-D: descriptive diagnostics module, CLI, diagnostic CSV outputs, tests, data governance docs, terminal log, and Graphify update/query evidence | User requested only Phase 2 advanced slotting diagnostics and explicitly excluded prescriptive/optimization phases | Delivers descriptive diagnostic outputs while keeping Phase 3+ capabilities deferred |
 
 ---
 
 ## 20. Next steps
 
-1. Manager verification of Phase 1.5 implementation, docs, and logs.
-2. Install optional Streamlit dependency with `pip install -e ".[streamlit]"` if runtime UI launch is required locally.
-3. Launch `streamlit run src/slotting_optimization_engine/app/streamlit_app.py` for manual browser inspection.
-4. Keep Phase 2 limited to advanced diagnostics only after Phase 1.5 is accepted.
+1. Manager verification of Phase 2 implementation, docs, logs, and Graphify update/query evidence.
+2. Review inferred thresholds with business users before any Phase 3 scoring work.
+3. Keep Phase 3 limited to prescriptive scoring only if explicitly requested after Phase 2 acceptance.
 
 ---
 
@@ -587,16 +634,18 @@ The code should be understandable to someone learning Python without sacrificing
 
 | Item | Status |
 |---|---|---|
-| Master plan Markdown file | Updated through Phase 1.5 |
-| Project code | Created — Phase 1 data pipeline and Phase 1.5 technical UI complete |
-| Project commands | Phase 1.5 verification commands executed and recorded |
+| Master plan Markdown file | Updated through Phase 2 |
+| Project code | Created — Phase 1 data pipeline, Phase 1.5 technical UI, and Phase 2 diagnostics complete |
+| Project commands | Phase 2 verification commands executed and recorded |
 | Phase 0 implementation | Completed |
 | Phase 0-D documentation | Completed |
 | Phase 1 implementation | Completed |
 | Phase 1-D documentation | Completed |
 | Phase 1.5 implementation | Completed |
 | Phase 1.5-D documentation | Completed |
-| Terminal logs | Created — Phase 0, Phase 1, and Phase 1.5 |
+| Phase 2 implementation | Completed |
+| Phase 2-D documentation | Completed |
+| Terminal logs | Created — Phase 0, Phase 1, Phase 1.5, and Phase 2 |
 
 ---
 

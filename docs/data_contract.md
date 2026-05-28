@@ -1,7 +1,7 @@
 # Data Contract — Slotting Optimization Engine
 
-**Status:** FINALISED — Phase 1 implementation complete.  
-**Purpose:** Define data entities, fields, validation rules, and file formats for the Phase 1 data pipeline.  
+**Status:** FINALISED — Phase 2 diagnostics added.  
+**Purpose:** Define data entities, fields, validation rules, file formats, and diagnostic output schemas.  
 **Last updated:** 2026-05-27
 
 ---
@@ -134,10 +134,57 @@ All validation functions are in `src/slotting_optimization_engine/data/validatio
 | All synthetic source data | CSV | `data/synthetic/*.csv` | No |
 | Slotting features | Parquet | `data/processed/slotting_features.parquet` | Yes (built-in) |
 | Location/zone utilisation | CSV | `data/processed/*.csv` | No |
+| Diagnostic outputs | CSV | `data/processed/*_diagnostics.csv`, `diagnostic_summary.csv` | No |
 
 ---
 
-## 5. Assumptions
+## 5. Phase 2 diagnostic output schemas
+
+All diagnostic thresholds are `inferred / pending confirmation`. Outputs are descriptive only and do not contain recommended moves, scores for prioritization, optimization decisions, or simulation results.
+
+### 5.1 Slotting Diagnostics (`slotting_diagnostics.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `sku_id`, `category`, `rotation_class` | SKU identifiers and taxonomy copied from Phase 1 features |
+| `total_demand`, `order_count` | Phase 1 demand features |
+| `location_count`, `zone_count` | Count of current SKU placements from validated synthetic inventory/location context |
+| `distance_to_dispatch`, `priority_level`, `min_priority_level` | Current placement distance/priority evidence |
+| `high_demand_threshold`, `low_demand_threshold`, `long_distance_threshold` | Inferred threshold values used for flags |
+| `is_high_demand`, `is_low_demand_or_rotation` | Demand/rotation classification indicators |
+| `has_long_distance_placement`, `has_low_priority_placement`, `occupies_premium_zone` | Placement condition flags |
+| `high_demand_poor_placement_flag` | Descriptive flag for high demand SKUs in long-distance or low-priority placements |
+| `low_demand_premium_zone_flag` | Descriptive flag for low-demand/slow-rotation SKUs occupying premium zones |
+| `diagnostic_count`, `diagnostic_severity` | Count and label for number of triggered descriptive flags |
+| `business_rule_state` | Always `inferred / pending confirmation` for Phase 2 |
+
+### 5.2 Location Diagnostics (`location_diagnostics.csv`)
+
+Includes Phase 1 location utilization fields plus `category_count`, `assigned_sku_count`, `total_location_demand`, `avg_utilization_pct`, `overutilized_flag`, `underutilized_flag`, `density_concern_flag`, `category_mix_flag`, `diagnostic_count`, and `business_rule_state`.
+
+### 5.3 Zone Diagnostics (`zone_diagnostics.csv`)
+
+Includes Phase 1 zone utilization fields plus `assigned_sku_count`, `low_demand_sku_count`, `slow_rotation_sku_count`, `avg_utilization_pct`, `overutilized_zone_flag`, `underutilized_zone_flag`, `premium_zone_slow_mover_flag`, and `business_rule_state`.
+
+### 5.4 Category Diagnostics (`category_diagnostics.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `category` | SKU category |
+| `zone_count`, `location_count`, `sku_count` | Spread and placement counts |
+| `total_demand` | Demand represented by category placements |
+| `top_zone_sku_share` | Share of category SKUs in the most represented zone |
+| `category_spread_flag` | Category spans at least the inferred zone-count threshold |
+| `category_misgrouping_indicator` | Category is spread and lacks dominant-zone concentration |
+| `business_rule_state` | `inferred / pending confirmation` |
+
+### 5.5 Diagnostic Summary (`diagnostic_summary.csv`)
+
+One row per diagnostic metric with `metric`, `value`, `business_rule_state`, and `threshold_note`.
+
+---
+
+## 6. Assumptions
 
 1. **Synthetic data only**: Phase 1 uses generated data that follows known distributions. Real data is not available.
 2. **CSV as exchange format**: Source data is stored and loaded from CSV files. Parquet is used for feature outputs.
@@ -145,10 +192,11 @@ All validation functions are in `src/slotting_optimization_engine/data/validatio
 4. **Single DC model**: The initial engine models a single distribution center.
 5. **Metric units**: Volume in cubic centimeters; weight in kilograms.
 6. **Deterministic generation**: All synthetic data is reproducible with seed=42.
+7. **Diagnostic thresholds pending confirmation**: Phase 2 uses simple quantile and utilization thresholds for review only.
 
 ---
 
-## 6. Open questions (resolved)
+## 7. Open questions (resolved)
 
 | Question | Resolution |
 |----------|-----------|

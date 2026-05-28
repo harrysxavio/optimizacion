@@ -1,12 +1,21 @@
-"""
-diagnostics — Slotting diagnostics module.
+"""Descriptive slotting diagnostics for Phase 2."""
 
-FUTURE STUB — Phase 2 scope.
-This module will analyse slotting quality:
-    - SKU-location misalignment detection.
-    - Overused and underused zone identification.
-    - Category grouping quality.
-    - Density, volume, and weight utilisation analysis.
+from slotting_optimization_engine.diagnostics.rules import (
+    DiagnosticConfig,
+    build_all_diagnostics,
+    build_category_diagnostics,
+    build_location_diagnostics,
+    build_slotting_diagnostics,
+    build_zone_diagnostics,
+    save_diagnostics,
+)
 
-No functional logic is implemented in the first cycle.
-"""
+__all__ = [
+    "DiagnosticConfig",
+    "build_all_diagnostics",
+    "build_category_diagnostics",
+    "build_location_diagnostics",
+    "build_slotting_diagnostics",
+    "build_zone_diagnostics",
+    "save_diagnostics",
+]

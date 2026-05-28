@@ -1,7 +1,7 @@
 # Business Knowledge — Slotting Optimization Engine
 
 **Last updated:** 2026-05-27  
-**Status:** Active (Phase 1)
+**Status:** Active (Phase 2)
 
 All rules are marked with their current state per the project governance policy.
 
@@ -57,6 +57,12 @@ All rules are marked with their current state per the project governance policy.
 | Alignment score thresholds (top 20% demand, median distance) are arbitrary and dataset-dependent | `inferred / pending confirmation` |
 | ⚠️ Alignment score is NON-PRESCRIPTIVE — it flags patterns for human review, not automated decisions | `technical pattern` |
 | Utilisation is capped at 100% for reporting; over-capacity is flagged separately | `technical pattern` |
+| Phase 2 high-demand threshold uses the 80th percentile of `total_demand` | `inferred / pending confirmation` |
+| Phase 2 low-demand threshold uses the 20th percentile of `total_demand` | `inferred / pending confirmation` |
+| Phase 2 long-distance threshold uses the 75th percentile of placement distance | `inferred / pending confirmation` |
+| Premium zones are priority level <= 2 for diagnostic review | `inferred / pending confirmation` |
+| Low-priority placement is priority level >= 3 for diagnostic review | `inferred / pending confirmation` |
+| Overutilized locations/zones are avg utilization >= 85%; underutilized are <= 20% | `inferred / pending confirmation` |
 
 ### Capacity and Utilisation
 
@@ -76,6 +82,9 @@ All rules are marked with their current state per the project governance policy.
 | Volume utilisation % | (occupied_volume / max_volume_capacity) × 100 | `features.builder.build_location_utilization` |
 | Weight utilisation % | (occupied_weight / max_weight_capacity) × 100 | `features.builder.build_location_utilization` |
 | SKU count per location | Distinct SKUs assigned to a location | `features.builder.build_location_utilization` |
+| High-demand poor placement count | SKUs above inferred demand threshold with long-distance or low-priority placement | `diagnostics.rules.build_slotting_diagnostics` |
+| Low-demand premium-zone count | Low-demand or slow-rotation SKUs occupying inferred premium zones | `diagnostics.rules.build_slotting_diagnostics` |
+| Category spread indicator | Category spans multiple zones without dominant concentration | `diagnostics.rules.build_category_diagnostics` |
 
 ---
 
