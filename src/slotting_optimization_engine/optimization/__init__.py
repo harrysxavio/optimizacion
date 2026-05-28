@@ -1,12 +1,25 @@
-"""
-optimization — Mathematical optimization models.
+"""Controlled mathematical optimization prototypes."""
 
-FUTURE STUB — Phase 5 scope.
-This module will implement optimisation models:
-    - Zone resizing recommendations.
-    - SKU relocation optimisation.
-    - Scenario comparison.
-    - OR-Tools, Pyomo, or scipy solvers (decision deferred).
+from slotting_optimization_engine.optimization.assignment import (
+    OPTIMIZATION_CAVEAT,
+    AssignmentConfig,
+    build_assignment_cost_matrix,
+    build_optimization_outputs,
+    build_optimization_summary,
+    load_optimization_inputs,
+    save_optimization_outputs,
+    select_candidate_skus,
+    solve_assignment,
+)
 
-No functional logic is implemented in the first cycle.
-"""
+__all__ = [
+    "OPTIMIZATION_CAVEAT",
+    "AssignmentConfig",
+    "build_assignment_cost_matrix",
+    "build_optimization_outputs",
+    "build_optimization_summary",
+    "load_optimization_inputs",
+    "save_optimization_outputs",
+    "select_candidate_skus",
+    "solve_assignment",
+]

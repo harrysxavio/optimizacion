@@ -73,3 +73,6 @@ over_capacity = occupied > capacity
 | Prioritization can look like recommendation if labels are ambiguous | Scoring | Use `review_*` candidate action labels and repeat that scores are not optimal move recommendations |
 | Inferred weights can become hidden business policy | Scoring | Store weights in a dataclass config and copy `inferred / pending confirmation` into outputs and docs |
 | Scenario comparison can be confused with optimization | Scenarios | Use explicit `scenario_note` caveats and keep outputs limited to top-N what-if metrics, not target locations or executable moves |
+| Min-max normalization inside a top-N candidate set can distort demand | Optimization | Normalize demand against maximum demand instead of subtracting the selected-set minimum, so all high-demand SKUs remain meaningfully costly to place far away |
+| Solver availability can vary by active Python environment | Optimization | Add SciPy to project dependencies, but keep a deterministic `greedy_fallback` and record `solver_method` in every output |
+| Zone-level assignment can be mistaken for physical slot feasibility | Optimization | Use `target_zone_slot` only as a logical solver slot and repeat caveats in outputs and docs |

@@ -1,7 +1,7 @@
 # Data Contract — Slotting Optimization Engine
 
-**Status:** FINALISED — Phase 4 scenario/model comparison added.  
-**Purpose:** Define data entities, fields, validation rules, file formats, diagnostic output schemas, scoring output schemas, and scenario output schemas.  
+**Status:** FINALISED — Phase 5 controlled optimization outputs added.  
+**Purpose:** Define data entities, fields, validation rules, file formats, diagnostic output schemas, scoring output schemas, scenario output schemas, and optimization output schemas.  
 **Last updated:** 2026-05-28
 
 ---
@@ -137,6 +137,7 @@ All validation functions are in `src/slotting_optimization_engine/data/validatio
 | Diagnostic outputs | CSV | `data/processed/*_diagnostics.csv`, `diagnostic_summary.csv` | No |
 | Scoring outputs | CSV | `data/processed/slotting_opportunity_scores.csv`, `priority_recommendation_queue.csv`, `scoring_summary.csv` | No |
 | Scenario outputs | CSV | `data/processed/scenario_comparison.csv`, `scenario_action_mix.csv`, `scenario_summary.csv` | No |
+| Optimization outputs | CSV | `data/processed/optimization_assignments.csv`, `optimization_summary.csv`, `optimization_cost_matrix.csv` | No |
 
 ---
 
@@ -197,6 +198,7 @@ One row per diagnostic metric with `metric`, `value`, `business_rule_state`, and
 7. **Diagnostic thresholds pending confirmation**: Phase 2 uses simple quantile and utilization thresholds for review only.
 8. **Scoring weights pending confirmation**: Phase 3 weights are transparent, inferred, and not approved business policy.
 9. **Scenario lenses pending confirmation**: Phase 4 scenario weights and top-N settings are analytical assumptions, not operating policy.
+10. **Optimization weights pending confirmation**: Phase 5 costs and zone-slot limits are inferred and must not be treated as approved warehouse policy.
 
 ---
 
@@ -271,7 +273,41 @@ One row per scenario with selected count, top-N, total weighted opportunity, ave
 
 ---
 
-## 9. Open questions (resolved)
+## 9. Phase 5 optimization output schemas
+
+All Phase 5 optimization outputs are `inferred / pending confirmation`. They are a controlled mathematical prototype over synthetic data and do not contain executable move tasks, WMS/ERP integrations, simulation results, or guaranteed feasible physical locations.
+
+### 9.1 Optimization Assignments (`optimization_assignments.csv`)
+
+One row per selected SKU assignment to a target zone slot.
+
+| Field | Description |
+|-------|-------------|
+| `assignment_rank` | 1-based order returned by the assignment method |
+| `sku_id` | Selected SKU from the Phase 3 priority queue |
+| `target_zone_id` | Candidate target zone, not a physical location |
+| `target_zone_slot` | Logical expanded zone slot used only to allow rectangular assignment |
+| `candidate_action`, `opportunity_score` | Phase 3 review context copied for traceability |
+| `total_demand`, `rotation_class` | SKU demand/rotation context |
+| `zone_priority_level`, `zone_distance_to_dispatch`, `zone_capacity_pressure` | Zone cost drivers |
+| `scenario_weighted_score` | Best available Phase 4 scenario context for the SKU |
+| `assignment_cost` | Transparent weighted minimization cost; lower is preferred by the prototype |
+| `solver_method` | `scipy_linear_sum_assignment` or `greedy_fallback` |
+| `assumption_state` | Always `inferred / pending confirmation` for Phase 5 |
+| `optimization_caveat` | Explicit prototype/no-execution/no-location-feasibility caveat |
+| `config_snapshot` | Inferred weights and limits used for the run |
+
+### 9.2 Optimization Summary (`optimization_summary.csv`)
+
+One row per metric: selected SKUs, assigned rows, candidate zone slots, target zones used, average assignment cost, total assignment cost, solver method, assumption state, caveat, and config snapshot.
+
+### 9.3 Optimization Cost Matrix (`optimization_cost_matrix.csv`)
+
+One row per SKU-zone-slot candidate pair with the same cost driver fields used by the assignment output. This table exists for auditability and explains why the prototype selected a lower-cost pairing.
+
+---
+
+## 10. Open questions (resolved)
 
 | Question | Resolution |
 |----------|-----------|

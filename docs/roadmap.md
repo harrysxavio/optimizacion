@@ -19,7 +19,8 @@
 | 3 | Prescriptive scoring and prioritisation | ✅ **Completed** | Transparent review-prioritization scores from Phase 2 diagnostics |
 | 4 | Scenario/model comparison | ✅ **Completed** | Analytical what-if comparison of Phase 3 ranking lenses; no solver or move execution |
 | 4-D | Phase 4 documentation & traceability | ✅ **Completed** | Phase note, terminal log, data contract, governance docs, Graphify evidence |
-| 5 | Mathematical optimisation | 🔜 Future | OR-Tools/Pyomo, zone resizing, SKU relocation |
+| 5 | Mathematical optimisation | ✅ **Completed** | Controlled SKU-to-zone assignment prototype; no execution or location-level feasibility guarantee |
+| 5-D | Phase 5 documentation & traceability | ✅ **Completed** | Phase note, terminal log, data contract, governance docs, README tools table, Graphify evidence |
 | 6 | Operational simulation | 🔜 Future | Labour modelling, travel time, throughput estimation |
 | 7 | Production-ready application | 🔜 Future | Auth, CI/CD, deployment, WMS/ERP connectors |
 
@@ -121,6 +122,19 @@
 - [x] `tests/unit/test_project_structure.py` — Updated required Phase 4 files
 - [x] `docs/phase_notes/phase_4_scenarios.md` — Phase 4 decisions and evidence
 - [x] `docs/phase_logs/phase_4_terminal_log.md` — Terminal log with verification and Graphify use
+
+### Phase 5 — Complete
+
+- [x] `src/slotting_optimization_engine/optimization/__init__.py` — Optimization package exports
+- [x] `src/slotting_optimization_engine/optimization/assignment.py` — Cost matrix, solver/fallback assignment, summary, and output writer
+- [x] `scripts/run_optimization.py` — CLI entrypoint for Phase 5 outputs
+- [x] `data/processed/optimization_assignments.csv` — Controlled SKU-to-zone assignment rows
+- [x] `data/processed/optimization_summary.csv` — Method, selected SKU count, zone usage, and cost metrics
+- [x] `data/processed/optimization_cost_matrix.csv` — Transparent SKU-zone-slot cost matrix
+- [x] `tests/unit/test_optimization_assignment.py` — Cost matrix, shape, deterministic fallback, missing inputs, saving, method field, script import
+- [x] `tests/unit/test_project_structure.py` — Updated required Phase 5 files
+- [x] `docs/phase_notes/phase_5_optimization.md` — Phase 5 decisions and evidence
+- [x] `docs/phase_logs/phase_5_terminal_log.md` — Terminal log with verification and Graphify use
 
 ## Legend
 

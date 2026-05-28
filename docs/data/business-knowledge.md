@@ -1,7 +1,7 @@
 # Business Knowledge — Slotting Optimization Engine
 
 **Last updated:** 2026-05-28  
-**Status:** Active (Phase 4)
+**Status:** Active (Phase 5)
 
 All rules are marked with their current state per the project governance policy.
 
@@ -73,6 +73,10 @@ All rules are marked with their current state per the project governance policy.
 | Phase 4 `capacity_first` scenario gives extra analytical weight to zone capacity pressure labels | `inferred / pending confirmation` |
 | Phase 4 `balanced_review` scenario adds a small priority-label bonus and moderate action emphasis | `inferred / pending confirmation` |
 | Scenario outputs are what-if comparison summaries, not optimized plans or movement instructions | `technical pattern` |
+| Phase 5 selects top-N SKU candidates from the Phase 3 priority queue for a bounded assignment prototype | `inferred / pending confirmation` |
+| Phase 5 cost combines demand, zone distance/priority, capacity pressure, opportunity score, and scenario context | `inferred / pending confirmation` |
+| Phase 5 target zone slots are logical solver slots, not confirmed physical locations | `technical pattern` |
+| Phase 5 assignments are analytical recommendations only and must not execute SKU moves | `technical pattern` |
 
 ### Capacity and Utilisation
 
@@ -99,6 +103,8 @@ All rules are marked with their current state per the project governance policy.
 | Priority queue position | Sorted rank for human review queue | `scoring.prioritization.build_priority_queue` |
 | Scenario weighted score | Reweighted Phase 3 opportunity score for within-scenario comparison only | `scenarios.comparison.build_scenario_comparison` |
 | Candidate action coverage | Count of distinct review action labels selected by a scenario | `scenarios.comparison.build_scenario_summary` |
+| Assignment cost | Weighted cost minimized by the Phase 5 prototype | `optimization.assignment.build_assignment_cost_matrix` |
+| Solver method | Records whether SciPy or deterministic fallback produced the assignment | `optimization.assignment.solve_assignment` |
 
 ---
 

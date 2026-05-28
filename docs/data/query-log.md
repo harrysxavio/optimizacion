@@ -75,3 +75,15 @@ Records of data operations executed against the project datasets.
 **Sources:** `data/processed/slotting_opportunity_scores.csv`, `priority_recommendation_queue.csv`, `scoring_summary.csv`, and optional `diagnostic_summary.csv`.
 
 **Results:** Wrote `scenario_comparison.csv`, `scenario_action_mix.csv`, and `scenario_summary.csv` to `data/processed/`. See `docs/phase_logs/phase_4_terminal_log.md`.
+
+---
+
+## 2026-05-28 — Phase 5 controlled optimization prototype
+
+**Action:** Built transparent SKU-to-zone assignment outputs from Phase 3 priority queue, Phase 4 scenario context, Phase 2 diagnostics, and validated synthetic SKU/zone dimensions.
+
+**Command:** `python scripts/run_optimization.py`
+
+**Sources:** `data/processed/priority_recommendation_queue.csv`, `slotting_diagnostics.csv`, `zone_diagnostics.csv`, optional `scenario_comparison.csv`, plus `data/synthetic/skus.csv` and `zones.csv`.
+
+**Results:** Wrote `optimization_assignments.csv`, `optimization_summary.csv`, and `optimization_cost_matrix.csv` to `data/processed/`. The run recorded `greedy_fallback` because SciPy was not importable in the active environment despite being added to project dependencies. See `docs/phase_logs/phase_5_terminal_log.md`.

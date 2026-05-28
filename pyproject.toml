@@ -25,6 +25,7 @@ dependencies = [
     "pandas>=2.0",
     "pandera>=0.18",
     "pyarrow>=10.0",
+    "scipy>=1.11",
 ]
 
 [project.optional-dependencies]

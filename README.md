@@ -14,8 +14,9 @@ Hoy el proyecto ordena el análisis, no reemplaza al equipo operativo. Toma dato
 | ¿Qué slow movers ocupan zonas premium? | `review_slow_mover_in_premium_zone` |
 | ¿Qué zonas muestran presión de capacidad? | `review_zone_capacity_pressure` |
 | ¿Cómo cambian las prioridades si miro primero demanda, capacidad o balance general? | Comparación de escenarios Phase 4 |
+| ¿Qué zona candidata sugiere un prototipo matemático para SKUs priorizados? | Asignación SKU→zona Phase 5, sin ejecución física |
 
-## Qué puede hacer hoy, hasta Phase 4
+## Qué puede hacer hoy, hasta Phase 5
 
 | Fase | Qué hace | Qué produce |
 |---|---|---|
@@ -24,14 +25,31 @@ Hoy el proyecto ordena el análisis, no reemplaza al equipo operativo. Toma dato
 | Phase 2 | Detecta diagnósticos descriptivos | Flags por SKU, ubicación, zona y categoría |
 | Phase 3 | Prioriza oportunidades para revisión humana | Scores y cola de revisión |
 | Phase 4 | Compara lentes analíticos what-if | Ranking comparativo por escenario/modelo simple |
+| Phase 5 | Calcula una asignación matemática controlada SKU→zona | CSV de asignaciones, resumen y matriz de costos |
+
+## Herramientas usadas por capa
+
+| Capa explicada | Herramienta/librería | Qué hace en simple | Dónde aparece |
+|---|---|---|---|
+| Base del proyecto | Python | Lenguaje principal para construir el motor modular | `src/`, `scripts/`, `tests/` |
+| Tablas y transformaciones | pandas | Lee CSV/Parquet y cruza SKUs, zonas, inventario, diagnósticos y scores | `data/loading.py`, `features/builder.py`, `diagnostics/`, `scoring/`, `scenarios/`, `optimization/` |
+| Validación de datos | pandera | Define contratos de columnas, tipos y reglas; si falla, hay fallback explícito | `data/validation.py` |
+| Cálculo numérico | numpy | Genera datos sintéticos reproducibles y ayuda con cálculos vectorizados | `data/generator.py`, `optimization/assignment.py` |
+| Optimización matemática | scipy `linear_sum_assignment` | Resuelve la asignación rectangular de menor costo si SciPy está instalado | `optimization/assignment.py`; si no está disponible, usa fallback greedy documentado |
+| UI técnica | Streamlit | Permite inspeccionar outputs procesados sin crear una app final de negocio | `app/streamlit_app.py` |
+| Tests | pytest | Verifica generación, validación, features, diagnósticos, scoring, escenarios y optimización | `tests/unit/` |
+| Lint/calidad | ruff | Revisa estilo, imports, errores simples y reglas de seguridad básicas | `python -m ruff check src tests scripts` |
+| Mapa de relaciones | Graphify | Mantiene un grafo del proyecto para ver conexiones entre módulos, docs y outputs | `graphify-out/`, consultas registradas en `docs/phase_logs/` |
+| Gobierno documental | Markdown docs/data governance | Deja trazabilidad humana: contratos, supuestos, logs, reglas inferidas y pendientes | `README.md`, `docs/`, `docs/data/` |
 
 ## Qué NO deberías decidir a ciegas
 
 - No muevas SKUs automáticamente usando estos CSV.
 - No trates un score alto como una orden operativa.
-- No interpretes los escenarios como solución óptima.
+- No interpretes los escenarios ni la asignación Phase 5 como solución óptima operativa.
 - No cambies layout, dotación o capacidad sin validar con operación real.
 - No uses estos pesos como política de negocio hasta confirmarlos con expertos.
+- No ejecutes movimientos de SKU automáticamente usando `optimization_assignments.csv`.
 
 Los datos actuales son sintéticos y los umbrales/pesos están marcados como `inferred / pending confirmation`. Eso es DELIBERADO: sirve para aprender y auditar la lógica antes de convertirla en decisión de negocio.
 
@@ -48,6 +66,7 @@ python scripts/build_features.py
 python scripts/run_diagnostics.py
 python scripts/run_scoring.py
 python scripts/run_scenarios.py
+python scripts/run_optimization.py
 
 python -m ruff check src tests scripts
 python -m pytest -v
@@ -63,6 +82,7 @@ python -m pytest -v
 | `run_diagnostics.py` | Marca problemas descriptivos, como capacidad o mala ubicación relativa |
 | `run_scoring.py` | Ordena oportunidades para revisión humana con pesos transparentes |
 | `run_scenarios.py` | Compara escenarios analíticos: baseline, demanda primero, capacidad primero y revisión balanceada |
+| `run_optimization.py` | Construye una asignación matemática controlada SKU→zona; no ejecuta movimientos ni garantiza slot físico |
 
 ## Outputs principales
 
@@ -80,6 +100,9 @@ python -m pytest -v
 - `data/processed/scenario_comparison.csv`
 - `data/processed/scenario_action_mix.csv`
 - `data/processed/scenario_summary.csv`
+- `data/processed/optimization_assignments.csv`
+- `data/processed/optimization_summary.csv`
+- `data/processed/optimization_cost_matrix.csv`
 
 ## Cómo leer los outputs de Phase 4
 
@@ -88,6 +111,16 @@ python -m pytest -v
 | `scenario_comparison.csv` | Top N por escenario con ranking recalculado según el lente analítico |
 | `scenario_action_mix.csv` | Cuánta mezcla de acciones aparece en cada escenario |
 | `scenario_summary.csv` | Métricas comparables: score promedio, high priority, foco SKU/zona y cobertura de acciones |
+
+## Cómo leer los outputs de Phase 5
+
+| Archivo | Cómo leerlo |
+|---|---|
+| `optimization_assignments.csv` | Una asignación candidata SKU→zona/slot lógico para SKUs priorizados; es recomendación analítica, no orden de movimiento |
+| `optimization_summary.csv` | Método usado (`scipy_linear_sum_assignment` o `greedy_fallback`), cantidad de SKUs, zonas usadas y costo total/promedio |
+| `optimization_cost_matrix.csv` | Costos transparentes por combinación SKU-zona-slot, con demanda, distancia, prioridad, presión de capacidad y contexto de scoring |
+
+Caveat clave: Phase 5 es un prototipo matemático acotado sobre datos sintéticos. No es un optimizador warehouse-grade, no valida factibilidad a nivel ubicación, no conecta WMS/ERP y no ejecuta movimientos.
 
 ## Posibles usos actuales
 
@@ -98,9 +131,9 @@ python -m pytest -v
 
 ## Posibilidades futuras
 
-Las fases futuras podrían agregar optimización matemática, simulación operativa, conectores WMS/ERP, autenticación, despliegue y una app de negocio. Eso todavía NO está implementado.
+Las fases futuras podrían agregar simulación operativa, conectores WMS/ERP, autenticación, despliegue y una app de negocio. Eso todavía NO está implementado.
 
-Caveat clave: Phase 4 compara modelos/lentes simples sobre scores existentes. No calcula ubicaciones destino, no resuelve un modelo de optimización y no ejecuta movimientos de SKUs.
+Caveat clave: Phase 5 asigna SKUs a zonas candidatas con un modelo pequeño y transparente. No calcula ubicaciones físicas exactas, no garantiza capacidad real, no simula operación y no ejecuta movimientos de SKUs.
 
 # Slotting Optimization Engine
 
@@ -113,7 +146,8 @@ A modular Python engine for slotting optimization in high-volume e-commerce and 
 **Phase 1.5 completed** — minimal technical Streamlit front for inspecting processed outputs.  
 **Phase 2 completed** — descriptive advanced slotting diagnostics and diagnostic output files.  
 **Phase 3 completed** — transparent scoring/prioritization queue from Phase 2 diagnostics.  
-**Phase 4 completed** — analytical scenario/model comparison from Phase 3 scores.
+**Phase 4 completed** — analytical scenario/model comparison from Phase 3 scores.  
+**Phase 5 completed** — controlled mathematical SKU-to-zone assignment prototype; no execution or location-level feasibility guarantee.
 
 ## Project structure
 
@@ -144,7 +178,7 @@ slotting-optimization-engine/
 │       ├── diagnostics/               # Descriptive slotting diagnostics (Phase 2)
 │       ├── scoring/                   # Prioritization scoring (Phase 3)
 │       ├── scenarios/                 # Analytical scenario comparison (Phase 4)
-│       ├── optimization/              # Mathematical optimization (future stub)
+│       ├── optimization/              # Controlled assignment optimization prototype (Phase 5)
 │       ├── simulation/                # Operational simulation (future stub)
 │       ├── reporting/                 # Outputs and summaries
 │       └── app/                       # Streamlit technical UI (Phase 1.5)
@@ -261,9 +295,27 @@ Expected outputs:
 - `data/processed/scenario_action_mix.csv`
 - `data/processed/scenario_summary.csv`
 
+## Phase 5 controlled optimization prototype
+
+Run Phase 5 after Phase 4 scenario outputs exist:
+
+```powershell
+python scripts/run_optimization.py
+```
+
+Phase 5 builds a small SKU-to-zone assignment prototype using top-N SKU candidates from the Phase 3 queue, Phase 4 scenario context, diagnostics, and synthetic SKU/zone dimensions. If SciPy is installed, it uses `scipy.optimize.linear_sum_assignment`; otherwise it records a deterministic `greedy_fallback` method in the outputs.
+
+Expected outputs:
+
+- `data/processed/optimization_assignments.csv`
+- `data/processed/optimization_summary.csv`
+- `data/processed/optimization_cost_matrix.csv`
+
+These outputs are analytical only. They are not WMS tasks, not automatic move instructions, and not guaranteed feasible at physical location level.
+
 ## Output structure
 
-After running Phase 1, Phase 2, Phase 3, and Phase 4 scripts:
+After running Phase 1 through Phase 5 scripts:
 
 ```
 data/
@@ -288,7 +340,10 @@ data/
     ├── scoring_summary.csv                 # Phase 3 scoring metrics/config notes
     ├── scenario_comparison.csv             # Phase 4 top-N scenario comparison rows
     ├── scenario_action_mix.csv             # Phase 4 action mix by scenario
-    └── scenario_summary.csv                # Phase 4 scenario-level metrics
+    ├── scenario_summary.csv                # Phase 4 scenario-level metrics
+    ├── optimization_assignments.csv        # Phase 5 SKU-to-zone assignments
+    ├── optimization_summary.csv            # Phase 5 method/cost summary
+    └── optimization_cost_matrix.csv        # Phase 5 transparent cost matrix
 ```
 
 ## Documentation map
@@ -305,12 +360,14 @@ data/
 | `docs/phase_notes/phase_2_diagnostics.md` | Phase 2 diagnostic rules, outputs, and evidence |
 | `docs/phase_notes/phase_3_scoring.md` | Phase 3 scoring rules, outputs, and evidence |
 | `docs/phase_notes/phase_4_scenarios.md` | Phase 4 scenario/model comparison rules, outputs, and evidence |
+| `docs/phase_notes/phase_5_optimization.md` | Phase 5 optimization prototype rules, outputs, caveats, and evidence |
 | `docs/phase_logs/phase_0_terminal_log.md` | Phase 0 terminal commands and results |
 | `docs/phase_logs/phase_1_terminal_log.md` | Phase 1 terminal commands and results |
 | `docs/phase_logs/phase_1_5_terminal_log.md` | Phase 1.5 terminal commands and results |
 | `docs/phase_logs/phase_2_terminal_log.md` | Phase 2 terminal commands and results |
 | `docs/phase_logs/phase_3_terminal_log.md` | Phase 3 terminal commands and results |
 | `docs/phase_logs/phase_4_terminal_log.md` | Phase 4 terminal commands and results |
+| `docs/phase_logs/phase_5_terminal_log.md` | Phase 5 terminal commands and results |
 | `docs/DESIGN.md` | Lightweight technical UI design system |
 | `docs/data/README.md` | Data documentation overview |
 | `docs/data/dataset-index.md` | All datasets with schemas and lineage |
@@ -325,7 +382,7 @@ Advanced capabilities are intentionally deferred and will not appear in early im
 
 - Phase 3: Prescriptive scoring and prioritization — completed as review prioritization only
 - Phase 4: Scenario/model comparison — completed as analytical what-if comparison only
-- Phase 5: Mathematical optimization
+- Phase 5: Mathematical optimization — completed as controlled SKU-to-zone prototype only
 - Phase 6: Operational simulation
 - Phase 7: Production-ready application
 

@@ -1,7 +1,7 @@
 # Architecture — Slotting Optimization Engine
 
-**Version:** 0.6.0  
-**Status:** Phase 4 — Scenario/model comparison implemented  
+**Version:** 0.7.0  
+**Status:** Phase 5 — Controlled mathematical optimization prototype implemented  
 **Last updated:** 2026-05-28
 
 ---
@@ -31,14 +31,14 @@ The engine follows a **modular layered architecture** designed for incremental e
 | `diagnostics` | Slotting quality diagnostics | Implemented in Phase 2 | Descriptive diagnostic flags; optimization remains deferred |
 | `scoring` | Prioritization scoring | Implemented in Phase 3 | Transparent review queue from diagnostic signals; no optimal move recommendation |
 | `scenarios` | Scenario/model comparison | Implemented in Phase 4 | Analytical what-if lenses over Phase 3 scores; no solver, target slots, simulation, or movement execution |
-| `optimization` | Mathematical optimisation models | Placeholder stub (Phase 5) | OR-Tools/Pyomo, zone resizing, SKU relocation |
+| `optimization` | Controlled mathematical optimization prototypes | Implemented in Phase 5 | Future full solver models, location-level feasibility, zone resizing, SKU relocation |
 | `simulation` | Operational impact simulation | Placeholder stub (Phase 6) | Labour modelling, what-if scenarios |
 | `reporting` | Output generation and summaries | Placeholder stub | PDF/Excel, BI exports |
 | `app` | Streamlit technical front-end and pure dashboard helpers | Implemented in Phase 1.5 | Dataset inspection, basic visualisations; production UX remains future |
 
 ---
 
-## 3. Data flow (implemented through Phase 4)
+## 3. Data flow (implemented through Phase 5)
 
 ```text
 Synthetic/raw data (CSV)
@@ -82,8 +82,12 @@ Synthetic/raw data (CSV)
   analytical what-if lenses
         │
         ▼
+  optimization/assignment.py
+  controlled SKU-to-zone assignment
+        │
+        ▼
   data/processed/*
-  score/queue/scenario CSVs
+  score/queue/scenario/optimization CSVs
 ```
 
 ---
@@ -104,7 +108,8 @@ Synthetic/raw data (CSV)
 | Scoring scope | `scoring/prioritization.py` produces action-level review priorities only | Phase 3 ranks diagnostic signals but does not select optimal target locations or solve a move plan |
 | Scoring weights | Dataclass config with transparent weights marked `inferred / pending confirmation` | Keeps business assumptions visible until confirmed by operations stakeholders |
 | Scenario comparison scope | `scenarios/comparison.py` re-ranks Phase 3 scores under named analytical lenses | Phase 4 compares assumptions without optimization, simulation, target slot assignment, or automatic SKU move execution |
-| Solver | Deferred | OR-Tools, Pyomo, scipy — decision blocked until Phase 5 requirements are clear |
+| Phase 5 solver | SciPy `linear_sum_assignment` if available, deterministic greedy fallback otherwise | Keeps the prototype small and transparent while recording the method used in outputs |
+| Optimization scope | Zone-level SKU assignment only | Avoids pretending to guarantee physical slot feasibility or executable move plans before Phase 6+ requirements exist |
 
 ---
 
@@ -119,6 +124,7 @@ Synthetic/raw data (CSV)
 | CLI verification | `scripts/run_diagnostics.py` | Diagnostic output generation | Phase 2 |
 | CLI verification | `scripts/run_scoring.py` | Scoring output generation | Phase 3 |
 | CLI verification | `scripts/run_scenarios.py` | Scenario comparison output generation | Phase 4 |
+| CLI verification | `scripts/run_optimization.py` | Controlled SKU-to-zone assignment output generation | Phase 5 |
 
 ### Phase 0 tests
 
@@ -138,7 +144,7 @@ The following architectural items are intentionally deferred:
 - **Database connectors**: All data in Phase 1 comes from CSV. Real WMS/ERP connectors are Phase 7.
 - **Authentication/authorization**: Deferred to Phase 7.
 - **Production application UX**: The app remains a technical inspection surface only; recommendations, scenario simulation, auth, and deployment remain deferred.
-- **Mathematical optimization**: Phase 4 scenario comparison is analytical only. Solver-based optimization, target-slot recommendations, automatic movement execution, and simulation remain deferred.
+- **Advanced mathematical optimization**: Phase 5 is a bounded zone-level prototype only. Location-level feasibility, executable move plans, automatic movement execution, and simulation remain deferred.
 
 ---
 
