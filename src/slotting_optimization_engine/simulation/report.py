@@ -13,6 +13,7 @@ import pandas as pd
 
 from slotting_optimization_engine.config.project_paths import DATA_PROCESSED_DIR
 from slotting_optimization_engine.simulation.config import SIMULATION_CAVEAT
+from slotting_optimization_engine.simulation.pipeline import SimulationContext
 
 
 def build_simulation_report(
@@ -107,6 +108,40 @@ def build_simulation_report(
         "throughput_scenarios": throughput_table,
         "travel_order_detail": order_detail,
     }
+
+
+def build_report_from_pipeline(
+    pipeline_results: dict[str, dict],
+    context: SimulationContext | None = None,
+) -> dict[str, pd.DataFrame | None]:
+    """Build report DataFrames from pipeline results.
+
+    This is the Scenario C entry point — it accepts the dict returned
+    by ``SimulationPipeline.run()`` and extracts per-scenario results
+    into the same report structure as ``build_simulation_report()``.
+
+    Parameters
+    ----------
+    pipeline_results : dict
+        Output of ``SimulationPipeline.run()`` mapping scenario name to result.
+    context : SimulationContext | None
+        Unused (kept for API consistency with future cross-scenario summaries).
+
+    Returns
+    -------
+    dict with same keys as ``build_simulation_report()``.
+    """
+    _ = context  # kept for future cross-scenario summary logic
+
+    travel_result = pipeline_results.get("travel", {})
+    workload_result = pipeline_results.get("workload", {})
+    throughput_result = pipeline_results.get("throughput", {})
+
+    return build_simulation_report(
+        travel_result=travel_result,
+        workload_result=workload_result,
+        throughput_result=throughput_result,
+    )
 
 
 def save_simulation_outputs(

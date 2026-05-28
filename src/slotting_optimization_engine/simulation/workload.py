@@ -9,6 +9,8 @@ workload is distributed across zones.
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
 import pandas as pd
 
@@ -20,6 +22,10 @@ from slotting_optimization_engine.domain.constants import (
 from slotting_optimization_engine.simulation.config import (
     SIMULATION_CAVEAT,
     SimulationConfig,
+)
+from slotting_optimization_engine.simulation.pipeline import (
+    SimulationContext,
+    SimulationScenario,
 )
 from slotting_optimization_engine.simulation.travel import (
     _CURRENT_ZONE,
@@ -150,3 +156,30 @@ def simulate_workload(
         }
 
     return result  # type: ignore[return-value]
+
+
+# ── Scenario C pluggable wrapper ─────────────────────────────────────────────
+
+
+class WorkloadScenario(SimulationScenario):
+    """Pluggable scenario that estimates zone workload balance impact."""
+
+    @property
+    def name(self) -> str:
+        return "workload"
+
+    @property
+    def description(self) -> str:
+        return (
+            "Estima la carga de picks por zona antes y después de la "
+            "optimización, y mide el balance con el coeficiente Gini."
+        )
+
+    def run(self, context: SimulationContext) -> dict[str, Any]:
+        return simulate_workload(
+            order_lines=context.order_lines,
+            zones=context.zones,
+            sku_current=context.sku_current_zone,
+            sku_optimized=context.sku_optimized_zone,
+            config=context.config,
+        )

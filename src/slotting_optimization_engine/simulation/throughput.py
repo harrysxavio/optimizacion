@@ -11,11 +11,17 @@ against real operational data.
 
 from __future__ import annotations
 
+from typing import Any
+
 import pandas as pd
 
 from slotting_optimization_engine.simulation.config import (
     SIMULATION_CAVEAT,
     SimulationConfig,
+)
+from slotting_optimization_engine.simulation.pipeline import (
+    SimulationContext,
+    SimulationScenario,
 )
 
 # ── Scenario labels ──────────────────────────────────────────────────────────
@@ -152,6 +158,38 @@ def estimate_throughput(
             "simulation_caveat": SIMULATION_CAVEAT,
         },
     }
+
+
+# ── Scenario C pluggable wrapper ─────────────────────────────────────────────
+
+
+class ThroughputScenario(SimulationScenario):
+    """Pluggable scenario that estimates throughput impact."""
+
+    @property
+    def name(self) -> str:
+        return "throughput"
+
+    @property
+    def description(self) -> str:
+        return (
+            "Estima el throughput (órdenes/turno) bajo 3 escenarios "
+            "(optimista, balanceado, conservador) a partir del ahorro "
+            "de tiempo de viaje del escenario 'travel'."
+        )
+
+    def run(self, context: SimulationContext) -> dict[str, Any]:
+        # Requires the 'travel' scenario result in context
+        travel_result = context.get_result("travel")
+        if travel_result is None:
+            raise ValueError(
+                "ThroughputScenario requires the 'travel' scenario to "
+                "run first. Add 'travel' to the pipeline before 'throughput'."
+            )
+        return estimate_throughput(
+            travel_result=travel_result,  # type: ignore[arg-type]
+            config=context.config,
+        )
 
 
 def _estimate_pick_time_per_order(

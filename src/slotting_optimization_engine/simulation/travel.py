@@ -10,6 +10,7 @@ aggregated across all synthetic orders.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -28,6 +29,10 @@ from slotting_optimization_engine.domain.constants import (
 from slotting_optimization_engine.simulation.config import (
     SIMULATION_CAVEAT,
     SimulationConfig,
+)
+from slotting_optimization_engine.simulation.pipeline import (
+    SimulationContext,
+    SimulationScenario,
 )
 
 # ── Column name helpers ──────────────────────────────────────────────────────
@@ -261,3 +266,30 @@ def simulate_travel(
         }
 
     return result  # type: ignore[return-value]
+
+
+# ── Scenario C pluggable wrapper ─────────────────────────────────────────────
+
+
+class TravelScenario(SimulationScenario):
+    """Pluggable scenario that estimates travel distance/time impact."""
+
+    @property
+    def name(self) -> str:
+        return "travel"
+
+    @property
+    def description(self) -> str:
+        return (
+            "Compara la distancia y tiempo de viaje actual vs. optimizado "
+            "por orden, usando distancia a despacho por zona como proxy."
+        )
+
+    def run(self, context: SimulationContext) -> dict[str, Any]:
+        return simulate_travel(
+            order_lines=context.order_lines,
+            zones=context.zones,
+            sku_current=context.sku_current_zone,
+            sku_optimized=context.sku_optimized_zone,
+            config=context.config,
+        )

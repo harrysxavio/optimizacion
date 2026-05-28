@@ -711,9 +711,22 @@ Expected outputs:
 
 These outputs are illustrative only. They are not certified engineering models, labour standards, or replacements for time-and-motion studies.
 
-To run a dry check without simulation:
+Scenario C (reusable framework) provides flexible scenario selection:
 
 ```powershell
+# List available scenarios
+python scripts/run_simulation.py --list-scenarios
+
+# Run travel only
+python scripts/run_simulation.py --scenarios travel
+
+# Run travel + throughput (skip workload)
+python scripts/run_simulation.py --scenarios travel,throughput
+
+# Run all (default)
+python scripts/run_simulation.py --scenarios travel,workload,throughput
+
+# Dry check without simulation
 python scripts/run_simulation.py --dry-run
 ```
 
@@ -787,14 +800,59 @@ data/
 | `docs/data/synthetic/cleaning-log.md` | Synthetic data cleaning events |
 | `docs/data/synthetic/learnings.md` | Technical patterns and gotchas |
 
-## Future phases
+## Fases completadas
 
-Advanced capabilities are intentionally deferred and will not appear in early implementations:
+| Fase | Estado | Qué entrega |
+|------|--------|-------------|
+| Phase 0–2 | ✅ Completadas | Estructura, datos sintéticos, validación, features, diagnósticos |
+| Phase 3 | ✅ Completada | Scoring y cola de priorización para revisión humana |
+| Phase 4 | ✅ Completada | Comparación de escenarios what-if (baseline, demanda, capacidad, balance) |
+| Phase 5 | ✅ Completada | Prototipo de asignación matemática SKU→zona |
+| Phase 6 | ✅ Completada | Simulación de impacto operacional (Escenario B) |
 
-- Phase 3: Prescriptive scoring and prioritization — completed as review prioritization only
-- Phase 4: Scenario/model comparison — completed as analytical what-if comparison only
-- Phase 5: Mathematical optimization — completed as controlled SKU-to-zone prototype only
-- Phase 6: Operational simulation — completed as Scenario B (travel + workload + throughput); remaining Scenario A (distance-only) and Scenario C (reusable framework)
-- Phase 7: Production-ready application
+## Phase 6 — Los 3 escenarios
 
-See `docs/roadmap.md` for detailed status.
+Phase 6 se diseñó como un **simulador modular** con 3 escenarios, de los cuales el **B está implementado** y los otros dos están pendientes. Cada escenario responde una pregunta distinta:
+
+### Escenario A — Solo distancias (pendiente)
+
+**Pregunta:** *"¿Cuánto cambiaría la distancia recorrida por los pickers si movemos estos SKUs?"*
+
+**Qué produce:** Comparación antes/después de distancia total y tiempo de viaje por orden. No considera balance de carga ni throughput. Es el escenario más liviano y rápido.
+
+**Cuándo usarlo:** Cuando solo interesa el impacto en caminatas diarias, sin entrar en detalle de zonas ni productividad.
+
+**Ya está cubierto por:** `TravelSimulator` en `simulation/travel.py`. Solo falta extraerlo como entrypoint independiente.
+
+### Escenario B — Impacto operacional completo ✅ (implementado)
+
+**Pregunta:** *"¿Cómo cambian las distancias, el balance entre zonas y la capacidad de procesar órdenes por turno?"*
+
+**Qué produce:** 5 CSVs con:
+- `simulation_summary.csv` — métricas clave (distancia, tiempo, Gini, throughput)
+- `simulation_travel_aggregate.csv` — distancia/tiempo agregados
+- `simulation_zone_impact.csv` — picks por zona + coeficiente Gini
+- `simulation_throughput_scenarios.csv` — órdenes/turno bajo 3 escenarios
+- `simulation_order_detail.csv` — desglose por orden individual
+
+**Cuándo usarlo:** Cuando querés una visión completa del impacto operativo. Es el escenario más informativo pero también el que tiene más supuestos inferidos.
+
+**Comando:** `python scripts/run_simulation.py`
+
+### Escenario C — Framework reutilizable (pendiente)
+
+**Pregunta:** *"¿Cómo ejecuto cualquier combinación de escenarios sin modificar código?"*
+
+**Qué produce:** Una arquitectura de pipeline con escenarios plugueables. En lugar de una función fija que corre todo en orden, definís qué escenarios ejecutar y en qué orden.
+
+**Cuándo usarlo:** Cuando necesitás flexibilidad — correr solo distancias un día, solo throughput otro día, o los 3 juntos. También es la base para que equipos de datos agreguen escenarios personalizados sin tocar el núcleo.
+
+**Lo que viene:** Se implementa a continuación.
+
+## Próximas fases (diferidas)
+
+Capacidades avanzadas que están fuera del alcance del ciclo actual:
+
+- Phase 7: Production-ready application (autenticación, CI/CD, deploy, conectores WMS/ERP)
+
+Ver `docs/roadmap.md` para detalle completo.

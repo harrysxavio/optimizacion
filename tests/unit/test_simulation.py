@@ -10,17 +10,32 @@ from slotting_optimization_engine.simulation.config import (
     SIMULATION_CAVEAT,
     SimulationConfig,
 )
+from slotting_optimization_engine.simulation.pipeline import (
+    SimulationContext,
+    SimulationPipeline,
+    SimulationScenario,
+)
+from slotting_optimization_engine.simulation.registry import (
+    ALL_SCENARIOS,
+    BUILTIN_SCENARIOS,
+)
 from slotting_optimization_engine.simulation.report import (
+    build_report_from_pipeline,
     build_simulation_report,
     save_simulation_outputs,
 )
-from slotting_optimization_engine.simulation.throughput import estimate_throughput
+from slotting_optimization_engine.simulation.throughput import (
+    ThroughputScenario,
+    estimate_throughput,
+)
 from slotting_optimization_engine.simulation.travel import (
+    TravelScenario,
     build_sku_current_zone,
     build_sku_optimized_zone,
     simulate_travel,
 )
 from slotting_optimization_engine.simulation.workload import (
+    WorkloadScenario,
     gini_coefficient,
     simulate_workload,
 )
@@ -444,3 +459,202 @@ class TestSimulationScriptImportable:
         with open(script_path) as f:
             tree = ast.parse(f.read())
         assert isinstance(tree, ast.Module)
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Scenario C — Reusable Pipeline Framework
+# ═══════════════════════════════════════════════════════════════════════════════
+
+
+class TestSimulationScenarioABC:
+    """Tests for the abstract base class."""
+
+    def test_cannot_instantiate(self):
+        with pytest.raises(TypeError):
+            SimulationScenario()  # type: ignore[abstract]
+
+    def test_travel_scenario_has_name_and_description(self):
+        s = TravelScenario()
+        assert s.name == "travel"
+        assert isinstance(s.description, str)
+        assert len(s.description) > 10
+
+    def test_workload_scenario_has_name_and_description(self):
+        s = WorkloadScenario()
+        assert s.name == "workload"
+        assert isinstance(s.description, str)
+        assert len(s.description) > 10
+
+    def test_throughput_scenario_has_name_and_description(self):
+        s = ThroughputScenario()
+        assert s.name == "throughput"
+        assert isinstance(s.description, str)
+        assert len(s.description) > 10
+
+
+class TestSimulationContext:
+    """Tests for the shared context dataclass."""
+
+    def test_defaults_are_none(self):
+        ctx = SimulationContext()
+        assert ctx.orders is None
+        assert ctx.order_lines is None
+        assert ctx.zones is None
+        assert ctx.locations is None
+        assert ctx.inventory is None
+        assert ctx.optimization_assignments is None
+        assert ctx.sku_current_zone is None
+        assert ctx.sku_optimized_zone is None
+        assert ctx.results == {}
+
+    def test_with_data(self):
+        ctx = SimulationContext(
+            orders=pd.DataFrame({"a": [1]}),
+            config=SimulationConfig(),
+        )
+        assert ctx.orders is not None
+        assert len(ctx.orders) == 1
+        assert ctx.config.picker_speed_m_per_s == 1.0
+
+    def test_get_result_returns_none_for_missing(self):
+        ctx = SimulationContext()
+        assert ctx.get_result("travel") is None
+
+    def test_get_result_returns_stored(self):
+        ctx = SimulationContext()
+        ctx.results["travel"] = {"aggregate": {"distance": 100}}
+        assert ctx.get_result("travel") == {"aggregate": {"distance": 100}}
+
+
+class TestSimulationPipeline:
+    """Tests for the pipeline orchestrator."""
+
+    def test_unknown_scenario_raises(self):
+        pipeline = SimulationPipeline(
+            ["nonsense"],
+            registry={"travel": TravelScenario},
+        )
+        ctx = SimulationContext()
+        with pytest.raises(ValueError, match="Unknown scenario"):
+            pipeline.run(ctx)
+
+    def test_run_travel_only(self):
+        pipeline = SimulationPipeline(
+            ["travel"],
+            registry=BUILTIN_SCENARIOS,
+        )
+        ctx = SimulationContext(
+            order_lines=pd.DataFrame({
+                "order_id": ["O1", "O1"],
+                "sku_id": ["S1", "S2"],
+                "quantity": [1, 2],
+            }),
+            zones=pd.DataFrame({
+                "zone_id": ["Z1", "Z2"],
+                "distance_to_dispatch": [10.0, 50.0],
+            }),
+            sku_current_zone=pd.DataFrame({
+                "sku_id": ["S1", "S2"],
+                "current_zone_id": ["Z1", "Z2"],
+                "units_in_zone": [5, 3],
+            }),
+            config=SimulationConfig(),
+        )
+        results = pipeline.run(ctx)
+        assert "travel" in results
+        agg = results["travel"].get("aggregate", {})
+        assert "total_current_distance_m" in agg
+
+    def test_scenario_names_property(self):
+        pipeline = SimulationPipeline(
+            ["travel", "workload"],
+            registry=BUILTIN_SCENARIOS,
+        )
+        assert pipeline.scenario_names == ["travel", "workload"]
+
+    def test_results_populate_context(self):
+        pipeline = SimulationPipeline(
+            ["travel"],
+            registry=BUILTIN_SCENARIOS,
+        )
+        ctx = SimulationContext(
+            order_lines=pd.DataFrame({
+                "order_id": ["O1"],
+                "sku_id": ["S1"],
+                "quantity": [1],
+            }),
+            zones=pd.DataFrame({
+                "zone_id": ["Z1"],
+                "distance_to_dispatch": [10.0],
+            }),
+            sku_current_zone=pd.DataFrame({
+                "sku_id": ["S1"],
+                "current_zone_id": ["Z1"],
+                "units_in_zone": [5],
+            }),
+            config=SimulationConfig(),
+        )
+        pipeline.run(ctx)
+        assert "travel" in ctx.results
+        assert ctx.get_result("travel") is not None
+
+
+class TestSimulationRegistry:
+    """Tests for the BUILTIN_SCENARIOS registry."""
+
+    def test_all_scenarios_present(self):
+        assert "travel" in BUILTIN_SCENARIOS
+        assert "workload" in BUILTIN_SCENARIOS
+        assert "throughput" in BUILTIN_SCENARIOS
+
+    def test_all_scenarios_have_classes(self):
+        for name, cls in BUILTIN_SCENARIOS.items():
+            scenario = cls()
+            assert scenario.name == name
+            assert callable(scenario.run)
+
+    def test_all_scenarios_descriptions(self):
+        assert "travel" in ALL_SCENARIOS
+        assert "workload" in ALL_SCENARIOS
+        assert "throughput" in ALL_SCENARIOS
+        for desc in ALL_SCENARIOS.values():
+            assert isinstance(desc, str)
+            assert len(desc) > 10
+
+    def test_unknown_scenario_not_in_registry(self):
+        assert "bogus" not in BUILTIN_SCENARIOS
+
+
+class TestBuildReportFromPipeline:
+    """Tests for the pipeline-aware report builder."""
+
+    def test_returns_expected_keys_with_travel_only(self):
+        ctx = SimulationContext(config=SimulationConfig())
+        results = {
+            "travel": {
+                "aggregate": {
+                    "total_orders_simulated": 10,
+                    "total_current_distance_m": 5000.0,
+                    "total_optimized_distance_m": 1000.0,
+                    "total_distance_saved_m": 4000.0,
+                    "total_time_saved_s": 2000.0,
+                    "avg_distance_per_order_current": 500.0,
+                    "avg_distance_per_order_optimized": 100.0,
+                    "avg_improvement_pct": 80.0,
+                    "orders_with_improvement": 8,
+                    "travel_overhead_factor": 1.3,
+                    "assumption_state": "inferred / pending confirmation",
+                    "simulation_caveat": SIMULATION_CAVEAT,
+                },
+            },
+        }
+        reports = build_report_from_pipeline(results, context=ctx)
+        assert "simulation_summary" in reports
+        assert "travel_aggregate" in reports
+
+    def test_report_from_empty_pipeline(self):
+        reports = build_report_from_pipeline({})
+        assert "simulation_summary" in reports
+        # Should still return valid structure with missing data
+        summary = reports["simulation_summary"]
+        assert isinstance(summary, pd.DataFrame)
