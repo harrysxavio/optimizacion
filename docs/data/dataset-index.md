@@ -1,7 +1,7 @@
 # Dataset Index — Slotting Optimization Engine
 
 **Last updated:** 2026-05-28  
-**Status:** Active (Phase 5 — synthetic + processed diagnostics + scoring + scenarios + optimization)
+**Status:** Active (Phase 6 — synthetic + processed diagnostics + scoring + scenarios + optimization + simulation)
 
 ---
 
@@ -187,6 +187,26 @@ Metric/value summary for selected SKUs, assigned rows, candidate zone slots, tar
 
 Transparent SKU-zone-slot matrix used by the Phase 5 assignment prototype. Each row records cost drivers for auditability; it is not a physical slot feasibility table.
 
+### 24. Simulation Summary (`simulation_summary.csv`)
+
+High-level Phase 6 simulation metrics. Contains scenario run date, input description, number of SKUs/orders/lines/zones, current and optimized distance and time, distance and time saved, average improvement %, Gini coefficients (before/after), throughput estimates (orders/shift before/after, gain %), and the simulation caveat.
+
+### 25. Simulation Travel Aggregate (`simulation_travel_aggregate.csv`)
+
+Aggregated travel metrics: total distance (current/optimized), total time (current/optimized), distance saved, time saved, average improvement %. One row per run.
+
+### 26. Simulation Zone Impact (`simulation_zone_impact.csv`)
+
+Zone-level workload detail: current picks per zone, optimized picks per zone, pick change (absolute and %), and Gini coefficient describing workload balance across zones.
+
+### 27. Simulation Throughput Scenarios (`simulation_throughput_scenarios.csv`)
+
+Throughput estimates under 3 scenarios (optimistic, balanced, conservative). Each scenario includes total time saved (s), orders/shift before, orders/shift after, throughput gain %, and the multiplier used.
+
+### 28. Simulation Order Detail (`simulation_order_detail.csv`)
+
+Per-order simulation breakdown: order ID, number of lines, current distance and time, optimized distance and time, distance saved, time saved, current zone IDs visited, candidate zone IDs visited. Useful for debugging and manual inspection of edge cases.
+
 ---
 
 ## Typical row counts (default config)
@@ -237,4 +257,10 @@ SyntheticDataGenerator
                                         ├── optimization_assignments.csv
                                         ├── optimization_summary.csv
                                         └── optimization_cost_matrix.csv
+                                        └── Simulation Runner (Phase 6)
+                                            ├── simulation_summary.csv
+                                            ├── simulation_travel_aggregate.csv
+                                            ├── simulation_zone_impact.csv
+                                            ├── simulation_throughput_scenarios.csv
+                                            └── simulation_order_detail.csv
 ```

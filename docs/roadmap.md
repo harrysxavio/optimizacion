@@ -21,7 +21,7 @@
 | 4-D | Phase 4 documentation & traceability | ✅ **Completed** | Phase note, terminal log, data contract, governance docs, Graphify evidence |
 | 5 | Mathematical optimisation | ✅ **Completed** | Controlled SKU-to-zone assignment prototype; no execution or location-level feasibility guarantee |
 | 5-D | Phase 5 documentation & traceability | ✅ **Completed** | Phase note, terminal log, data contract, governance docs, README tools table, Graphify evidence |
-| 6 | Operational simulation | 🔜 Future | Labour modelling, travel time, throughput estimation |
+| 6 | Operational simulation | ✅ **Completed** | Scenario B — travel distance/time, zone workload (Gini), throughput estimation (3 escenarios) |
 | 7 | Production-ready application | 🔜 Future | Auth, CI/CD, deployment, WMS/ERP connectors |
 
 ## Current phase details
@@ -135,6 +135,24 @@
 - [x] `tests/unit/test_project_structure.py` — Updated required Phase 5 files
 - [x] `docs/phase_notes/phase_5_optimization.md` — Phase 5 decisions and evidence
 - [x] `docs/phase_logs/phase_5_terminal_log.md` — Terminal log with verification and Graphify use
+
+### Phase 6 — Complete
+
+- [x] `src/slotting_optimization_engine/simulation/config.py` — SimulationConfig with inferred assumptions (picker speed, pick time, overhead, throughput multipliers)
+- [x] `src/slotting_optimization_engine/simulation/travel.py` — TravelSimulator (per-order distance/time before/after)
+- [x] `src/slotting_optimization_engine/simulation/workload.py` — ZoneWorkloadSimulator (picks per zone, Gini coefficient)
+- [x] `src/slotting_optimization_engine/simulation/throughput.py` — ThroughputEstimator (3 scenarios: optimistic, balanced, conservative)
+- [x] `src/slotting_optimization_engine/simulation/report.py` — SimulationReport (compile results, save 5 CSVs)
+- [x] `scripts/run_simulation.py` — CLI entrypoint for Phase 6
+- [x] `data/processed/simulation_summary.csv` — High-level simulation metrics
+- [x] `data/processed/simulation_travel_aggregate.csv` — Travel distance/time aggregates
+- [x] `data/processed/simulation_zone_impact.csv` — Zone workload/Gini detail
+- [x] `data/processed/simulation_throughput_scenarios.csv` — Throughput by scenario
+- [x] `data/processed/simulation_order_detail.csv` — Per-order breakdown
+- [x] `tests/unit/test_simulation.py` — 38 tests: config, travel, workload, Gini, throughput, report, saving, script import
+- [x] `tests/unit/test_project_structure.py` — Updated required Phase 6 files
+- [x] `docs/phase_notes/phase_6_simulation.md` — Phase 6 decisions and evidence
+- [x] `docs/phase_logs/phase_6_terminal_log.md` — Terminal log with verification and Graphify use
 
 ## Legend
 

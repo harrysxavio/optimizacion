@@ -100,6 +100,11 @@ REQUIRED_FILES = [
     "src/slotting_optimization_engine/optimization/__init__.py",
     "src/slotting_optimization_engine/optimization/assignment.py",
     "src/slotting_optimization_engine/simulation/__init__.py",
+    "src/slotting_optimization_engine/simulation/config.py",
+    "src/slotting_optimization_engine/simulation/travel.py",
+    "src/slotting_optimization_engine/simulation/workload.py",
+    "src/slotting_optimization_engine/simulation/throughput.py",
+    "src/slotting_optimization_engine/simulation/report.py",
     "src/slotting_optimization_engine/reporting/__init__.py",
     "src/slotting_optimization_engine/app/__init__.py",
     "src/slotting_optimization_engine/app/dashboard_data.py",
@@ -111,6 +116,7 @@ REQUIRED_FILES = [
     "scripts/run_scoring.py",
     "scripts/run_scenarios.py",
     "scripts/run_optimization.py",
+    "scripts/run_simulation.py",
     "tests/__init__.py",
     "tests/unit/__init__.py",
     "tests/unit/test_project_structure.py",
@@ -123,6 +129,7 @@ REQUIRED_FILES = [
     "tests/unit/test_scoring_prioritization.py",
     "tests/unit/test_scenario_comparison.py",
     "tests/unit/test_optimization_assignment.py",
+    "tests/unit/test_simulation.py",
     "tests/integration/__init__.py",
 ]
 

@@ -1,7 +1,7 @@
 # Data Contract — Slotting Optimization Engine
 
-**Status:** FINALISED — Phase 5 controlled optimization outputs added.  
-**Purpose:** Define data entities, fields, validation rules, file formats, diagnostic output schemas, scoring output schemas, scenario output schemas, and optimization output schemas.  
+**Status:** FINALISED — Phase 6 simulation outputs added.  
+**Purpose:** Define data entities, fields, validation rules, file formats, diagnostic output schemas, scoring output schemas, scenario output schemas, optimization output schemas, and simulation output schemas.  
 **Last updated:** 2026-05-28
 
 ---
@@ -138,6 +138,7 @@ All validation functions are in `src/slotting_optimization_engine/data/validatio
 | Scoring outputs | CSV | `data/processed/slotting_opportunity_scores.csv`, `priority_recommendation_queue.csv`, `scoring_summary.csv` | No |
 | Scenario outputs | CSV | `data/processed/scenario_comparison.csv`, `scenario_action_mix.csv`, `scenario_summary.csv` | No |
 | Optimization outputs | CSV | `data/processed/optimization_assignments.csv`, `optimization_summary.csv`, `optimization_cost_matrix.csv` | No |
+| Simulation outputs | CSV | `data/processed/simulation_summary.csv`, `simulation_travel_aggregate.csv`, `simulation_zone_impact.csv`, `simulation_throughput_scenarios.csv`, `simulation_order_detail.csv` | No |
 
 ---
 
@@ -199,6 +200,7 @@ One row per diagnostic metric with `metric`, `value`, `business_rule_state`, and
 8. **Scoring weights pending confirmation**: Phase 3 weights are transparent, inferred, and not approved business policy.
 9. **Scenario lenses pending confirmation**: Phase 4 scenario weights and top-N settings are analytical assumptions, not operating policy.
 10. **Optimization weights pending confirmation**: Phase 5 costs and zone-slot limits are inferred and must not be treated as approved warehouse policy.
+11. **Simulation assumptions pending confirmation**: Phase 6 parameters (picker speed 1.2 m/s, pick time 30 s, overhead 120 s, throughput multipliers 1.03/1.08/1.15) are inferred and not certified warehouse standards.
 
 ---
 
@@ -307,7 +309,80 @@ One row per SKU-zone-slot candidate pair with the same cost driver fields used b
 
 ---
 
-## 10. Open questions (resolved)
+## 10. Phase 6 simulation output schemas
+
+All Phase 6 simulation outputs are `inferred / pending confirmation`. They are an operational impact prototype over synthetic data and do not replace certified warehouse engineering models, labour standards, or time-and-motion studies.
+
+### 10.1 Simulation Summary (`simulation_summary.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `metric` | Metric name: run_timestamp, dataset_description, total_skus, total_orders, total_order_lines, total_zones, total_locations, total_inventory_records, optimized_sku_count, current_total_distance_m, optimized_total_distance_m, distance_saved_m, current_total_time_s, optimized_total_time_s, time_saved_s, avg_improvement_pct, gini_current, gini_optimized, balance_improved, orders_per_shift_current, orders_per_shift_optimized, throughput_gain_pct, assumption_state |
+| `value` | Metric value |
+| `note` | Optional caveat or description |
+
+### 10.2 Simulation Travel Aggregate (`simulation_travel_aggregate.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `scenario` | Always `current_vs_optimized` |
+| `current_total_distance_m` | Sum of travel distance across all orders using current SKU zones |
+| `optimized_total_distance_m` | Sum of travel distance using optimized SKU zones (from Phase 5) |
+| `distance_saved_m` | Difference (current - optimized) |
+| `current_total_time_s` | Sum of travel time (distance / speed) across all orders |
+| `optimized_total_time_s` | Optimized travel time |
+| `time_saved_s` | Difference (current - optimized) |
+| `avg_improvement_pct` | Average per-order improvement percentage |
+
+### 10.3 Simulation Zone Impact (`simulation_zone_impact.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `zone_id` | Zone identifier |
+| `zone_type` | Zone classification |
+| `priority_level` | Priority level (1 = highest) |
+| `current_pick_count` | Number of picks in this zone under current assignment |
+| `optimized_pick_count` | Number of picks under optimized assignment |
+| `pick_change` | Change in pick count (optimized - current) |
+| `pick_change_pct` | Percentage change |
+| `gini_coefficient_current` | Gini across all zones (current) — 0 = perfect equality |
+| `gini_coefficient_optimized` | Gini across all zones (optimized) |
+
+### 10.4 Simulation Throughput Scenarios (`simulation_throughput_scenarios.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `scenario` | Scenario name: `optimistic`, `balanced`, or `conservative` |
+| `total_time_saved_s` | Total travel time saved from the travel simulation |
+| `time_saved_with_multiplier_s` | Time saved × scenario throughput multiplier |
+| `orders_per_shift_before` | Estimated orders per shift without optimization |
+| `orders_per_shift_after` | Estimated orders per shift with optimization under this scenario |
+| `throughput_gain_pct` | Percentage gain in orders per shift |
+| `throughput_multiplier` | The multiplier applied (1.15, 1.08, or 1.03) |
+| `note` | Scenario description and caveat |
+
+### 10.5 Simulation Order Detail (`simulation_order_detail.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `order_id` | Order identifier |
+| `line_count` | Number of order lines in this order |
+| `current_distance_m` | Current travel distance for this order |
+| `optimized_distance_m` | Optimized travel distance for this order |
+| `distance_saved_m` | Difference |
+| `current_time_s` | Current travel time |
+| `optimized_time_s` | Optimized travel time |
+| `time_saved_s` | Difference |
+| `current_zone_ids` | Pipe-delimited list of current zone IDs visited |
+| `optimized_zone_ids` | Pipe-delimited list of optimized zone IDs visited |
+
+### 10.6 Caveat column
+
+Every simulation output includes an `assumption_state` column set to `inferred / pending confirmation`.
+
+---
+
+## 11. Open questions (resolved)
 
 | Question | Resolution |
 |----------|-----------|
