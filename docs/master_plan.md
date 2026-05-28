@@ -63,8 +63,11 @@ Only the following phases are in scope for the first implementation cycle:
 | 2 | Advanced slotting diagnostics | In scope | Completed |
 | 2-D | Documentation, explanation, and traceability for Phase 2 | In scope | Completed |
 | 3 | Prescriptive scoring and prioritization | In scope | Completed as review prioritization only |
+| 3-D | Documentation, explanation, and traceability for Phase 3 | In scope | Completed |
+| 4 | Scenario/model comparison | In scope | Completed as analytical what-if comparison only |
+| 4-D | Documentation, explanation, and traceability for Phase 4 | In scope | Completed |
 
-Phase 0 (design, architecture, base docs) and Phase 0-D (documentation and traceability) have been completed. No functional implementation beyond project structure and configuration was performed.
+Phases 0 through 4-D have been completed. Phase 4 remains analytical scenario/model comparison only; mathematical optimization, simulation, auth, deploy, production UX, and automatic SKU move execution are still deferred.
 
 ---
 
@@ -74,7 +77,6 @@ The following capabilities are intentionally deferred and must not be implemente
 
 | Future phase | Capability | Status |
 |---|---|---|
-| 4 | Scenario/model comparison | Future |
 | 5 | Mathematical optimization | Future |
 | 6 | Operational simulation | Future |
 | 7 | Production-ready application | Future |
@@ -87,8 +89,8 @@ Deferred capabilities include advanced recommendations, real optimization, simul
 
 | Principle | Decision |
 |---|---|
-| Controlled scope | Implement only the currently requested phase; Phase 3 is prioritization scoring only, not optimization. |
-| Modular architecture | Keep data, domain, features, diagnostics, scoring, optimization, simulation, reporting, and app concerns separated. |
+| Controlled scope | Implement only the currently requested phase; Phase 4 is scenario comparison only, not optimization. |
+| Modular architecture | Keep data, domain, features, diagnostics, scoring, scenarios, optimization, simulation, reporting, and app concerns separated. |
 | Production evolution | Start simple, but avoid structures that block future production hardening. |
 | Traceability | Every relevant decision must update this master plan. |
 | Testability | Functional phases must include tests or explicit verification evidence. |
@@ -136,6 +138,7 @@ slotting-optimization-engine/
 │       ├── features/
 │       ├── diagnostics/
 │       ├── scoring/
+│       ├── scenarios/
 │       ├── optimization/
 │       ├── simulation/
 │       ├── reporting/
@@ -167,7 +170,7 @@ Analytical dataset
         ↓
 Technical Streamlit inspection UI
         ↓
-Diagnostics and scoring, then future scenarios, optimization, simulation, recommendations
+Diagnostics, scoring, and scenario comparison, then future optimization, simulation, recommendations
 ```
 
 ### Main modules
@@ -180,6 +183,7 @@ Diagnostics and scoring, then future scenarios, optimization, simulation, recomm
 | `features` | Analytical feature construction | Initial demand, rotation, utilization, and density features. |
 | `diagnostics` | Slotting diagnostics | Descriptive diagnostic flags and CSV outputs. |
 | `scoring` | Prioritization scoring | Action-level review scores and queue from diagnostic outputs. |
+| `scenarios` | Scenario/model comparison | Analytical what-if comparison lenses over Phase 3 scoring outputs. |
 | `optimization` | Mathematical optimization | Future stub only in first cycle. |
 | `simulation` | Operational simulation | Future stub only in first cycle. |
 | `reporting` | Outputs and summaries | Basic reusable summaries if needed. |
@@ -670,14 +674,15 @@ The code should be understandable to someone learning Python without sacrificing
 | 2026-05-27 | v0.3.0 | Implemented Phase 1.5 and Phase 1.5-D: technical Streamlit front, dashboard helpers, UI design system, tests, docs, terminal log, and Graphify update/query evidence | User requested only Phase 1.5 after Phase 1 was completed and verified | Delivers a minimal descriptive UI for inspecting Phase 1 processed outputs without adding diagnostics, optimization, simulation, auth, or deployment |
 | 2026-05-27 | v0.4.0 | Implemented Phase 2 and Phase 2-D: descriptive diagnostics module, CLI, diagnostic CSV outputs, tests, data governance docs, terminal log, and Graphify update/query evidence | User requested only Phase 2 advanced slotting diagnostics and explicitly excluded prescriptive/optimization phases | Delivers descriptive diagnostic outputs while keeping Phase 3+ capabilities deferred |
 | 2026-05-27 | v0.5.0 | Implemented Phase 3: transparent scoring/prioritization module, CLI, scoring CSV outputs, tests, Spanish README intro, data governance docs, terminal log, and Graphify update/query evidence | User requested only Phase 3 scoring/prioritization and explicitly excluded Phase 4+ | Delivers a human-review priority queue while keeping scenario comparison, mathematical optimization, and simulation deferred |
+| 2026-05-28 | v0.6.0 | Implemented Phase 4 and Phase 4-D: scenario comparison module, CLI, scenario CSV outputs, tests, Spanish README expansion, data governance docs, terminal log, and Graphify update/query evidence | User requested only scenario/model comparison and explicitly excluded Phase 5+ optimization, solver, simulation, auth, deploy, and automatic SKU move execution | Delivers analytical what-if comparison while keeping mathematical optimization and simulation deferred |
 
 ---
 
 ## 20. Next steps
 
-1. Manager/user review of Phase 3 implementation, docs, logs, and Graphify update/query evidence.
-2. Review inferred thresholds and scoring weights with business users before treating queue positions as operating policy.
-3. Keep Phase 4+ deferred unless explicitly requested.
+1. Manager/user review of Phase 4 implementation, docs, logs, and Graphify update/query evidence.
+2. Review inferred thresholds, scoring weights, scenario weights, and top-N settings with business users before treating outputs as operating policy.
+3. Keep Phase 5+ deferred unless explicitly requested.
 
 ---
 
@@ -685,9 +690,9 @@ The code should be understandable to someone learning Python without sacrificing
 
 | Item | Status |
 |---|---|---|
-| Master plan Markdown file | Updated through Phase 3 |
-| Project code | Created — Phase 1 data pipeline, Phase 1.5 technical UI, Phase 2 diagnostics, and Phase 3 scoring complete |
-| Project commands | Phase 3 verification commands executed and recorded |
+| Master plan Markdown file | Updated through Phase 4 |
+| Project code | Created — Phase 1 data pipeline, Phase 1.5 technical UI, Phase 2 diagnostics, Phase 3 scoring, and Phase 4 scenarios complete |
+| Project commands | Phase 4 verification commands executed and recorded |
 | Phase 0 implementation | Completed |
 | Phase 0-D documentation | Completed |
 | Phase 1 implementation | Completed |
@@ -698,7 +703,9 @@ The code should be understandable to someone learning Python without sacrificing
 | Phase 2-D documentation | Completed |
 | Phase 3 implementation | Completed |
 | Phase 3-D documentation | Completed |
-| Terminal logs | Created — Phase 0, Phase 1, Phase 1.5, Phase 2, and Phase 3 |
+| Phase 4 implementation | Completed |
+| Phase 4-D documentation | Completed |
+| Terminal logs | Created — Phase 0, Phase 1, Phase 1.5, Phase 2, Phase 3, and Phase 4 |
 
 ---
 

@@ -1,6 +1,6 @@
 # Query Log — Slotting Optimization Engine
 
-**Last updated:** 2026-05-27
+**Last updated:** 2026-05-28
 
 Records of data operations executed against the project datasets.
 
@@ -63,3 +63,15 @@ Records of data operations executed against the project datasets.
 **Sources:** `data/processed/slotting_diagnostics.csv`, `location_diagnostics.csv`, `zone_diagnostics.csv`, `category_diagnostics.csv`, and optional `diagnostic_summary.csv`.
 
 **Results:** Wrote `slotting_opportunity_scores.csv`, `priority_recommendation_queue.csv`, and `scoring_summary.csv` to `data/processed/`. See `docs/phase_logs/phase_3_terminal_log.md`.
+
+---
+
+## 2026-05-28 — Phase 4 scenario/model comparison
+
+**Action:** Built analytical what-if scenario comparison outputs from Phase 3 scoring outputs.
+
+**Command:** `python scripts/run_scenarios.py`
+
+**Sources:** `data/processed/slotting_opportunity_scores.csv`, `priority_recommendation_queue.csv`, `scoring_summary.csv`, and optional `diagnostic_summary.csv`.
+
+**Results:** Wrote `scenario_comparison.csv`, `scenario_action_mix.csv`, and `scenario_summary.csv` to `data/processed/`. See `docs/phase_logs/phase_4_terminal_log.md`.

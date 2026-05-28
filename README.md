@@ -1,27 +1,41 @@
 # Introducción en español
 
-`slotting-optimization-engine` es un motor modular en Python para analizar la calidad del slotting de un centro de distribución: qué SKU está ubicado en qué zona, qué tan demandado es, cuánto espacio usa y qué señales merecen revisión operativa.
+`slotting-optimization-engine` es un motor modular en Python para entender y mejorar, de forma gradual, el **slotting** de un centro de distribución.
 
-El problema que resuelve hoy es ordenar el trabajo analítico: transforma datos sintéticos de SKUs, ubicaciones, zonas, inventario y pedidos en features, diagnósticos descriptivos y una cola de priorización para revisar oportunidades de slotting. Esto ayuda a detectar casos como SKUs de alta demanda lejos del despacho, slow movers ocupando zonas premium y zonas con presión de capacidad.
+En simple: **slotting** significa decidir dónde conviene ubicar cada SKU dentro del depósito. No es solo “poner productos en estanterías”; una mala ubicación puede aumentar caminatas, congestionar zonas, ocupar espacios premium con productos lentos o dejar SKUs de alta demanda lejos del despacho.
 
-Lo que puede hacer hoy:
+## Qué problema ayuda a mirar
 
-- Generar datos sintéticos reproducibles.
-- Validar contratos de datos.
-- Construir features de demanda, utilización y alineación inicial.
-- Mostrar una UI técnica mínima en Streamlit para inspección.
-- Generar diagnósticos descriptivos de slotting, ubicación, zona y categoría.
-- Generar scoring de priorización Phase 3 con pesos transparentes e inferidos.
+Hoy el proyecto ordena el análisis, no reemplaza al equipo operativo. Toma datos sintéticos de SKUs, ubicaciones, zonas, inventario y pedidos, y los transforma en señales para responder preguntas como estas:
 
-Lo que todavía NO hace:
+| Pregunta | Ejemplo de señal actual |
+|---|---|
+| ¿Qué SKUs de alta demanda están lejos o en zonas poco prioritarias? | `review_high_demand_far_sku` |
+| ¿Qué slow movers ocupan zonas premium? | `review_slow_mover_in_premium_zone` |
+| ¿Qué zonas muestran presión de capacidad? | `review_zone_capacity_pressure` |
+| ¿Cómo cambian las prioridades si miro primero demanda, capacidad o balance general? | Comparación de escenarios Phase 4 |
 
-- No calcula una solución óptima de slotting.
-- No recomienda movimientos óptimos SKU→ubicación.
-- No ejecuta simulación operativa ni comparación de escenarios.
-- No usa datos reales de WMS/ERP.
-- No tiene autenticación, despliegue productivo ni UX final de negocio.
+## Qué puede hacer hoy, hasta Phase 4
 
-Uso paso a paso:
+| Fase | Qué hace | Qué produce |
+|---|---|---|
+| Phase 1 | Genera datos sintéticos, valida contratos y construye features | Tablas de SKUs, demanda, utilización y features |
+| Phase 1.5 | Muestra una UI técnica mínima en Streamlit | Inspección visual de outputs procesados |
+| Phase 2 | Detecta diagnósticos descriptivos | Flags por SKU, ubicación, zona y categoría |
+| Phase 3 | Prioriza oportunidades para revisión humana | Scores y cola de revisión |
+| Phase 4 | Compara lentes analíticos what-if | Ranking comparativo por escenario/modelo simple |
+
+## Qué NO deberías decidir a ciegas
+
+- No muevas SKUs automáticamente usando estos CSV.
+- No trates un score alto como una orden operativa.
+- No interpretes los escenarios como solución óptima.
+- No cambies layout, dotación o capacidad sin validar con operación real.
+- No uses estos pesos como política de negocio hasta confirmarlos con expertos.
+
+Los datos actuales son sintéticos y los umbrales/pesos están marcados como `inferred / pending confirmation`. Eso es DELIBERADO: sirve para aprender y auditar la lógica antes de convertirla en decisión de negocio.
+
+## Uso paso a paso
 
 ```powershell
 python -m venv .venv
@@ -33,12 +47,24 @@ python scripts/run_data_validation.py
 python scripts/build_features.py
 python scripts/run_diagnostics.py
 python scripts/run_scoring.py
+python scripts/run_scenarios.py
 
 python -m ruff check src tests scripts
 python -m pytest -v
 ```
 
-Outputs principales:
+## Qué hace cada comando
+
+| Comando | Explicación simple |
+|---|---|
+| `generate_sample_data.py` | Crea datos sintéticos reproducibles para practicar sin tocar datos reales |
+| `run_data_validation.py` | Revisa que IDs, claves, tipos y reglas mínimas estén bien |
+| `build_features.py` | Calcula demanda, utilización y señales analíticas base |
+| `run_diagnostics.py` | Marca problemas descriptivos, como capacidad o mala ubicación relativa |
+| `run_scoring.py` | Ordena oportunidades para revisión humana con pesos transparentes |
+| `run_scenarios.py` | Compara escenarios analíticos: baseline, demanda primero, capacidad primero y revisión balanceada |
+
+## Outputs principales
 
 - `data/processed/slotting_features.parquet`
 - `data/processed/location_utilization.csv`
@@ -51,8 +77,30 @@ Outputs principales:
 - `data/processed/slotting_opportunity_scores.csv`
 - `data/processed/priority_recommendation_queue.csv`
 - `data/processed/scoring_summary.csv`
+- `data/processed/scenario_comparison.csv`
+- `data/processed/scenario_action_mix.csv`
+- `data/processed/scenario_summary.csv`
 
-Caveats importantes: los datos actuales son sintéticos y los umbrales/pesos de scoring están marcados como `inferred / pending confirmation`. El scoring es una priorización para revisión humana, no una optimización matemática ni una recomendación automática de movimientos.
+## Cómo leer los outputs de Phase 4
+
+| Archivo | Cómo leerlo |
+|---|---|
+| `scenario_comparison.csv` | Top N por escenario con ranking recalculado según el lente analítico |
+| `scenario_action_mix.csv` | Cuánta mezcla de acciones aparece en cada escenario |
+| `scenario_summary.csv` | Métricas comparables: score promedio, high priority, foco SKU/zona y cobertura de acciones |
+
+## Posibles usos actuales
+
+- Preparar una conversación con operación sobre dónde revisar primero.
+- Comparar si el backlog se ve distinto cuando priorizás demanda o capacidad.
+- Documentar supuestos antes de pedir datos reales.
+- Diseñar una futura fase de optimización con mejores requisitos.
+
+## Posibilidades futuras
+
+Las fases futuras podrían agregar optimización matemática, simulación operativa, conectores WMS/ERP, autenticación, despliegue y una app de negocio. Eso todavía NO está implementado.
+
+Caveat clave: Phase 4 compara modelos/lentes simples sobre scores existentes. No calcula ubicaciones destino, no resuelve un modelo de optimización y no ejecuta movimientos de SKUs.
 
 # Slotting Optimization Engine
 
@@ -64,7 +112,8 @@ A modular Python engine for slotting optimization in high-volume e-commerce and 
 **Phase 1 completed** — synthetic data pipeline, validation, and feature builder.  
 **Phase 1.5 completed** — minimal technical Streamlit front for inspecting processed outputs.  
 **Phase 2 completed** — descriptive advanced slotting diagnostics and diagnostic output files.  
-**Phase 3 completed** — transparent scoring/prioritization queue from Phase 2 diagnostics.
+**Phase 3 completed** — transparent scoring/prioritization queue from Phase 2 diagnostics.  
+**Phase 4 completed** — analytical scenario/model comparison from Phase 3 scores.
 
 ## Project structure
 
@@ -94,6 +143,7 @@ slotting-optimization-engine/
 │       ├── features/                  # Analytical feature construction
 │       ├── diagnostics/               # Descriptive slotting diagnostics (Phase 2)
 │       ├── scoring/                   # Prioritization scoring (Phase 3)
+│       ├── scenarios/                 # Analytical scenario comparison (Phase 4)
 │       ├── optimization/              # Mathematical optimization (future stub)
 │       ├── simulation/                # Operational simulation (future stub)
 │       ├── reporting/                 # Outputs and summaries
@@ -195,9 +245,25 @@ Expected outputs:
 - `data/processed/priority_recommendation_queue.csv`
 - `data/processed/scoring_summary.csv`
 
+## Phase 4 scenario/model comparison
+
+Run Phase 4 after Phase 3 scoring outputs exist:
+
+```powershell
+python scripts/run_scenarios.py
+```
+
+Scenario outputs compare transparent analytical lenses such as `baseline`, `demand_first`, `capacity_first`, and `balanced_review`. They are what-if review summaries only; they do not calculate optimal moves, target locations, solver decisions, simulation results, or automatic SKU movement instructions.
+
+Expected outputs:
+
+- `data/processed/scenario_comparison.csv`
+- `data/processed/scenario_action_mix.csv`
+- `data/processed/scenario_summary.csv`
+
 ## Output structure
 
-After running Phase 1, Phase 2, and Phase 3 scripts:
+After running Phase 1, Phase 2, Phase 3, and Phase 4 scripts:
 
 ```
 data/
@@ -219,7 +285,10 @@ data/
     ├── diagnostic_summary.csv      # Metric summary of diagnostic counts
     ├── slotting_opportunity_scores.csv     # Action-level prioritization scores
     ├── priority_recommendation_queue.csv   # Sorted review queue
-    └── scoring_summary.csv                 # Phase 3 scoring metrics/config notes
+    ├── scoring_summary.csv                 # Phase 3 scoring metrics/config notes
+    ├── scenario_comparison.csv             # Phase 4 top-N scenario comparison rows
+    ├── scenario_action_mix.csv             # Phase 4 action mix by scenario
+    └── scenario_summary.csv                # Phase 4 scenario-level metrics
 ```
 
 ## Documentation map
@@ -235,11 +304,13 @@ data/
 | `docs/phase_notes/phase_1_5_streamlit_front.md` | Phase 1.5 Streamlit front decisions and evidence |
 | `docs/phase_notes/phase_2_diagnostics.md` | Phase 2 diagnostic rules, outputs, and evidence |
 | `docs/phase_notes/phase_3_scoring.md` | Phase 3 scoring rules, outputs, and evidence |
+| `docs/phase_notes/phase_4_scenarios.md` | Phase 4 scenario/model comparison rules, outputs, and evidence |
 | `docs/phase_logs/phase_0_terminal_log.md` | Phase 0 terminal commands and results |
 | `docs/phase_logs/phase_1_terminal_log.md` | Phase 1 terminal commands and results |
 | `docs/phase_logs/phase_1_5_terminal_log.md` | Phase 1.5 terminal commands and results |
 | `docs/phase_logs/phase_2_terminal_log.md` | Phase 2 terminal commands and results |
 | `docs/phase_logs/phase_3_terminal_log.md` | Phase 3 terminal commands and results |
+| `docs/phase_logs/phase_4_terminal_log.md` | Phase 4 terminal commands and results |
 | `docs/DESIGN.md` | Lightweight technical UI design system |
 | `docs/data/README.md` | Data documentation overview |
 | `docs/data/dataset-index.md` | All datasets with schemas and lineage |
@@ -253,7 +324,7 @@ data/
 Advanced capabilities are intentionally deferred and will not appear in early implementations:
 
 - Phase 3: Prescriptive scoring and prioritization — completed as review prioritization only
-- Phase 4: Scenario/model comparison
+- Phase 4: Scenario/model comparison — completed as analytical what-if comparison only
 - Phase 5: Mathematical optimization
 - Phase 6: Operational simulation
 - Phase 7: Production-ready application

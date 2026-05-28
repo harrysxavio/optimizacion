@@ -1,7 +1,7 @@
 # Learnings — Synthetic Data
 
 **Source:** `data/synthetic/`  
-**Last updated:** 2026-05-27
+**Last updated:** 2026-05-28
 
 ---
 
@@ -72,3 +72,4 @@ over_capacity = occupied > capacity
 | Windows PowerShell may emit Graphify query output using `cp1252` | Graphify | Set `$env:PYTHONIOENCODING='utf-8'` before Graphify queries that print arrows or other Unicode |
 | Prioritization can look like recommendation if labels are ambiguous | Scoring | Use `review_*` candidate action labels and repeat that scores are not optimal move recommendations |
 | Inferred weights can become hidden business policy | Scoring | Store weights in a dataclass config and copy `inferred / pending confirmation` into outputs and docs |
+| Scenario comparison can be confused with optimization | Scenarios | Use explicit `scenario_note` caveats and keep outputs limited to top-N what-if metrics, not target locations or executable moves |

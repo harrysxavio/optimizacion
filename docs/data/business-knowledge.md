@@ -1,7 +1,7 @@
 # Business Knowledge — Slotting Optimization Engine
 
-**Last updated:** 2026-05-27  
-**Status:** Active (Phase 3)
+**Last updated:** 2026-05-28  
+**Status:** Active (Phase 4)
 
 All rules are marked with their current state per the project governance policy.
 
@@ -68,6 +68,11 @@ All rules are marked with their current state per the project governance policy.
 | `review_high_demand_far_sku` flags high-demand SKUs with distance/priority concern for review | `inferred / pending confirmation` |
 | `review_slow_mover_in_premium_zone` flags low-demand or slow-rotation SKUs occupying premium access for review | `inferred / pending confirmation` |
 | `review_zone_capacity_pressure` flags zones with utilization or premium-zone pressure for review | `inferred / pending confirmation` |
+| Phase 4 `baseline` scenario preserves Phase 3 score ordering for comparison | `inferred / pending confirmation` |
+| Phase 4 `demand_first` scenario gives extra analytical weight to high-demand far-SKU review labels | `inferred / pending confirmation` |
+| Phase 4 `capacity_first` scenario gives extra analytical weight to zone capacity pressure labels | `inferred / pending confirmation` |
+| Phase 4 `balanced_review` scenario adds a small priority-label bonus and moderate action emphasis | `inferred / pending confirmation` |
+| Scenario outputs are what-if comparison summaries, not optimized plans or movement instructions | `technical pattern` |
 
 ### Capacity and Utilisation
 
@@ -92,6 +97,8 @@ All rules are marked with their current state per the project governance policy.
 | Category spread indicator | Category spans multiple zones without dominant concentration | `diagnostics.rules.build_category_diagnostics` |
 | Opportunity score | 0-100 inferred review-prioritization score | `scoring.prioritization.build_slotting_opportunity_scores` |
 | Priority queue position | Sorted rank for human review queue | `scoring.prioritization.build_priority_queue` |
+| Scenario weighted score | Reweighted Phase 3 opportunity score for within-scenario comparison only | `scenarios.comparison.build_scenario_comparison` |
+| Candidate action coverage | Count of distinct review action labels selected by a scenario | `scenarios.comparison.build_scenario_summary` |
 
 ---
 

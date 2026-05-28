@@ -1,6 +1,6 @@
 # Roadmap — Slotting Optimization Engine
 
-**Last updated:** 2026-05-27
+**Last updated:** 2026-05-28
 
 ---
 
@@ -17,7 +17,8 @@
 | 2 | Advanced slotting diagnostics | ✅ **Completed** | Descriptive SKU placement, zone, location, category, and capacity diagnostics |
 | 2-D | Phase 2 documentation & traceability | ✅ **Completed** | Phase notes, logs, contracts, data governance docs, Graphify evidence |
 | 3 | Prescriptive scoring and prioritisation | ✅ **Completed** | Transparent review-prioritization scores from Phase 2 diagnostics |
-| 4 | Scenario/model comparison | 🔜 Future | What-if modelling, alternative slotting evaluation |
+| 4 | Scenario/model comparison | ✅ **Completed** | Analytical what-if comparison of Phase 3 ranking lenses; no solver or move execution |
+| 4-D | Phase 4 documentation & traceability | ✅ **Completed** | Phase note, terminal log, data contract, governance docs, Graphify evidence |
 | 5 | Mathematical optimisation | 🔜 Future | OR-Tools/Pyomo, zone resizing, SKU relocation |
 | 6 | Operational simulation | 🔜 Future | Labour modelling, travel time, throughput estimation |
 | 7 | Production-ready application | 🔜 Future | Auth, CI/CD, deployment, WMS/ERP connectors |
@@ -107,6 +108,19 @@
 - [x] `tests/unit/test_project_structure.py` — Updated required Phase 3 files
 - [x] `docs/phase_notes/phase_3_scoring.md` — Phase 3 decisions and evidence
 - [x] `docs/phase_logs/phase_3_terminal_log.md` — Terminal log with verification and Graphify use
+
+### Phase 4 — Complete
+
+- [x] `src/slotting_optimization_engine/scenarios/__init__.py` — Scenario package exports
+- [x] `src/slotting_optimization_engine/scenarios/comparison.py` — Dataclass scenario lenses, top-N comparison, action mix, summary, and output writer
+- [x] `scripts/run_scenarios.py` — CLI entrypoint for Phase 4 outputs
+- [x] `data/processed/scenario_comparison.csv` — Top-N analytical comparison rows by scenario
+- [x] `data/processed/scenario_action_mix.csv` — Candidate-action mix by scenario
+- [x] `data/processed/scenario_summary.csv` — Scenario-level comparable metrics and assumptions
+- [x] `tests/unit/test_scenario_comparison.py` — Scenario config, sorting/weights, missing inputs, output saving, and script import tests
+- [x] `tests/unit/test_project_structure.py` — Updated required Phase 4 files
+- [x] `docs/phase_notes/phase_4_scenarios.md` — Phase 4 decisions and evidence
+- [x] `docs/phase_logs/phase_4_terminal_log.md` — Terminal log with verification and Graphify use
 
 ## Legend
 

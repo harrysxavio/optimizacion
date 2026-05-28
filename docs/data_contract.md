@@ -1,8 +1,8 @@
 # Data Contract — Slotting Optimization Engine
 
-**Status:** FINALISED — Phase 3 scoring added.  
-**Purpose:** Define data entities, fields, validation rules, file formats, diagnostic output schemas, and scoring output schemas.  
-**Last updated:** 2026-05-27
+**Status:** FINALISED — Phase 4 scenario/model comparison added.  
+**Purpose:** Define data entities, fields, validation rules, file formats, diagnostic output schemas, scoring output schemas, and scenario output schemas.  
+**Last updated:** 2026-05-28
 
 ---
 
@@ -136,6 +136,7 @@ All validation functions are in `src/slotting_optimization_engine/data/validatio
 | Location/zone utilisation | CSV | `data/processed/*.csv` | No |
 | Diagnostic outputs | CSV | `data/processed/*_diagnostics.csv`, `diagnostic_summary.csv` | No |
 | Scoring outputs | CSV | `data/processed/slotting_opportunity_scores.csv`, `priority_recommendation_queue.csv`, `scoring_summary.csv` | No |
+| Scenario outputs | CSV | `data/processed/scenario_comparison.csv`, `scenario_action_mix.csv`, `scenario_summary.csv` | No |
 
 ---
 
@@ -195,6 +196,7 @@ One row per diagnostic metric with `metric`, `value`, `business_rule_state`, and
 6. **Deterministic generation**: All synthetic data is reproducible with seed=42.
 7. **Diagnostic thresholds pending confirmation**: Phase 2 uses simple quantile and utilization thresholds for review only.
 8. **Scoring weights pending confirmation**: Phase 3 weights are transparent, inferred, and not approved business policy.
+9. **Scenario lenses pending confirmation**: Phase 4 scenario weights and top-N settings are analytical assumptions, not operating policy.
 
 ---
 
@@ -237,7 +239,39 @@ One row per scoring metric with `metric`, `value`, `business_rule_state`, `scori
 
 ---
 
-## 8. Open questions (resolved)
+## 8. Phase 4 scenario output schemas
+
+All Phase 4 scenario outputs are `inferred / pending confirmation`. They compare analytical lenses over Phase 3 scores and do not contain optimal moves, target slots, solver output, simulation results, or executable movement plans.
+
+### 8.1 Scenario Comparison (`scenario_comparison.csv`)
+
+Top-N selected rows per scenario/model variant.
+
+| Field | Description |
+|-------|-------------|
+| `scenario` | Scenario lens name, e.g. `baseline`, `demand_first`, `capacity_first`, `balanced_review` |
+| `scenario_rank` | 1-based rank within that scenario lens |
+| `scenario_weighted_score` | Reweighted score used for within-scenario comparison only |
+| `scenario_description` | Human-readable scenario assumption summary |
+| `scenario_top_n` | Number of selected rows requested for the scenario |
+| `entity_type`, `entity_id` | Entity under analytical review, currently SKU or zone |
+| `candidate_action` | Candidate review action inherited from Phase 3 |
+| `priority`, `opportunity_score`, `rank`, `reason` | Phase 3 score context copied for traceability |
+| `business_rule_state` | Phase 3 assumption state |
+| `scenario_assumption_state` | Phase 4 scenario assumption state, currently `inferred / pending confirmation` |
+| `scenario_note` | Explicit caveat that this is analytical what-if comparison only |
+
+### 8.2 Scenario Action Mix (`scenario_action_mix.csv`)
+
+One row per scenario/action combination with selected count, share, high-priority count, average opportunity score, total weighted opportunity, assumption state, and scenario caveat.
+
+### 8.3 Scenario Summary (`scenario_summary.csv`)
+
+One row per scenario with selected count, top-N, total weighted opportunity, average scores, high-priority count, SKU/zone emphasis counts, candidate-action coverage, dominant action, assumption state, scenario caveat, and config snapshot.
+
+---
+
+## 9. Open questions (resolved)
 
 | Question | Resolution |
 |----------|-----------|

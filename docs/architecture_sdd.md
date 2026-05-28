@@ -1,8 +1,8 @@
 # Architecture — Slotting Optimization Engine
 
-**Version:** 0.5.0  
-**Status:** Phase 3 — Scoring/prioritization implemented  
-**Last updated:** 2026-05-27
+**Version:** 0.6.0  
+**Status:** Phase 4 — Scenario/model comparison implemented  
+**Last updated:** 2026-05-28
 
 ---
 
@@ -30,6 +30,7 @@ The engine follows a **modular layered architecture** designed for incremental e
 | `features` | Derived analytical features | Placeholder stub | Demand, rotation, utilisation, distance indicators |
 | `diagnostics` | Slotting quality diagnostics | Implemented in Phase 2 | Descriptive diagnostic flags; optimization remains deferred |
 | `scoring` | Prioritization scoring | Implemented in Phase 3 | Transparent review queue from diagnostic signals; no optimal move recommendation |
+| `scenarios` | Scenario/model comparison | Implemented in Phase 4 | Analytical what-if lenses over Phase 3 scores; no solver, target slots, simulation, or movement execution |
 | `optimization` | Mathematical optimisation models | Placeholder stub (Phase 5) | OR-Tools/Pyomo, zone resizing, SKU relocation |
 | `simulation` | Operational impact simulation | Placeholder stub (Phase 6) | Labour modelling, what-if scenarios |
 | `reporting` | Output generation and summaries | Placeholder stub | PDF/Excel, BI exports |
@@ -37,7 +38,7 @@ The engine follows a **modular layered architecture** designed for incremental e
 
 ---
 
-## 3. Data flow (implemented through Phase 3)
+## 3. Data flow (implemented through Phase 4)
 
 ```text
 Synthetic/raw data (CSV)
@@ -73,12 +74,16 @@ Synthetic/raw data (CSV)
  descriptive flags       pure loading/KPI helpers
         │                      │
         ▼                      ▼
- scoring/prioritization.py     app/streamlit_app.py
- prioritization scores         technical inspection UI
+  scoring/prioritization.py     app/streamlit_app.py
+  prioritization scores         technical inspection UI
         │
         ▼
- data/processed/*
- score/queue CSVs
+  scenarios/comparison.py
+  analytical what-if lenses
+        │
+        ▼
+  data/processed/*
+  score/queue/scenario CSVs
 ```
 
 ---
@@ -98,6 +103,7 @@ Synthetic/raw data (CSV)
 | Diagnostics scope | `diagnostics/rules.py` produces flags and evidence, not recommendations | Phase 2 must remain descriptive and avoid Phase 3 scoring/optimization behavior |
 | Scoring scope | `scoring/prioritization.py` produces action-level review priorities only | Phase 3 ranks diagnostic signals but does not select optimal target locations or solve a move plan |
 | Scoring weights | Dataclass config with transparent weights marked `inferred / pending confirmation` | Keeps business assumptions visible until confirmed by operations stakeholders |
+| Scenario comparison scope | `scenarios/comparison.py` re-ranks Phase 3 scores under named analytical lenses | Phase 4 compares assumptions without optimization, simulation, target slot assignment, or automatic SKU move execution |
 | Solver | Deferred | OR-Tools, Pyomo, scipy — decision blocked until Phase 5 requirements are clear |
 
 ---
@@ -112,6 +118,7 @@ Synthetic/raw data (CSV)
 | Manual verification | Streamlit inspection | Visual data quality check | Phase 1.5+ |
 | CLI verification | `scripts/run_diagnostics.py` | Diagnostic output generation | Phase 2 |
 | CLI verification | `scripts/run_scoring.py` | Scoring output generation | Phase 3 |
+| CLI verification | `scripts/run_scenarios.py` | Scenario comparison output generation | Phase 4 |
 
 ### Phase 0 tests
 
@@ -131,7 +138,7 @@ The following architectural items are intentionally deferred:
 - **Database connectors**: All data in Phase 1 comes from CSV. Real WMS/ERP connectors are Phase 7.
 - **Authentication/authorization**: Deferred to Phase 7.
 - **Production application UX**: The app remains a technical inspection surface only; recommendations, scenario simulation, auth, and deployment remain deferred.
-- **Mathematical optimization**: Phase 3 scoring is prioritization only. Scenario comparison, solver-based optimization, target-slot recommendations, and simulation remain deferred.
+- **Mathematical optimization**: Phase 4 scenario comparison is analytical only. Solver-based optimization, target-slot recommendations, automatic movement execution, and simulation remain deferred.
 
 ---
 
