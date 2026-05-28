@@ -70,3 +70,5 @@ over_capacity = occupied > capacity
 | `.groupby().agg()` with named aggregation returns MultiIndex columns if tuples are mixed | Aggregation | Use `reset_index()` after `agg()` to flatten |
 | Phase 1 processed outputs do not persist full SKU-location placement context | Diagnostics | Phase 2 reads processed outputs plus validated synthetic source dimensions without mutating synthetic data |
 | Windows PowerShell may emit Graphify query output using `cp1252` | Graphify | Set `$env:PYTHONIOENCODING='utf-8'` before Graphify queries that print arrows or other Unicode |
+| Prioritization can look like recommendation if labels are ambiguous | Scoring | Use `review_*` candidate action labels and repeat that scores are not optimal move recommendations |
+| Inferred weights can become hidden business policy | Scoring | Store weights in a dataclass config and copy `inferred / pending confirmation` into outputs and docs |

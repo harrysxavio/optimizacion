@@ -16,7 +16,7 @@
 | 1.5-D | Phase 1.5 documentation & traceability | ✅ **Completed** | Phase notes, logs, README, architecture, design docs |
 | 2 | Advanced slotting diagnostics | ✅ **Completed** | Descriptive SKU placement, zone, location, category, and capacity diagnostics |
 | 2-D | Phase 2 documentation & traceability | ✅ **Completed** | Phase notes, logs, contracts, data governance docs, Graphify evidence |
-| 3 | Prescriptive scoring and prioritisation | 🔜 Future | Scoring models, prioritisation rules |
+| 3 | Prescriptive scoring and prioritisation | ✅ **Completed** | Transparent review-prioritization scores from Phase 2 diagnostics |
 | 4 | Scenario/model comparison | 🔜 Future | What-if modelling, alternative slotting evaluation |
 | 5 | Mathematical optimisation | 🔜 Future | OR-Tools/Pyomo, zone resizing, SKU relocation |
 | 6 | Operational simulation | 🔜 Future | Labour modelling, travel time, throughput estimation |
@@ -94,6 +94,19 @@
 - [x] `src/slotting_optimization_engine/app/streamlit_app.py` — Diagnostic summary preview only
 - [x] `docs/phase_notes/phase_2_diagnostics.md` — Phase 2 decisions and evidence
 - [x] `docs/phase_logs/phase_2_terminal_log.md` — Terminal log with verification and Graphify use
+
+### Phase 3 — Complete
+
+- [x] `src/slotting_optimization_engine/scoring/__init__.py` — Scoring package exports
+- [x] `src/slotting_optimization_engine/scoring/prioritization.py` — Dataclass scoring config, action scores, priority queue, summary, and output writer
+- [x] `scripts/run_scoring.py` — CLI entrypoint for Phase 3 outputs
+- [x] `data/processed/slotting_opportunity_scores.csv` — Action-level prioritization scores
+- [x] `data/processed/priority_recommendation_queue.csv` — Sorted human-review queue
+- [x] `data/processed/scoring_summary.csv` — Summary metrics and inferred config snapshot
+- [x] `tests/unit/test_scoring_prioritization.py` — Score range, priority labels, queue sorting, missing inputs, output saving, script import
+- [x] `tests/unit/test_project_structure.py` — Updated required Phase 3 files
+- [x] `docs/phase_notes/phase_3_scoring.md` — Phase 3 decisions and evidence
+- [x] `docs/phase_logs/phase_3_terminal_log.md` — Terminal log with verification and Graphify use
 
 ## Legend
 

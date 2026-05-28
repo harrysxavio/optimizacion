@@ -1,10 +1,10 @@
 # Master Plan — slotting-optimization-engine
 
 **Project:** `slotting-optimization-engine`  
-**Plan version:** `v0.4.0`  
+**Plan version:** `v0.5.0`  
 **Last updated:** 2026-05-27  
-**Status:** Phase 0, Phase 0-D, Phase 1, Phase 1-D, Phase 1.5, Phase 1.5-D, Phase 2, and Phase 2-D completed.  
-**Scope of this update:** Phase 2 advanced descriptive diagnostics and Phase 2-D documentation.
+**Status:** Phase 0, Phase 0-D, Phase 1, Phase 1-D, Phase 1.5, Phase 1.5-D, Phase 2, Phase 2-D, and Phase 3 completed.  
+**Scope of this update:** Phase 3 scoring/prioritization and Spanish README introduction.
 
 ---
 
@@ -62,6 +62,7 @@ Only the following phases are in scope for the first implementation cycle:
 | 1.5-D | Documentation, explanation, and traceability for Phase 1.5 | In scope | Completed |
 | 2 | Advanced slotting diagnostics | In scope | Completed |
 | 2-D | Documentation, explanation, and traceability for Phase 2 | In scope | Completed |
+| 3 | Prescriptive scoring and prioritization | In scope | Completed as review prioritization only |
 
 Phase 0 (design, architecture, base docs) and Phase 0-D (documentation and traceability) have been completed. No functional implementation beyond project structure and configuration was performed.
 
@@ -73,7 +74,6 @@ The following capabilities are intentionally deferred and must not be implemente
 
 | Future phase | Capability | Status |
 |---|---|---|
-| 3 | Prescriptive scoring and prioritization | Future |
 | 4 | Scenario/model comparison | Future |
 | 5 | Mathematical optimization | Future |
 | 6 | Operational simulation | Future |
@@ -87,8 +87,8 @@ Deferred capabilities include advanced recommendations, real optimization, simul
 
 | Principle | Decision |
 |---|---|
-| Controlled scope | Implement only the currently requested phase; Phase 2 is descriptive diagnostics only. |
-| Modular architecture | Keep data, domain, features, diagnostics, optimization, simulation, reporting, and app concerns separated. |
+| Controlled scope | Implement only the currently requested phase; Phase 3 is prioritization scoring only, not optimization. |
+| Modular architecture | Keep data, domain, features, diagnostics, scoring, optimization, simulation, reporting, and app concerns separated. |
 | Production evolution | Start simple, but avoid structures that block future production hardening. |
 | Traceability | Every relevant decision must update this master plan. |
 | Testability | Functional phases must include tests or explicit verification evidence. |
@@ -135,6 +135,7 @@ slotting-optimization-engine/
 │       ├── domain/
 │       ├── features/
 │       ├── diagnostics/
+│       ├── scoring/
 │       ├── optimization/
 │       ├── simulation/
 │       ├── reporting/
@@ -166,7 +167,7 @@ Analytical dataset
         ↓
 Technical Streamlit inspection UI
         ↓
-Future diagnostics, scenarios, optimization, simulation, recommendations
+Diagnostics and scoring, then future scenarios, optimization, simulation, recommendations
 ```
 
 ### Main modules
@@ -178,6 +179,7 @@ Future diagnostics, scenarios, optimization, simulation, recommendations
 | `data` | Data generation, loading, validation | Synthetic data and contract validation. |
 | `features` | Analytical feature construction | Initial demand, rotation, utilization, and density features. |
 | `diagnostics` | Slotting diagnostics | Descriptive diagnostic flags and CSV outputs. |
+| `scoring` | Prioritization scoring | Action-level review scores and queue from diagnostic outputs. |
 | `optimization` | Mathematical optimization | Future stub only in first cycle. |
 | `simulation` | Operational simulation | Future stub only in first cycle. |
 | `reporting` | Outputs and summaries | Basic reusable summaries if needed. |
@@ -405,6 +407,46 @@ This ensures validation never silently degrades.
 - `docs/architecture_sdd.md`
 - `docs/roadmap.md`
 
+### Phase 3 — Scoring and prioritization
+
+**Goal:** Produce transparent prioritization scores and a sorted review queue from Phase 2 diagnostic outputs without creating mathematical optimization, target slot recommendations, scenario comparison, simulation, auth, deploy, or a final business app.
+
+**Expected deliverables:**
+
+- `src/slotting_optimization_engine/scoring/__init__.py`
+- `src/slotting_optimization_engine/scoring/prioritization.py`
+- `scripts/run_scoring.py`
+- `data/processed/slotting_opportunity_scores.csv`
+- `data/processed/priority_recommendation_queue.csv`
+- `data/processed/scoring_summary.csv`
+- Unit tests for score range, priority assignment, queue sorting, missing inputs, and output writing
+- Documentation updates and Phase 3 terminal log
+
+**Acceptance criteria:**
+
+- Read Phase 2 diagnostic CSVs from `data/processed/`.
+- Use a dataclass config with transparent weights.
+- Mark every scoring weight/rule as `inferred / pending confirmation`.
+- Emit candidate action labels such as `review_high_demand_far_sku`, `review_slow_mover_in_premium_zone`, and `review_zone_capacity_pressure`.
+- Keep scoring as review prioritization only, not optimal move recommendation.
+- Avoid heavy dependencies and use pandas only.
+
+### Phase 3-D — Documentation and traceability
+
+**Required updates:**
+
+- `README.md`
+- `docs/master_plan.md`
+- `docs/data_contract.md`
+- `docs/data/dataset-index.md`
+- `docs/data/business-knowledge.md`
+- `docs/data/query-log.md`
+- `docs/data/synthetic/learnings.md`
+- `docs/phase_notes/phase_3_scoring.md`
+- `docs/phase_logs/phase_3_terminal_log.md`
+- `docs/architecture_sdd.md`
+- `docs/roadmap.md`
+
 ---
 
 ## 12. Required phase-note template
@@ -471,12 +513,13 @@ If a command cannot be executed, the log must explicitly say so.
 | `docs/phase_logs/phase_1_terminal_log.md` | Created. Phase 1 generation, validation, feature build, lint, and tests were executed and recorded. |
 | `docs/phase_logs/phase_1_5_terminal_log.md` | Created. Phase 1.5 feature build, lint, tests, smoke import, Streamlit dependency check, and Graphify commands were recorded. |
 | `docs/phase_logs/phase_2_terminal_log.md` | Created. Phase 2 diagnostics, lint, tests, and Graphify commands were recorded. |
+| `docs/phase_logs/phase_3_terminal_log.md` | Created. Phase 3 diagnostics, scoring, lint, tests, and Graphify commands were recorded. |
 
 ---
 
 ## 14. Planned commands
 
-These commands describe the standard project workflow. Phase 0, Phase 1, Phase 1.5, and Phase 2 verification commands were executed and recorded in their phase logs.
+These commands describe the standard project workflow. Phase 0, Phase 1, Phase 1.5, Phase 2, and Phase 3 verification commands were executed and recorded in their phase logs.
 
 ### Environment setup
 
@@ -527,6 +570,12 @@ streamlit run src/slotting_optimization_engine/app/streamlit_app.py
 python scripts/run_diagnostics.py
 ```
 
+### Run scoring/prioritization
+
+```bash
+python scripts/run_scoring.py
+```
+
 ---
 
 ## 15. Mandatory traceability rules
@@ -575,15 +624,16 @@ The code should be understandable to someone learning Python without sacrificing
 
 | Document | Purpose | Status |
 |---|---|---|
-| `docs/master_plan.md` | Living project guide and traceability source | Updated (Phase 2) |
-| `README.md` | Project usage and quick start | Updated (Phase 2) |
-| `docs/architecture_sdd.md` | Technical architecture and SDD decisions | Updated (Phase 2) |
-| `docs/data_contract.md` | Data entities, fields, validations, assumptions, diagnostic schemas | Updated (Phase 2) |
-| `docs/roadmap.md` | Detailed project roadmap | Updated (Phase 2) |
+| `docs/master_plan.md` | Living project guide and traceability source | Updated (Phase 3) |
+| `README.md` | Project usage and quick start | Updated (Phase 3) |
+| `docs/architecture_sdd.md` | Technical architecture and SDD decisions | Updated (Phase 3) |
+| `docs/data_contract.md` | Data entities, fields, validations, assumptions, diagnostic/scoring schemas | Updated (Phase 3) |
+| `docs/roadmap.md` | Detailed project roadmap | Updated (Phase 3) |
 | `docs/phase_notes/phase_0_design_and_setup.md` | Phase 0 explanation and evidence | Created (Phase 0) |
 | `docs/phase_notes/phase_1_data_pipeline.md` | Phase 1 explanation and evidence | Created (Phase 1) |
 | `docs/phase_notes/phase_1_5_streamlit_front.md` | Phase 1.5 explanation and evidence | Created (Phase 1.5) |
 | `docs/phase_notes/phase_2_diagnostics.md` | Phase 2 explanation and evidence | Created (Phase 2) |
+| `docs/phase_notes/phase_3_scoring.md` | Phase 3 explanation and evidence | Created (Phase 3) |
 | `docs/DESIGN.md` | Lightweight technical UI design system | Created (Phase 1.5) |
 | `docs/data/README.md` | Data documentation overview | Created (Phase 1) |
 | `docs/data/dataset-index.md` | All datasets with schemas and lineage | Created (Phase 1) |
@@ -619,14 +669,15 @@ The code should be understandable to someone learning Python without sacrificing
 | 2026-05-27 | v0.2.0 | Implemented Phase 1 and Phase 1-D: synthetic data generator, validation, loading, feature builder, scripts, tests, data governance docs, terminal log | User requested Phase 1 implementation after Phase 0 was verified | Delivers the complete Phase 1 data pipeline with 6 synthetic datasets and 7 feature builders |
 | 2026-05-27 | v0.3.0 | Implemented Phase 1.5 and Phase 1.5-D: technical Streamlit front, dashboard helpers, UI design system, tests, docs, terminal log, and Graphify update/query evidence | User requested only Phase 1.5 after Phase 1 was completed and verified | Delivers a minimal descriptive UI for inspecting Phase 1 processed outputs without adding diagnostics, optimization, simulation, auth, or deployment |
 | 2026-05-27 | v0.4.0 | Implemented Phase 2 and Phase 2-D: descriptive diagnostics module, CLI, diagnostic CSV outputs, tests, data governance docs, terminal log, and Graphify update/query evidence | User requested only Phase 2 advanced slotting diagnostics and explicitly excluded prescriptive/optimization phases | Delivers descriptive diagnostic outputs while keeping Phase 3+ capabilities deferred |
+| 2026-05-27 | v0.5.0 | Implemented Phase 3: transparent scoring/prioritization module, CLI, scoring CSV outputs, tests, Spanish README intro, data governance docs, terminal log, and Graphify update/query evidence | User requested only Phase 3 scoring/prioritization and explicitly excluded Phase 4+ | Delivers a human-review priority queue while keeping scenario comparison, mathematical optimization, and simulation deferred |
 
 ---
 
 ## 20. Next steps
 
-1. Manager verification of Phase 2 implementation, docs, logs, and Graphify update/query evidence.
-2. Review inferred thresholds with business users before any Phase 3 scoring work.
-3. Keep Phase 3 limited to prescriptive scoring only if explicitly requested after Phase 2 acceptance.
+1. Manager/user review of Phase 3 implementation, docs, logs, and Graphify update/query evidence.
+2. Review inferred thresholds and scoring weights with business users before treating queue positions as operating policy.
+3. Keep Phase 4+ deferred unless explicitly requested.
 
 ---
 
@@ -634,9 +685,9 @@ The code should be understandable to someone learning Python without sacrificing
 
 | Item | Status |
 |---|---|---|
-| Master plan Markdown file | Updated through Phase 2 |
-| Project code | Created — Phase 1 data pipeline, Phase 1.5 technical UI, and Phase 2 diagnostics complete |
-| Project commands | Phase 2 verification commands executed and recorded |
+| Master plan Markdown file | Updated through Phase 3 |
+| Project code | Created — Phase 1 data pipeline, Phase 1.5 technical UI, Phase 2 diagnostics, and Phase 3 scoring complete |
+| Project commands | Phase 3 verification commands executed and recorded |
 | Phase 0 implementation | Completed |
 | Phase 0-D documentation | Completed |
 | Phase 1 implementation | Completed |
@@ -645,7 +696,9 @@ The code should be understandable to someone learning Python without sacrificing
 | Phase 1.5-D documentation | Completed |
 | Phase 2 implementation | Completed |
 | Phase 2-D documentation | Completed |
-| Terminal logs | Created — Phase 0, Phase 1, Phase 1.5, and Phase 2 |
+| Phase 3 implementation | Completed |
+| Phase 3-D documentation | Completed |
+| Terminal logs | Created — Phase 0, Phase 1, Phase 1.5, Phase 2, and Phase 3 |
 
 ---
 

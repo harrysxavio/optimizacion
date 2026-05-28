@@ -1,7 +1,7 @@
 # Business Knowledge — Slotting Optimization Engine
 
 **Last updated:** 2026-05-27  
-**Status:** Active (Phase 2)
+**Status:** Active (Phase 3)
 
 All rules are marked with their current state per the project governance policy.
 
@@ -63,6 +63,11 @@ All rules are marked with their current state per the project governance policy.
 | Premium zones are priority level <= 2 for diagnostic review | `inferred / pending confirmation` |
 | Low-priority placement is priority level >= 3 for diagnostic review | `inferred / pending confirmation` |
 | Overutilized locations/zones are avg utilization >= 85%; underutilized are <= 20% | `inferred / pending confirmation` |
+| Phase 3 prioritization weights are inferred and only order review work | `inferred / pending confirmation` |
+| Candidate action labels identify review themes, not approved operational moves | `technical pattern` |
+| `review_high_demand_far_sku` flags high-demand SKUs with distance/priority concern for review | `inferred / pending confirmation` |
+| `review_slow_mover_in_premium_zone` flags low-demand or slow-rotation SKUs occupying premium access for review | `inferred / pending confirmation` |
+| `review_zone_capacity_pressure` flags zones with utilization or premium-zone pressure for review | `inferred / pending confirmation` |
 
 ### Capacity and Utilisation
 
@@ -85,6 +90,8 @@ All rules are marked with their current state per the project governance policy.
 | High-demand poor placement count | SKUs above inferred demand threshold with long-distance or low-priority placement | `diagnostics.rules.build_slotting_diagnostics` |
 | Low-demand premium-zone count | Low-demand or slow-rotation SKUs occupying inferred premium zones | `diagnostics.rules.build_slotting_diagnostics` |
 | Category spread indicator | Category spans multiple zones without dominant concentration | `diagnostics.rules.build_category_diagnostics` |
+| Opportunity score | 0-100 inferred review-prioritization score | `scoring.prioritization.build_slotting_opportunity_scores` |
+| Priority queue position | Sorted rank for human review queue | `scoring.prioritization.build_priority_queue` |
 
 ---
 

@@ -1,7 +1,7 @@
 # Data Contract — Slotting Optimization Engine
 
-**Status:** FINALISED — Phase 2 diagnostics added.  
-**Purpose:** Define data entities, fields, validation rules, file formats, and diagnostic output schemas.  
+**Status:** FINALISED — Phase 3 scoring added.  
+**Purpose:** Define data entities, fields, validation rules, file formats, diagnostic output schemas, and scoring output schemas.  
 **Last updated:** 2026-05-27
 
 ---
@@ -135,6 +135,7 @@ All validation functions are in `src/slotting_optimization_engine/data/validatio
 | Slotting features | Parquet | `data/processed/slotting_features.parquet` | Yes (built-in) |
 | Location/zone utilisation | CSV | `data/processed/*.csv` | No |
 | Diagnostic outputs | CSV | `data/processed/*_diagnostics.csv`, `diagnostic_summary.csv` | No |
+| Scoring outputs | CSV | `data/processed/slotting_opportunity_scores.csv`, `priority_recommendation_queue.csv`, `scoring_summary.csv` | No |
 
 ---
 
@@ -193,10 +194,50 @@ One row per diagnostic metric with `metric`, `value`, `business_rule_state`, and
 5. **Metric units**: Volume in cubic centimeters; weight in kilograms.
 6. **Deterministic generation**: All synthetic data is reproducible with seed=42.
 7. **Diagnostic thresholds pending confirmation**: Phase 2 uses simple quantile and utilization thresholds for review only.
+8. **Scoring weights pending confirmation**: Phase 3 weights are transparent, inferred, and not approved business policy.
 
 ---
 
-## 7. Open questions (resolved)
+## 7. Phase 3 scoring output schemas
+
+All Phase 3 scoring outputs are `inferred / pending confirmation`. They prioritize human review and do not contain optimal moves, target slots, scenario comparisons, solver output, or simulation results.
+
+### 7.1 Slotting Opportunity Scores (`slotting_opportunity_scores.csv`)
+
+| Field | Description |
+|-------|-------------|
+| `entity_type` | Scored entity type, currently `sku` or `zone` |
+| `entity_id` | SKU or zone identifier |
+| `candidate_action` | Review label such as `review_high_demand_far_sku`, `review_slow_mover_in_premium_zone`, or `review_zone_capacity_pressure` |
+| `opportunity_score` | Prioritization score clipped to 0-100 |
+| `reason` | Human-readable explanation of the diagnostic signal |
+| `priority` | `high`, `medium`, or `low` from inferred score thresholds |
+| `rank` | Descending rank by score |
+| `business_rule_state` | Always `inferred / pending confirmation` for Phase 3 |
+| `scoring_note` | Explicit non-optimization caveat |
+
+### 7.2 Priority Recommendation Queue (`priority_recommendation_queue.csv`)
+
+Sorted review queue for opportunities with score >= configured queue threshold. Despite the filename, recommendations are candidate review actions only, not optimal movement instructions.
+
+| Field | Description |
+|-------|-------------|
+| `queue_position` | 1-based sorted queue position |
+| `priority` | Priority label |
+| `opportunity_score` | 0-100 prioritization score |
+| `entity_type`, `entity_id` | Entity under review |
+| `candidate_action` | Candidate review action label |
+| `reason` | Diagnostic/scoring explanation |
+| `business_rule_state` | `inferred / pending confirmation` |
+| `scoring_note` | Non-optimization caveat |
+
+### 7.3 Scoring Summary (`scoring_summary.csv`)
+
+One row per scoring metric with `metric`, `value`, `business_rule_state`, `scoring_note`, and `config_snapshot`. The config snapshot records every inferred weight and threshold.
+
+---
+
+## 8. Open questions (resolved)
 
 | Question | Resolution |
 |----------|-----------|
