@@ -4,6 +4,7 @@ Phase 6 simulation CLI — runs operational impact simulation.
 
 Usage:
     python scripts/run_simulation.py                          # All 3 scenarios
+    python scripts/run_simulation.py --scenario-a             # Travel only (Escenario A)
     python scripts/run_simulation.py --scenarios travel       # Travel only
     python scripts/run_simulation.py --scenarios travel,throughput
     python scripts/run_simulation.py --list-scenarios         # List available
@@ -122,6 +123,11 @@ def main() -> int:
         ),
     )
     parser.add_argument(
+        "--scenario-a",
+        action="store_true",
+        help="Shortcut for --scenarios travel (distance-only scenario).",
+    )
+    parser.add_argument(
         "--list-scenarios",
         action="store_true",
         help="List available scenarios and exit.",
@@ -141,7 +147,12 @@ def main() -> int:
         print()
         print("Usage: python scripts/run_simulation.py --scenarios travel,workload")
         print("       python scripts/run_simulation.py --scenarios travel")
+        print("       python scripts/run_simulation.py --scenario-a")
         return 0
+
+    # --scenario-a is a convenience alias for --scenarios travel
+    if args.scenario_a:
+        args.scenarios = "travel"
 
     config = SimulationConfig()
 

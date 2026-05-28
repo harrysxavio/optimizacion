@@ -68,10 +68,10 @@ Only the following phases are in scope for the first implementation cycle:
 | 4-D | Documentation, explanation, and traceability for Phase 4 | In scope | Completed |
 | 5 | Mathematical optimization | In scope | Completed as controlled SKU-to-zone prototype only |
 | 5-D | Documentation, explanation, and traceability for Phase 5 | In scope | Completed |
-| 6 | Operational simulation | In scope | Completed as Scenario B (travel + workload + throughput); Scenario C (reusable framework) and Scenario A (distance-only) remain |
+| 6 | Operational simulation | In scope | Completed — all 3 scenarios (A/B/C) done. A = distance-only, B = full operational impact, C = reusable pipeline framework |
 | 6-D | Documentation, explanation, and traceability for Phase 6 | In scope | Completed |
 
-Phases 0 through 6-D have been completed. Phase 5 is a controlled mathematical assignment prototype only; Phase 6 is an operational impact simulation with inferred assumptions on synthetic data. Auth, deploy, production UX, real WMS/ERP integration, location-level feasibility guarantees, and automatic SKU move execution are still deferred.
+Phases 0 through 6-D have been completed. Phase 5 is a controlled mathematical assignment prototype only; Phase 6 is an operational impact simulation (all 3 scenarios: A distance-only, B full impact, C reusable pipeline) with inferred assumptions on synthetic data. Auth, deploy, production UX, real WMS/ERP integration, location-level feasibility guarantees, and automatic SKU move execution are still deferred.
 
 ---
 
@@ -709,8 +709,7 @@ The code should be understandable to someone learning Python without sacrificing
 
 1. Manager/user review of Phase 6 implementation, docs, logs, and Graphify update/query evidence.
 2. Review inferred thresholds, scoring weights, scenario weights, optimization weights, simulation assumptions, and top-N settings with business users before treating outputs as operating policy.
-3. Continue with Phase 6 Scenario C (reusable framework) when the user requests it.
-4. Continue with Phase 6 Scenario A (distance-only extraction) if needed.
+3. Review Phase 6 documentation, beginner's guide, and verify all 3 scenarios produce expected outputs.
 
 ---
 

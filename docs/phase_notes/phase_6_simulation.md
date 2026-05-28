@@ -174,18 +174,30 @@ SimulationReport
 
 ---
 
-## 9. What is missing for Scenario C and A
+## 9. Scenario A and C — completed
 
-- **Scenario C** (Reusable Framework): Refactor simulation modules into a base class/strategy pattern so each scenario (travel-only, workload, full) becomes a pluggable strategy. Pending user approval to start.
-- **Scenario A** (Distance-only): Already covered by `TravelSimulator` — can be extracted as a standalone entrypoint when Scenario C is built.
+Both scenarios have been implemented and are operational:
+
+- **Scenario A** (Distance-only): A dedicated `--scenario-a` CLI flag provides a standalone travel-only entrypoint. It runs the same `TravelScenario` as `--scenarios travel` but with a simpler, discoverable flag. Produces 3 CSVs: `simulation_summary.csv`, `simulation_travel_aggregate.csv`, `simulation_order_detail.csv`.
+- **Scenario C** (Reusable Framework): Built as `SimulationScenario` base class + `SimulationPipeline` + `BUILTIN_SCENARIOS` registry. Each scenario (travel, workload, throughput) is a pluggable class. The CLI supports `--scenarios travel,workload,throughput` (any combination), `--list-scenarios`, and `--dry-run`. See `src/slotting_optimization_engine/simulation/pipeline.py` and `registry.py`.
 
 ---
 
 ## 10. How to run
 
 ```powershell
-# Full simulation pipeline
+# Full simulation pipeline (all 3 scenarios)
 python scripts/run_simulation.py
+
+# Distance-only (Scenario A)
+python scripts/run_simulation.py --scenario-a
+python scripts/run_simulation.py --scenarios travel
+
+# Selected scenarios (Scenario C flexibility)
+python scripts/run_simulation.py --scenarios travel,throughput
+
+# List available scenarios
+python scripts/run_simulation.py --list-scenarios
 
 # Dry run — only load data, don't simulate
 python scripts/run_simulation.py --dry-run

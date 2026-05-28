@@ -814,7 +814,7 @@ data/
 
 Phase 6 se diseñó como un **simulador modular** con 3 escenarios, de los cuales el **B está implementado** y los otros dos están pendientes. Cada escenario responde una pregunta distinta:
 
-### Escenario A — Solo distancias (pendiente)
+### Escenario A — Solo distancias ✅ (implementado)
 
 **Pregunta:** *"¿Cuánto cambiaría la distancia recorrida por los pickers si movemos estos SKUs?"*
 
@@ -822,7 +822,12 @@ Phase 6 se diseñó como un **simulador modular** con 3 escenarios, de los cuale
 
 **Cuándo usarlo:** Cuando solo interesa el impacto en caminatas diarias, sin entrar en detalle de zonas ni productividad.
 
-**Ya está cubierto por:** `TravelSimulator` en `simulation/travel.py`. Solo falta extraerlo como entrypoint independiente.
+**Comando:** `python scripts/run_simulation.py --scenario-a` o `python scripts/run_simulation.py --scenarios travel`
+
+**Qué esperar:** 3 CSVs en `data/processed/`:
+- `simulation_summary.csv` — métricas de distancia/tiempo
+- `simulation_travel_aggregate.csv` — agregados de viaje
+- `simulation_order_detail.csv` — detalle por orden
 
 ### Escenario B — Impacto operacional completo ✅ (implementado)
 
@@ -839,7 +844,7 @@ Phase 6 se diseñó como un **simulador modular** con 3 escenarios, de los cuale
 
 **Comando:** `python scripts/run_simulation.py`
 
-### Escenario C — Framework reutilizable (pendiente)
+### Escenario C — Framework reutilizable ✅ (implementado)
 
 **Pregunta:** *"¿Cómo ejecuto cualquier combinación de escenarios sin modificar código?"*
 
@@ -847,7 +852,20 @@ Phase 6 se diseñó como un **simulador modular** con 3 escenarios, de los cuale
 
 **Cuándo usarlo:** Cuando necesitás flexibilidad — correr solo distancias un día, solo throughput otro día, o los 3 juntos. También es la base para que equipos de datos agreguen escenarios personalizados sin tocar el núcleo.
 
-**Lo que viene:** Se implementa a continuación.
+**Comandos:**
+```powershell
+# Ver escenarios disponibles
+python scripts/run_simulation.py --list-scenarios
+
+# Solo distancia (Escenario A)
+python scripts/run_simulation.py --scenario-a
+
+# Distancia + throughput (sin workload)
+python scripts/run_simulation.py --scenarios travel,throughput
+
+# Todos (default)
+python scripts/run_simulation.py
+```
 
 ## Próximas fases (diferidas)
 
@@ -856,3 +874,209 @@ Capacidades avanzadas que están fuera del alcance del ciclo actual:
 - Phase 7: Production-ready application (autenticación, CI/CD, deploy, conectores WMS/ERP)
 
 Ver `docs/roadmap.md` para detalle completo.
+
+---
+
+## Guía para principiantes — Cómo usar esta herramienta
+
+Si ves esto por primera vez, esta guía te explica **qué es esto, qué necesitas y cómo usarlo paso a paso**.
+
+### ¿Qué es esto?
+
+Es un motor de análisis para centros de distribución (depósitos, bodegas). Te ayuda a responder preguntas como:
+
+- *"¿Qué SKUs están mal ubicados?"*
+- *"¿Qué zonas están sobrecargadas?"*
+- *"¿Qué conviene reubicar primero?"*
+- *"¿Cuánto cambiarían las distancias si muevo ciertos productos?"*
+
+No mueve productos automáticamente. **Analiza y recomienda**, pero la decisión final la toma un humano.
+
+### ¿Qué necesito para empezar?
+
+1. **Python 3.11 o superior** instalado en tu PC.
+2. **Una terminal** (PowerShell en Windows, bash en Mac/Linux).
+3. **Git** (opcional, para clonar el repositorio).
+
+### Paso 1 — Obtener el código
+
+Si ya tenés la carpeta del proyecto en tu PC, abrí una terminal en esa carpeta.
+
+Si no, clonalo con:
+
+```bash
+git clone https://github.com/harrysxavio/optimizacion.git
+cd optimizacion
+```
+
+### Paso 2 — Crear el entorno virtual (recomendado)
+
+Esto aísla las dependencias del proyecto del resto de tu sistema.
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+En Mac/Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### Paso 3 — Instalar el paquete
+
+```powershell
+pip install -e ".[dev]"
+```
+
+Esto instala todo lo necesario: pandas, numpy, ruff, pytest, etc.
+
+### Paso 4 — Generar datos sintéticos
+
+El proyecto usa datos ficticios para que puedas probar sin riesgo.
+
+```powershell
+python scripts/generate_sample_data.py
+```
+
+Esto crea ~13,000 filas de datos en la carpeta `data/synthetic/`: SKUs, zonas, ubicaciones, inventario, pedidos.
+
+### Paso 5 — Validar los datos
+
+```powershell
+python scripts/run_data_validation.py
+```
+
+Revisa que todos los IDs, tipos y reglas estén correctos.
+
+### Paso 6 — Construir features analíticas
+
+```powershell
+python scripts/build_features.py
+```
+
+Esto calcula demanda por SKU, utilización de ubicaciones y zonas, etc.
+
+### Paso 7 — Ejecutar diagnósticos
+
+```powershell
+python scripts/run_diagnostics.py
+```
+
+Marca qué SKUs están lejos del despacho, qué zonas están sobrecargadas, etc.
+
+### Paso 8 — Scoring y priorización
+
+```powershell
+python scripts/run_scoring.py
+```
+
+Ordena los problemas detectados por importancia, así sabés por dónde empezar a revisar.
+
+### Paso 9 — Comparar escenarios
+
+```powershell
+python scripts/run_scenarios.py
+```
+
+Te muestra cómo cambian las prioridades según el enfoque (priorizar demanda, capacidad, etc.).
+
+### Paso 10 — Optimización matemática
+
+```powershell
+python scripts/run_optimization.py
+```
+
+Asigna SKUs prioritarios a zonas candidatas minimizando un costo calculado.
+
+### Paso 11 — Simular impacto operativo
+
+Una vez que tenés la asignación del paso 10, podés simular el impacto:
+
+```powershell
+# Todos los escenarios (distancia + carga + throughput)
+python scripts/run_simulation.py
+
+# Solo distancia (más rápido)
+python scripts/run_simulation.py --scenario-a
+```
+
+### Paso 12 — Ver resultados
+
+Todos los resultados se guardan como CSV en `data/processed/`. Podés abrirlos con Excel, Google Sheets, o cualquier editor de texto.
+
+Los archivos más importantes:
+
+| Archivo | Qué contiene |
+|---------|-------------|
+| `priority_recommendation_queue.csv` | Lista ordenada de qué revisar primero |
+| `scenario_comparison.csv` | Cómo cambian las prioridades según el escenario |
+| `optimization_assignments.csv` | Qué SKU va a qué zona candidata |
+| `simulation_summary.csv` | Cuánto cambiarían las distancias, carga y throughput |
+
+### Comandos rápidos
+
+Si querés ejecutar todo de una:
+
+```powershell
+python scripts/generate_sample_data.py
+python scripts/run_data_validation.py
+python scripts/build_features.py
+python scripts/run_diagnostics.py
+python scripts/run_scoring.py
+python scripts/run_scenarios.py
+python scripts/run_optimization.py
+python scripts/run_simulation.py
+
+# Y verificar que todo funciona
+python -m ruff check src tests scripts
+python -m pytest -v
+```
+
+### Verificar que todo funciona
+
+```powershell
+# Tests (deberían dar ~257 pasados)
+python -m pytest -v
+
+# Calidad de código
+python -m ruff check src tests scripts
+```
+
+### ¿Y si algo falla?
+
+- **"No such file or directory"**: Corré el paso anterior que genera ese archivo. Cada fase necesita los outputs de la anterior.
+- **Error de importación**: Activaste el entorno virtual? (`source .venv/bin/activate` o `.\.venv\Scripts\Activate.ps1`)
+- **Tests fallan**: Asegurate de haber corrido todos los pasos de la Phase 1 a la Phase 5 antes de los tests.
+
+### Conceptos clave
+
+| Término | Significado |
+|---------|-------------|
+| **SKU** | Producto individual que se almacena y se vende |
+| **Slotting** | Decidir dónde ubicar cada SKU dentro del depósito |
+| **Zona** | Área del depósito (ej: picking, reserve, cross-dock) |
+| **Ubicación** | Estante/rack específico dentro de una zona |
+| **Gini** | Coeficiente que mide qué tan balanceada está la carga entre zonas (0 = perfecto) |
+| **Throughput** | Cantidad de órdenes que se pueden procesar por turno |
+| **Inferred / pending confirmation** | Los valores fueron estimados, no confirmados con operación real |
+
+### Limitaciones importantes
+
+- Los datos actuales son **sintéticos** (no reales).
+- Los pesos y umbrales están marcados como `inferred / pending confirmation`.
+- **No** ejecutes movimientos de SKU automáticamente basándote en estos CSVs.
+- La simulación no reemplaza un estudio de tiempos y movimientos certificado.
+
+### ¿Y ahora?
+
+Una vez que entiendas el flujo, podés:
+
+1. Reemplazar los datos sintéticos por datos reales de tu depósito.
+2. Ajustar los pesos y umbrales a tu operación.
+3. Usar los CSVs como insumo para decisiones con tu equipo operativo.
+4. Explorar el código fuente para entender cada módulo.
+
+Para preguntas específicas, abrí un issue en GitHub o consultá la documentación en `docs/`.
