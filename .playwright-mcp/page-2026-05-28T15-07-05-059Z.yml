@@ -1,0 +1,116 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - heading "📦 Slotting Control Panel" [level=1] [ref=e24]:
+      - text: 📦 Slotting Control Panel
+      - generic [ref=e25]:
+        - link "Link to heading":
+          - /url: "#slotting-control-panel"
+          - img
+    - paragraph [ref=e30]: Panel de control del pipeline completo de slotting — Fases 1 a 6. Vista descriptiva y analítica, no genera recomendaciones operativas.
+    - alert [ref=e33]:
+      - generic [ref=e36]:
+        - generic [ref=e39]: 🔴
+        - paragraph [ref=e41]: Se detectaron 168 ubicaciones sobrecapacidad.
+    - generic [ref=e43]:
+      - tablist [ref=e45]:
+        - tab "📊 Overview" [ref=e46] [cursor=pointer]:
+          - paragraph [ref=e48]: 📊 Overview
+        - tab "🔬 Diagnóstico" [ref=e49] [cursor=pointer]:
+          - paragraph [ref=e51]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [ref=e52] [cursor=pointer]:
+          - paragraph [ref=e54]: 📈 Scoring
+        - tab "🔄 Escenarios" [ref=e55] [cursor=pointer]:
+          - paragraph [ref=e57]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [active] [selected] [ref=e58] [cursor=pointer]:
+          - paragraph [ref=e60]: ⚙️ Optimización
+        - tab "🎲 Simulación" [ref=e61] [cursor=pointer]:
+          - paragraph [ref=e63]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [ref=e64] [cursor=pointer]:
+          - paragraph [ref=e66]: 📋 Templates & Upload
+      - tabpanel "⚙️ Optimización" [ref=e868]:
+        - generic [ref=e869]:
+          - paragraph [ref=e874]:
+            - strong [ref=e875]: "Fase 5: Asignación optimizada."
+            - text: Algoritmo de asignación que maximiza el alineamiento SKU-ubicación respetando restricciones de capacidad, zona y tipo de producto. Genera una matriz de costos y un resumen ejecutivo.
+          - generic [ref=e877]:
+            - generic [ref=e879]:
+              - heading "Asignaciones" [level=3] [ref=e884]:
+                - text: Asignaciones
+                - generic [ref=e885]:
+                  - link "Link to heading":
+                    - /url: "#asignaciones"
+                    - img
+              - generic [ref=e890]:
+                - button "Show/hide columns" [ref=e894] [cursor=pointer]:
+                  - img [ref=e895]
+                - button "Download as CSV" [ref=e900] [cursor=pointer]:
+                  - img [ref=e901]
+                - button "Search" [ref=e906] [cursor=pointer]:
+                  - img [ref=e907]
+                - button "Fullscreen" [ref=e912] [cursor=pointer]:
+                  - img [ref=e913]
+            - generic [ref=e925]:
+              - heading "Resumen" [level=3] [ref=e930]:
+                - text: Resumen
+                - generic [ref=e931]:
+                  - link "Link to heading":
+                    - /url: "#resumen"
+                    - img
+              - generic [ref=e936]:
+                - button "Show/hide columns" [ref=e940] [cursor=pointer]:
+                  - img [ref=e941]
+                - button "Download as CSV" [ref=e946] [cursor=pointer]:
+                  - img [ref=e947]
+                - button "Search" [ref=e952] [cursor=pointer]:
+                  - img [ref=e953]
+                - button "Fullscreen" [ref=e958] [cursor=pointer]:
+                  - img [ref=e959]
+          - heading "Matriz de costos" [level=3] [ref=e974]:
+            - text: Matriz de costos
+            - generic [ref=e975]:
+              - link "Link to heading":
+                - /url: "#matriz-de-costos"
+                - img
+          - generic [ref=e980]:
+            - button "Show/hide columns" [ref=e984] [cursor=pointer]:
+              - img [ref=e985]
+            - button "Download as CSV" [ref=e990] [cursor=pointer]:
+              - img [ref=e991]
+            - button "Search" [ref=e996] [cursor=pointer]:
+              - img [ref=e997]
+            - button "Fullscreen" [ref=e1002] [cursor=pointer]:
+              - img [ref=e1003]
+          - heading "Recomendaciones" [level=3] [ref=e1018]:
+            - text: Recomendaciones
+            - generic [ref=e1019]:
+              - link "Link to heading":
+                - /url: "#recomendaciones"
+                - img
+          - list [ref=e1024]:
+            - listitem [ref=e1025]: ⚙️ Optimización ejecutada con método 'desconocido' para ? SKU(s).
+          - list [ref=e1030]:
+            - listitem [ref=e1031]: 📍 3 SKU(s) asignados a Z-10.
+          - list [ref=e1036]:
+            - listitem [ref=e1037]: 📍 1 SKU(s) asignados a Z-01.
+          - list [ref=e1042]:
+            - listitem [ref=e1043]: 📍 1 SKU(s) asignados a Z-02.
+          - list [ref=e1048]:
+            - listitem [ref=e1049]: 📍 1 SKU(s) asignados a Z-03.
+          - list [ref=e1054]:
+            - listitem [ref=e1055]: 📍 1 SKU(s) asignados a Z-04.
+          - list [ref=e1060]:
+            - listitem [ref=e1061]: 📍 1 SKU(s) asignados a Z-05.
+          - list [ref=e1066]:
+            - listitem [ref=e1067]: 📍 1 SKU(s) asignados a Z-06.
+          - list [ref=e1072]:
+            - listitem [ref=e1073]: 📍 1 SKU(s) asignados a Z-07.
+          - list [ref=e1078]:
+            - listitem [ref=e1079]: 📍 1 SKU(s) asignados a Z-08.
+          - list [ref=e1084]:
+            - listitem [ref=e1085]: 📍 1 SKU(s) asignados a Z-09.

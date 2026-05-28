@@ -1,0 +1,26 @@
+[    4675ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4689ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4715ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4716ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4726ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4727ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4734ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4734ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4775ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4785ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4785ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4788ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4796ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4797ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4828ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4837ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4837ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4840ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4845ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[    4846ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[   35676ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[   35684ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[   35684ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[   35688ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[   35696ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0
+[   35696ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8521/static/js/embed.Bqebd2RE.js:0

@@ -60,7 +60,7 @@ def test_missing_outputs_and_status_table() -> None:
     table = status_table((missing_status,))
 
     assert table.loc[0, "dataset"] == "Zones"
-    assert table.loc[0, "available"] == "No"
+    assert table.loc[0, "disponible"] == "❌ No"
 
 
 def test_preview_table_returns_bounded_copy() -> None:

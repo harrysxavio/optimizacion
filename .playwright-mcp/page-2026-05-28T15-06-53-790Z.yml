@@ -1,0 +1,96 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - heading "📦 Slotting Control Panel" [level=1] [ref=e24]:
+      - text: 📦 Slotting Control Panel
+      - generic [ref=e25]:
+        - link "Link to heading":
+          - /url: "#slotting-control-panel"
+          - img
+    - paragraph [ref=e30]: Panel de control del pipeline completo de slotting — Fases 1 a 6. Vista descriptiva y analítica, no genera recomendaciones operativas.
+    - alert [ref=e33]:
+      - generic [ref=e36]:
+        - generic [ref=e39]: 🔴
+        - paragraph [ref=e41]: Se detectaron 168 ubicaciones sobrecapacidad.
+    - generic [ref=e43]:
+      - tablist [ref=e45]:
+        - tab "📊 Overview" [ref=e46] [cursor=pointer]:
+          - paragraph [ref=e48]: 📊 Overview
+        - tab "🔬 Diagnóstico" [ref=e49] [cursor=pointer]:
+          - paragraph [ref=e51]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [ref=e52] [cursor=pointer]:
+          - paragraph [ref=e54]: 📈 Scoring
+        - tab "🔄 Escenarios" [active] [selected] [ref=e55] [cursor=pointer]:
+          - paragraph [ref=e57]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [ref=e58] [cursor=pointer]:
+          - paragraph [ref=e60]: ⚙️ Optimización
+        - tab "🎲 Simulación" [ref=e61] [cursor=pointer]:
+          - paragraph [ref=e63]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [ref=e64] [cursor=pointer]:
+          - paragraph [ref=e66]: 📋 Templates & Upload
+      - tabpanel "🔄 Escenarios" [ref=e710]:
+        - generic [ref=e711]:
+          - paragraph [ref=e716]:
+            - strong [ref=e717]: "Fase 4: Comparación de escenarios."
+            - text: Evaluación de múltiples estrategias de slotting (ABC cross-dock, demanda ponderada, rotación pura). Cada escenario muestra su mix de acciones propuestas y un resumen comparativo.
+          - generic [ref=e719]:
+            - generic [ref=e721]:
+              - heading "Comparación de escenarios" [level=3] [ref=e726]:
+                - text: Comparación de escenarios
+                - generic [ref=e727]:
+                  - link "Link to heading":
+                    - /url: "#comparacion-de-escenarios"
+                    - img
+              - generic [ref=e732]:
+                - button "Show/hide columns" [ref=e736] [cursor=pointer]:
+                  - img [ref=e737]
+                - button "Download as CSV" [ref=e742] [cursor=pointer]:
+                  - img [ref=e743]
+                - button "Search" [ref=e748] [cursor=pointer]:
+                  - img [ref=e749]
+                - button "Fullscreen" [ref=e754] [cursor=pointer]:
+                  - img [ref=e755]
+            - generic [ref=e767]:
+              - heading "Action mix por escenario" [level=3] [ref=e772]:
+                - text: Action mix por escenario
+                - generic [ref=e773]:
+                  - link "Link to heading":
+                    - /url: "#action-mix-por-escenario"
+                    - img
+              - generic [ref=e778]:
+                - button "Show/hide columns" [ref=e782] [cursor=pointer]:
+                  - img [ref=e783]
+                - button "Download as CSV" [ref=e788] [cursor=pointer]:
+                  - img [ref=e789]
+                - button "Search" [ref=e794] [cursor=pointer]:
+                  - img [ref=e795]
+                - button "Fullscreen" [ref=e800] [cursor=pointer]:
+                  - img [ref=e801]
+          - heading "Resumen de escenarios" [level=3] [ref=e816]:
+            - text: Resumen de escenarios
+            - generic [ref=e817]:
+              - link "Link to heading":
+                - /url: "#resumen-de-escenarios"
+                - img
+          - generic [ref=e822]:
+            - button "Show/hide columns" [ref=e826] [cursor=pointer]:
+              - img [ref=e827]
+            - button "Download as CSV" [ref=e832] [cursor=pointer]:
+              - img [ref=e833]
+            - button "Search" [ref=e838] [cursor=pointer]:
+              - img [ref=e839]
+            - button "Fullscreen" [ref=e844] [cursor=pointer]:
+              - img [ref=e845]
+          - heading "Recomendaciones" [level=3] [ref=e860]:
+            - text: Recomendaciones
+            - generic [ref=e861]:
+              - link "Link to heading":
+                - /url: "#recomendaciones"
+                - img
+          - list [ref=e866]:
+            - listitem [ref=e867]: "🔄 4 escenarios comparados: baseline, demand_first, capacity_first, balanced_review."

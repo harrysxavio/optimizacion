@@ -1,0 +1,114 @@
+[    1189ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1194ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1212ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1213ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1220ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1224ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1233ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1233ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1488ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1500ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1501ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1507ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1516ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1517ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1648ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1659ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1659ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1663ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1670ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[    1671ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47814ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47815ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47825ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47825ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47829ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47830ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47835ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[   47835ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132535ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132544ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132559ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132560ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132567ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132568ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132574ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132574ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132741ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132748ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132748ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132751ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132757ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132757ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132872ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132887ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132887ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132892ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132899ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  132899ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133699ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133700ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133705ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133706ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133709ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133711ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133715ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  133715ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  173561ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  173568ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  173568ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  173571ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  173578ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  173578ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536616ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536618ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536626ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536626ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536631ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536632ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536636ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[  536637ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1037960ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1037964ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038061ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038061ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038069ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038071ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038078ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038078ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038291ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038297ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038297ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038300ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038307ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038307ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038530ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038538ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038538ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038543ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038550ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1038550ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040649ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040652ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040666ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040667ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040674ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040676ms] [WARNING] WARN Dropping "fit-x" because spec has discrete width. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040682ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040682ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040826ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040833ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040833ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040838ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040845ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1040845ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1041075ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1041082ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1041082ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1041085ms] [WARNING] WARN Scale bindings are currently only supported for scales with unbinned, continuous domains. @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1041091ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_start": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1041092ms] [WARNING] WARN Infinite extent for field "value -- streamlit-generated_end": [Infinity, -Infinity] @ http://localhost:8501/static/js/embed.Bqebd2RE.js:0
+[ 1156145ms] [WARNING] WebSocket onclose @ http://localhost:8501/static/js/index.D2ZqaFuW.js:17
+[ 1158505ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0
+[ 1158506ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/host-config:0
+[ 1158789ms] [ERROR] Failed to load resource: net::ERR_CONNECTION_REFUSED @ http://localhost:8501/_stcore/health:0

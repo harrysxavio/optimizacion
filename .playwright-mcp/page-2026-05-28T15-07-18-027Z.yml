@@ -1,0 +1,163 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - heading "📦 Slotting Control Panel" [level=1] [ref=e24]:
+      - text: 📦 Slotting Control Panel
+      - generic [ref=e25]:
+        - link "Link to heading":
+          - /url: "#slotting-control-panel"
+          - img
+    - paragraph [ref=e30]: Panel de control del pipeline completo de slotting — Fases 1 a 6. Vista descriptiva y analítica, no genera recomendaciones operativas.
+    - alert [ref=e33]:
+      - generic [ref=e36]:
+        - generic [ref=e39]: 🔴
+        - paragraph [ref=e41]: Se detectaron 168 ubicaciones sobrecapacidad.
+    - generic [ref=e43]:
+      - tablist [ref=e45]:
+        - tab "📊 Overview" [ref=e46] [cursor=pointer]:
+          - paragraph [ref=e48]: 📊 Overview
+        - tab "🔬 Diagnóstico" [ref=e49] [cursor=pointer]:
+          - paragraph [ref=e51]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [ref=e52] [cursor=pointer]:
+          - paragraph [ref=e54]: 📈 Scoring
+        - tab "🔄 Escenarios" [ref=e55] [cursor=pointer]:
+          - paragraph [ref=e57]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [ref=e58] [cursor=pointer]:
+          - paragraph [ref=e60]: ⚙️ Optimización
+        - tab "🎲 Simulación" [ref=e61] [cursor=pointer]:
+          - paragraph [ref=e63]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [active] [selected] [ref=e64] [cursor=pointer]:
+          - paragraph [ref=e66]: 📋 Templates & Upload
+      - tabpanel "📋 Templates & Upload" [ref=e1086]:
+        - generic [ref=e1087]:
+          - paragraph [ref=e1092]:
+            - strong [ref=e1093]: Descargá templates CSV vacíos
+            - text: con las columnas esperadas por cada dataset del sistema. Usalos como base para tus archivos de entrada.
+          - generic [ref=e1095]:
+            - paragraph [ref=e1102]:
+              - strong [ref=e1103]: Catálogo de SKUs
+            - paragraph [ref=e1110]: Lista maestra de todos los productos. Cada fila = un SKU.
+            - generic [ref=e1112]:
+              - paragraph [ref=e1117]: 7 cols
+              - group [ref=e1120]:
+                - generic "keyboard_arrow_right Ver columnas" [ref=e1121] [cursor=pointer]:
+                  - generic [ref=e1122]:
+                    - generic [ref=e1124]: keyboard_arrow_right
+                    - paragraph [ref=e1127]: Ver columnas
+            - button "⬇ CSV" [ref=e1132] [cursor=pointer]:
+              - paragraph [ref=e1136]: ⬇ CSV
+          - generic [ref=e1138]:
+            - paragraph [ref=e1145]:
+              - strong [ref=e1146]: Zonas del depósito
+            - paragraph [ref=e1153]: Áreas del depósito con distancia a despacho y capacidad.
+            - generic [ref=e1155]:
+              - paragraph [ref=e1160]: 6 cols
+              - group [ref=e1163]:
+                - generic "keyboard_arrow_right Ver columnas" [ref=e1164] [cursor=pointer]:
+                  - generic [ref=e1165]:
+                    - generic [ref=e1167]: keyboard_arrow_right
+                    - paragraph [ref=e1170]: Ver columnas
+            - button "⬇ CSV" [ref=e1175] [cursor=pointer]:
+              - paragraph [ref=e1179]: ⬇ CSV
+          - generic [ref=e1181]:
+            - paragraph [ref=e1188]:
+              - strong [ref=e1189]: Ubicaciones (estanterías)
+            - paragraph [ref=e1196]: Ubicaciones físicas dentro de cada zona.
+            - generic [ref=e1198]:
+              - paragraph [ref=e1203]: 7 cols
+              - group [ref=e1206]:
+                - generic "keyboard_arrow_right Ver columnas" [ref=e1207] [cursor=pointer]:
+                  - generic [ref=e1208]:
+                    - generic [ref=e1210]: keyboard_arrow_right
+                    - paragraph [ref=e1213]: Ver columnas
+            - button "⬇ CSV" [ref=e1218] [cursor=pointer]:
+              - paragraph [ref=e1222]: ⬇ CSV
+          - generic [ref=e1224]:
+            - paragraph [ref=e1231]:
+              - strong [ref=e1232]: Inventario
+            - paragraph [ref=e1239]: Stock actual. Cada fila = un SKU en una ubicación.
+            - generic [ref=e1241]:
+              - paragraph [ref=e1246]: 5 cols
+              - group [ref=e1249]:
+                - generic "keyboard_arrow_right Ver columnas" [ref=e1250] [cursor=pointer]:
+                  - generic [ref=e1251]:
+                    - generic [ref=e1253]: keyboard_arrow_right
+                    - paragraph [ref=e1256]: Ver columnas
+            - button "⬇ CSV" [ref=e1261] [cursor=pointer]:
+              - paragraph [ref=e1265]: ⬇ CSV
+          - generic [ref=e1267]:
+            - paragraph [ref=e1274]:
+              - strong [ref=e1275]: Pedidos (cabecera)
+            - paragraph [ref=e1282]: Encabezados de pedidos. Cada fila = una orden.
+            - generic [ref=e1284]:
+              - paragraph [ref=e1289]: 3 cols
+              - group [ref=e1292]:
+                - generic "keyboard_arrow_right Ver columnas" [ref=e1293] [cursor=pointer]:
+                  - generic [ref=e1294]:
+                    - generic [ref=e1296]: keyboard_arrow_right
+                    - paragraph [ref=e1299]: Ver columnas
+            - button "⬇ CSV" [ref=e1304] [cursor=pointer]:
+              - paragraph [ref=e1308]: ⬇ CSV
+          - generic [ref=e1310]:
+            - paragraph [ref=e1317]:
+              - strong [ref=e1318]: Líneas de pedido
+            - paragraph [ref=e1325]: Detalle de cada pedido. Cada fila = un SKU en una orden.
+            - generic [ref=e1327]:
+              - paragraph [ref=e1332]: 3 cols
+              - group [ref=e1335]:
+                - generic "keyboard_arrow_right Ver columnas" [ref=e1336] [cursor=pointer]:
+                  - generic [ref=e1337]:
+                    - generic [ref=e1339]: keyboard_arrow_right
+                    - paragraph [ref=e1342]: Ver columnas
+            - button "⬇ CSV" [ref=e1347] [cursor=pointer]:
+              - paragraph [ref=e1351]: ⬇ CSV
+          - separator [ref=e1356]
+          - heading "Subir y validar datos" [level=3] [ref=e1361]:
+            - text: Subir y validar datos
+            - generic [ref=e1362]:
+              - link "Link to heading":
+                - /url: "#subir-y-validar-datos"
+                - img
+          - generic [ref=e1364]:
+            - generic [ref=e1365]:
+              - paragraph [ref=e1368]: Seleccioná el tipo de dataset
+              - button "Help for Seleccioná el tipo de dataset" [ref=e1372] [cursor=pointer]:
+                - img [ref=e1373]
+            - generic [ref=e1377]:
+              - generic [ref=e1378]:
+                - generic [ref=e1379]: Catálogo de SKUs
+                - combobox "Selected Catálogo de SKUs. Seleccioná el tipo de dataset" [ref=e1381]
+              - img "open" [ref=e1383]
+          - generic [ref=e1386]:
+            - generic [ref=e1387]:
+              - paragraph [ref=e1390]: Seleccioná un archivo CSV
+              - button "Help for Seleccioná un archivo CSV" [ref=e1394] [cursor=pointer]:
+                - img [ref=e1395]
+            - region "Seleccioná un archivo CSV" [ref=e1398] [cursor=pointer]:
+              - button "Choose File" [ref=e1399]
+              - button "upload Upload" [ref=e1401]:
+                - generic [ref=e1403]:
+                  - generic [ref=e1405]: upload
+                  - paragraph [ref=e1407]: Upload
+              - generic [ref=e1410]: 200MB per file • CSV
+          - separator [ref=e1415]
+          - heading "Estado completo — todos los datasets" [level=3] [ref=e1420]:
+            - text: Estado completo — todos los datasets
+            - generic [ref=e1421]:
+              - link "Link to heading":
+                - /url: "#estado-completo-todos-los-datasets"
+                - img
+          - generic [ref=e1426]:
+            - button "Show/hide columns" [ref=e1430] [cursor=pointer]:
+              - img [ref=e1431]
+            - button "Download as CSV" [ref=e1436] [cursor=pointer]:
+              - img [ref=e1437]
+            - button "Search" [ref=e1442] [cursor=pointer]:
+              - img [ref=e1443]
+            - button "Fullscreen" [ref=e1448] [cursor=pointer]:
+              - img [ref=e1449]

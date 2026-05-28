@@ -1,0 +1,313 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - heading "📦 Slotting Control Panel" [level=1] [ref=e24]:
+      - text: 📦 Slotting Control Panel
+      - generic [ref=e25]:
+        - link "Link to heading":
+          - /url: "#slotting-control-panel"
+          - img
+    - paragraph [ref=e30]: Panel de control del pipeline completo de slotting — Fases 1 a 6. Vista descriptiva y analítica, no genera recomendaciones operativas.
+    - alert [ref=e33]:
+      - generic [ref=e36]:
+        - generic [ref=e39]: 🔴
+        - paragraph [ref=e41]: Se detectaron 168 ubicaciones sobrecapacidad.
+    - generic [ref=e43]:
+      - tablist [ref=e45]:
+        - tab "📊 Overview" [selected] [ref=e46] [cursor=pointer]:
+          - paragraph [ref=e48]: 📊 Overview
+        - tab "🔬 Diagnóstico" [ref=e49] [cursor=pointer]:
+          - paragraph [ref=e51]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [ref=e52] [cursor=pointer]:
+          - paragraph [ref=e54]: 📈 Scoring
+        - tab "🔄 Escenarios" [ref=e55] [cursor=pointer]:
+          - paragraph [ref=e57]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [ref=e58] [cursor=pointer]:
+          - paragraph [ref=e60]: ⚙️ Optimización
+        - tab "🎲 Simulación" [ref=e61] [cursor=pointer]:
+          - paragraph [ref=e63]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [ref=e64] [cursor=pointer]:
+          - paragraph [ref=e66]: 📋 Templates & Upload
+      - tabpanel "📊 Overview" [ref=e69]:
+        - generic [ref=e70]:
+          - paragraph [ref=e75]:
+            - strong [ref=e76]: "Fase 1-2: Procesamiento base + Diagnóstico."
+            - text: "Esta vista consolida los indicadores clave de slotting: cantidad de SKUs, zonas, ubicaciones, % de utilización promedio y ubicaciones sobrecapacidad. Los diagnósticos de Fase 2 detectan SKUs mal ubicados (alta demanda lejos, lentos en premium, etc.) usando reglas de negocio configurables."
+          - generic [ref=e78]:
+            - generic [ref=e83]:
+              - paragraph [ref=e86]: SKUs
+              - paragraph [ref=e89]: "500"
+            - generic [ref=e94]:
+              - paragraph [ref=e97]: Zonas
+              - paragraph [ref=e100]: "10"
+            - generic [ref=e105]:
+              - paragraph [ref=e108]: Ubicaciones
+              - paragraph [ref=e111]: "200"
+            - generic [ref=e116]:
+              - paragraph [ref=e119]: Utilización promedio
+              - paragraph [ref=e122]: 82.5%
+            - generic [ref=e127]:
+              - paragraph [ref=e130]: Sobre capacidad
+              - paragraph [ref=e133]: "168"
+          - heading "Disponibilidad de datasets" [level=3] [ref=e138]:
+            - text: Disponibilidad de datasets
+            - generic [ref=e139]:
+              - link "Link to heading":
+                - /url: "#disponibilidad-de-datasets"
+                - img
+          - generic [ref=e144]:
+            - button "Show/hide columns" [ref=e148] [cursor=pointer]:
+              - img [ref=e149]
+            - button "Download as CSV" [ref=e154] [cursor=pointer]:
+              - img [ref=e155]
+            - button "Search" [ref=e160] [cursor=pointer]:
+              - img [ref=e161]
+            - button "Fullscreen" [ref=e166] [cursor=pointer]:
+              - img [ref=e167]
+          - generic [ref=e179]:
+            - generic [ref=e181]:
+              - heading "Utilización por zona" [level=3] [ref=e186]:
+                - text: Utilización por zona
+                - generic [ref=e187]:
+                  - link "Link to heading":
+                    - /url: "#utilizacion-por-zona"
+                    - img
+              - generic [ref=e190]:
+                - generic [ref=e192]:
+                  - button "Show data" [ref=e195] [cursor=pointer]:
+                    - img [ref=e196]
+                  - button "Fullscreen" [ref=e201] [cursor=pointer]:
+                    - img [ref=e202]
+                - generic [ref=e205]:
+                  - generic "Vega visualization" [ref=e206]:
+                    - img [ref=e207]:
+                      - generic [ref=e212]:
+                        - 'generic "X-axis for a discrete scale with 10 values: Z-01, Z-02, Z-03, Z-04, Z-05, ending with Z-10" [ref=e216]':
+                          - generic [ref=e218]:
+                            - generic:
+                              - generic: Z-01
+                              - generic: Z-02
+                              - generic: Z-03
+                              - generic: Z-04
+                              - generic: Z-05
+                              - generic: Z-06
+                              - generic: Z-07
+                              - generic: Z-08
+                              - generic: Z-09
+                              - generic: Z-10
+                        - generic "Y-axis for a linear scale with values from 0 to 200" [ref=e219]:
+                          - generic [ref=e221]:
+                            - generic:
+                              - generic: "0"
+                              - generic: "100"
+                              - generic: "200"
+                              - generic: "50"
+                              - generic: "150"
+                        - generic [ref=e222]:
+                          - 'generic "zone_id: Z-01; value -- streamlit-generated: 91.4806899143; : avg_volume_util_pct; value: 91.4806899143; color: avg_volume_util_pct" [ref=e223]'
+                          - 'generic "zone_id: Z-02; value -- streamlit-generated: 88.8189380866; : avg_volume_util_pct; value: 88.8189380866; color: avg_volume_util_pct" [ref=e224]'
+                          - 'generic "zone_id: Z-03; value -- streamlit-generated: 80.840346553; : avg_volume_util_pct; value: 80.840346553; color: avg_volume_util_pct" [ref=e225]'
+                          - 'generic "zone_id: Z-04; value -- streamlit-generated: 91.7187559509; : avg_volume_util_pct; value: 91.7187559509; color: avg_volume_util_pct" [ref=e226]'
+                          - 'generic "zone_id: Z-05; value -- streamlit-generated: 98.4790697674; : avg_volume_util_pct; value: 98.4790697674; color: avg_volume_util_pct" [ref=e227]'
+                          - 'generic "zone_id: Z-06; value -- streamlit-generated: 97.6489169675; : avg_volume_util_pct; value: 97.6489169675; color: avg_volume_util_pct" [ref=e228]'
+                          - 'generic "zone_id: Z-07; value -- streamlit-generated: 100; : avg_volume_util_pct; value: 100; color: avg_volume_util_pct" [ref=e229]'
+                          - 'generic "zone_id: Z-08; value -- streamlit-generated: 100; : avg_volume_util_pct; value: 100; color: avg_volume_util_pct" [ref=e230]'
+                          - 'generic "zone_id: Z-09; value -- streamlit-generated: 93.973; : avg_volume_util_pct; value: 93.973; color: avg_volume_util_pct" [ref=e231]'
+                          - 'generic "zone_id: Z-10; value -- streamlit-generated: 0; : avg_volume_util_pct; value: 0; color: avg_volume_util_pct"'
+                          - 'generic "zone_id: Z-01; value -- streamlit-generated: 86.223390491; : avg_weight_util_pct; value: 86.223390491; color: avg_weight_util_pct" [ref=e232]'
+                          - 'generic "zone_id: Z-02; value -- streamlit-generated: 89.3966190229; : avg_weight_util_pct; value: 89.3966190229; color: avg_weight_util_pct" [ref=e233]'
+                          - 'generic "zone_id: Z-03; value -- streamlit-generated: 83.6536702389; : avg_weight_util_pct; value: 83.6536702389; color: avg_weight_util_pct" [ref=e234]'
+                          - 'generic "zone_id: Z-04; value -- streamlit-generated: 92.2702773832; : avg_weight_util_pct; value: 92.2702773832; color: avg_weight_util_pct" [ref=e235]'
+                          - 'generic "zone_id: Z-05; value -- streamlit-generated: 93.2824677477; : avg_weight_util_pct; value: 93.2824677477; color: avg_weight_util_pct" [ref=e236]'
+                          - 'generic "zone_id: Z-06; value -- streamlit-generated: 93.2685568761; : avg_weight_util_pct; value: 93.2685568761; color: avg_weight_util_pct" [ref=e237]'
+                          - 'generic "zone_id: Z-07; value -- streamlit-generated: 92.364832798; : avg_weight_util_pct; value: 92.364832798; color: avg_weight_util_pct" [ref=e238]'
+                          - 'generic "zone_id: Z-08; value -- streamlit-generated: 90.8274280702; : avg_weight_util_pct; value: 90.8274280702; color: avg_weight_util_pct" [ref=e239]'
+                          - 'generic "zone_id: Z-09; value -- streamlit-generated: 86.1466; : avg_weight_util_pct; value: 86.1466; color: avg_weight_util_pct" [ref=e240]'
+                          - 'generic "zone_id: Z-10; value -- streamlit-generated: 0; : avg_weight_util_pct; value: 0; color: avg_weight_util_pct"'
+                        - 'generic "Symbol legend titled '' '' for fill color with 2 values: avg_volume_util_pct, avg_weight_util_pct" [ref=e241]':
+                          - generic [ref=e247]:
+                            - generic [ref=e249]:
+                              - generic:
+                                - generic: avg_volume_util_pct
+                            - generic [ref=e251]:
+                              - generic:
+                                - generic: avg_weight_util_pct
+                  - group "Click to view actions":
+                    - img [ref=e253] [cursor=pointer]
+              - generic [ref=e261]:
+                - button "Show/hide columns" [ref=e265] [cursor=pointer]:
+                  - img [ref=e266]
+                - button "Download as CSV" [ref=e271] [cursor=pointer]:
+                  - img [ref=e272]
+                - button "Search" [ref=e277] [cursor=pointer]:
+                  - img [ref=e278]
+                - button "Fullscreen" [ref=e283] [cursor=pointer]:
+                  - img [ref=e284]
+            - generic [ref=e296]:
+              - heading "Top ubicaciones por utilización" [level=3] [ref=e301]:
+                - text: Top ubicaciones por utilización
+                - generic [ref=e302]:
+                  - link "Link to heading":
+                    - /url: "#top-ubicaciones-por-utilizacion"
+                    - img
+              - generic [ref=e305]:
+                - generic [ref=e307]:
+                  - button "Show data" [ref=e310] [cursor=pointer]:
+                    - img [ref=e311]
+                  - button "Fullscreen" [ref=e316] [cursor=pointer]:
+                    - img [ref=e317]
+                - generic [ref=e320]:
+                  - generic "Vega visualization" [ref=e321]:
+                    - img [ref=e322]:
+                      - generic [ref=e327]:
+                        - 'generic "X-axis for a discrete scale with 25 values: LOC-000001, LOC-000002, LOC-000003, LOC-000004, LOC-000005, ending with LOC-000040" [ref=e331]':
+                          - generic [ref=e333]:
+                            - generic:
+                              - generic: LOC-000001
+                              - generic: LOC-000002
+                              - generic: LOC-000003
+                              - generic: LOC-000004
+                              - generic: LOC-000005
+                              - generic: LOC-000006
+                              - generic: LOC-000007
+                              - generic: LOC-000008
+                              - generic: LOC-000010
+                              - generic: LOC-000011
+                              - generic: LOC-000012
+                              - generic: LOC-000013
+                              - generic: LOC-000014
+                              - generic: LOC-000015
+                              - generic: LOC-000018
+                              - generic: LOC-000019
+                              - generic: LOC-000020
+                              - generic: LOC-000021
+                              - generic: LOC-000023
+                              - generic: LOC-000024
+                              - generic: LOC-000026
+                              - generic: LOC-000027
+                              - generic: LOC-000029
+                              - generic: LOC-000030
+                              - generic: LOC-000040
+                        - generic "Y-axis for a linear scale with values from 0 to 200" [ref=e334]:
+                          - generic [ref=e336]:
+                            - generic:
+                              - generic: "0"
+                              - generic: "100"
+                              - generic: "200"
+                              - generic: "50"
+                              - generic: "150"
+                        - generic [ref=e337]:
+                          - 'generic "location_id: LOC-000001; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e338]'
+                          - 'generic "location_id: LOC-000002; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e339]'
+                          - 'generic "location_id: LOC-000003; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e340]'
+                          - 'generic "location_id: LOC-000004; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e341]'
+                          - 'generic "location_id: LOC-000005; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e342]'
+                          - 'generic "location_id: LOC-000006; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e343]'
+                          - 'generic "location_id: LOC-000007; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e344]'
+                          - 'generic "location_id: LOC-000008; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e345]'
+                          - 'generic "location_id: LOC-000010; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e346]'
+                          - 'generic "location_id: LOC-000011; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e347]'
+                          - 'generic "location_id: LOC-000012; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e348]'
+                          - 'generic "location_id: LOC-000013; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e349]'
+                          - 'generic "location_id: LOC-000015; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e350]'
+                          - 'generic "location_id: LOC-000014; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e351]'
+                          - 'generic "location_id: LOC-000019; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e352]'
+                          - 'generic "location_id: LOC-000018; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e353]'
+                          - 'generic "location_id: LOC-000024; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e354]'
+                          - 'generic "location_id: LOC-000023; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e355]'
+                          - 'generic "location_id: LOC-000020; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e356]'
+                          - 'generic "location_id: LOC-000021; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e357]'
+                          - 'generic "location_id: LOC-000029; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e358]'
+                          - 'generic "location_id: LOC-000030; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e359]'
+                          - 'generic "location_id: LOC-000027; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e360]'
+                          - 'generic "location_id: LOC-000026; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e361]'
+                          - 'generic "location_id: LOC-000040; value -- streamlit-generated: 100; : volume_utilization_pct; value: 100; color: volume_utilization_pct" [ref=e362]'
+                          - 'generic "location_id: LOC-000001; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e363]'
+                          - 'generic "location_id: LOC-000002; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e364]'
+                          - 'generic "location_id: LOC-000003; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e365]'
+                          - 'generic "location_id: LOC-000004; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e366]'
+                          - 'generic "location_id: LOC-000005; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e367]'
+                          - 'generic "location_id: LOC-000006; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e368]'
+                          - 'generic "location_id: LOC-000007; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e369]'
+                          - 'generic "location_id: LOC-000008; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e370]'
+                          - 'generic "location_id: LOC-000010; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e371]'
+                          - 'generic "location_id: LOC-000011; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e372]'
+                          - 'generic "location_id: LOC-000012; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e373]'
+                          - 'generic "location_id: LOC-000013; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e374]'
+                          - 'generic "location_id: LOC-000015; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e375]'
+                          - 'generic "location_id: LOC-000014; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e376]'
+                          - 'generic "location_id: LOC-000019; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e377]'
+                          - 'generic "location_id: LOC-000018; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e378]'
+                          - 'generic "location_id: LOC-000024; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e379]'
+                          - 'generic "location_id: LOC-000023; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e380]'
+                          - 'generic "location_id: LOC-000020; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e381]'
+                          - 'generic "location_id: LOC-000021; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e382]'
+                          - 'generic "location_id: LOC-000029; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e383]'
+                          - 'generic "location_id: LOC-000030; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e384]'
+                          - 'generic "location_id: LOC-000027; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e385]'
+                          - 'generic "location_id: LOC-000026; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e386]'
+                          - 'generic "location_id: LOC-000040; value -- streamlit-generated: 100; : weight_utilization_pct; value: 100; color: weight_utilization_pct" [ref=e387]'
+                        - 'generic "Symbol legend titled '' '' for fill color with 2 values: volume_utilization_pct, weight_utilization_pct" [ref=e388]':
+                          - generic [ref=e394]:
+                            - generic [ref=e396]:
+                              - generic:
+                                - generic: volume_utilization_pct
+                            - generic [ref=e398]:
+                              - generic:
+                                - generic: weight_utilization_pct
+                  - group "Click to view actions":
+                    - img [ref=e400] [cursor=pointer]
+              - generic [ref=e408]:
+                - button "Show/hide columns" [ref=e412] [cursor=pointer]:
+                  - img [ref=e413]
+                - button "Download as CSV" [ref=e418] [cursor=pointer]:
+                  - img [ref=e419]
+                - button "Search" [ref=e424] [cursor=pointer]:
+                  - img [ref=e425]
+                - button "Fullscreen" [ref=e430] [cursor=pointer]:
+                  - img [ref=e431]
+          - heading "Vista previa — SKU features" [level=3] [ref=e446]:
+            - text: Vista previa — SKU features
+            - generic [ref=e447]:
+              - link "Link to heading":
+                - /url: "#vista-previa-sku-features"
+                - img
+          - paragraph [ref=e452]: Vista acotada de la tabla de features generada en Fase 1.
+          - generic [ref=e457]:
+            - button "Show/hide columns" [ref=e461] [cursor=pointer]:
+              - img [ref=e462]
+            - button "Download as CSV" [ref=e467] [cursor=pointer]:
+              - img [ref=e468]
+            - button "Search" [ref=e473] [cursor=pointer]:
+              - img [ref=e474]
+            - button "Fullscreen" [ref=e479] [cursor=pointer]:
+              - img [ref=e480]
+          - heading "Vista previa — Diagnósticos" [level=3] [ref=e495]:
+            - text: Vista previa — Diagnósticos
+            - generic [ref=e496]:
+              - link "Link to heading":
+                - /url: "#vista-previa-diagnosticos"
+                - img
+          - paragraph [ref=e501]: Flags de diagnóstico de Fase 2. Solo para revisión analítica.
+          - generic [ref=e506]:
+            - button "Show/hide columns" [ref=e510] [cursor=pointer]:
+              - img [ref=e511]
+            - button "Download as CSV" [ref=e516] [cursor=pointer]:
+              - img [ref=e517]
+            - button "Search" [ref=e522] [cursor=pointer]:
+              - img [ref=e523]
+            - button "Fullscreen" [ref=e528] [cursor=pointer]:
+              - img [ref=e529]
+          - heading "Recomendaciones" [level=3] [ref=e544]:
+            - text: Recomendaciones
+            - generic [ref=e545]:
+              - link "Link to heading":
+                - /url: "#recomendaciones"
+                - img
+          - list [ref=e550]:
+            - listitem [ref=e551]: "⚠️ Zonas con sobrecapacidad: Z-01, Z-02, Z-03, Z-04, Z-05, Z-06, Z-07, Z-08, Z-09. Considerá redistribuir carga."

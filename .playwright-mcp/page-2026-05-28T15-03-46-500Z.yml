@@ -1,0 +1,51 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - heading "📦 Slotting Control Panel" [level=1] [ref=e24]:
+      - text: 📦 Slotting Control Panel
+      - generic [ref=e25]:
+        - link "Link to heading":
+          - /url: "#slotting-control-panel"
+          - img
+    - paragraph [ref=e30]: Panel de control del pipeline completo de slotting — Fases 1 a 6. Vista descriptiva y analítica, no genera recomendaciones operativas.
+    - alert [ref=e33]:
+      - generic [ref=e36]:
+        - generic [ref=e39]: 🔴
+        - paragraph [ref=e41]: Se detectaron 168 ubicaciones sobrecapacidad.
+    - generic [ref=e43]:
+      - tablist [ref=e45]:
+        - tab "📊 Overview" [ref=e46] [cursor=pointer]:
+          - paragraph [ref=e48]: 📊 Overview
+        - tab "🔬 Diagnóstico" [active] [selected] [ref=e49] [cursor=pointer]:
+          - paragraph [ref=e51]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [ref=e52] [cursor=pointer]:
+          - paragraph [ref=e54]: 📈 Scoring
+        - tab "🔄 Escenarios" [ref=e55] [cursor=pointer]:
+          - paragraph [ref=e57]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [ref=e58] [cursor=pointer]:
+          - paragraph [ref=e60]: ⚙️ Optimización
+        - tab "🎲 Simulación" [ref=e61] [cursor=pointer]:
+          - paragraph [ref=e63]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [ref=e64] [cursor=pointer]:
+          - paragraph [ref=e66]: 📋 Templates & Upload
+      - tabpanel "🔬 Diagnóstico" [ref=e559]
+    - alert [ref=e542]:
+      - generic [ref=e545]:
+        - generic [ref=e546]: "AttributeError: 'str' object has no attribute 'str'"
+        - generic [ref=e547]:
+          - generic [ref=e548]: "Traceback:"
+          - code [ref=e551]:
+            - generic [ref=e552]: File "C:\Users\harry\OneDrive\Documentos\GitHub\optimizacion\src\slotting_optimization_engine\app\streamlit_app.py", line 614, in <module> main() ~~~~^^
+            - generic [ref=e553]: File "C:\Users\harry\OneDrive\Documentos\GitHub\optimizacion\src\slotting_optimization_engine\app\streamlit_app.py", line 215, in main diag_recs = generate_diagnostics_recommendations( full_data.diagnostic_summary, full_data.slotting_diagnostics, full_data.zone_diagnostics, )
+            - generic [ref=e554]: File "C:\Users\harry\OneDrive\Documentos\GitHub\optimizacion\src\slotting_optimization_engine\app\dashboard_data.py", line 700, in generate_diagnostics_recommendations slotting_diagnostics.get("candidate_action", "").str.contains( ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        - generic [ref=e555]:
+          - button "Copy" [ref=e556] [cursor=pointer]
+          - link "Ask Google" [ref=e557] [cursor=pointer]:
+            - /url: https://www.google.com/search?q=AttributeError%3A%20'str'%20object%20has%20no%20attribute%20'str'
+          - link "Ask ChatGPT" [ref=e558] [cursor=pointer]:
+            - /url: https://chatgpt.com/?q=AttributeError%3A%20'str'%20object%20has%20no%20attribute%20'str'%0A%0AFile%20%22C%3A%5CUsers%5Charry%5COneDrive%5CDocumentos%5CGitHub%5Coptimizacion%5Csrc%5Cslotting_optimization_engine%5Capp%5Cstreamlit_app.py%22%2C%20line%20614%2C%20in%20%3Cmodule%3E%0A%20%20%20%20main()%0A%20%20%20%20~~~~%5E%5E%0AFile%20%22C%3A%5CUsers%5Charry%5COneDrive%5CDocumentos%5CGitHub%5Coptimizacion%5Csrc%5Cslotting_optimization_engine%5Capp%5Cstreamlit_app.py%22%2C%20line%20215%2C%20in%20main%0A%20%20%20%20diag_recs%20%3D%20generate_diagnostics_recommendations(%0A%20%20%20%20%20%20%20%20full_data.diagnostic_summary%2C%0A%20%20%20%20%20%20%20%20full_data.slotting_diagnostics%2C%0A%20%20%20%20%20%20%20%20full_data.zone_diagnostics%2C%0A%20%20%20%20)%0AFile%20%22C%3A%5CUsers%5Charry%5COneDrive%5CDocumentos%5CGitHub%5Coptimizacion%5Csrc%5Cslotting_optimization_engine%5Capp%5Cdashboard_data.py%22%2C%20line%20700%2C%20in%20generate_diagnostics_recommendations%0A%20%20%20%20slotting_diagnostics.get(%22candidate_action%22%2C%20%22%22).str.contains(%0A%20%20%20%20%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E

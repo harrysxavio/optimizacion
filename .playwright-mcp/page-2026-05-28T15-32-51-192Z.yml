@@ -1,0 +1,155 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - generic [ref=e21]:
+      - generic [ref=e23]:
+        - heading "📦 Slotting Control Panel" [level=1] [ref=e28]:
+          - text: 📦 Slotting Control Panel
+          - generic [ref=e29]:
+            - link "Link to heading":
+              - /url: "#slotting-control-panel"
+              - img
+        - paragraph [ref=e34]: Pipeline completo de slotting — Fases 1 a 6. Panel ejecutivo con indicadores, diagnósticos y análisis.
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - paragraph [ref=e42]: Estado general
+          - button "Help for Estado general" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+        - paragraph [ref=e52]: 🔴
+    - generic [ref=e54]:
+      - tablist [ref=e56]:
+        - tab "📊 Panel Global" [ref=e57] [cursor=pointer]:
+          - paragraph [ref=e59]: 📊 Panel Global
+        - tab "🔬 Diagnóstico" [ref=e60] [cursor=pointer]:
+          - paragraph [ref=e62]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [ref=e63] [cursor=pointer]:
+          - paragraph [ref=e65]: 📈 Scoring
+        - tab "🔄 Escenarios" [ref=e66] [cursor=pointer]:
+          - paragraph [ref=e68]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [ref=e69] [cursor=pointer]:
+          - paragraph [ref=e71]: ⚙️ Optimización
+        - tab "🎲 Simulación" [active] [selected] [ref=e72] [cursor=pointer]:
+          - paragraph [ref=e74]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [ref=e75] [cursor=pointer]:
+          - paragraph [ref=e77]: 📋 Templates & Upload
+      - tabpanel "🎲 Simulación" [ref=e522]:
+        - generic [ref=e523]:
+          - paragraph [ref=e528]:
+            - strong [ref=e529]: Simulación operativa (Fase 6).
+            - text: "Modela el impacto de las asignaciones propuestas en métricas operativas: distancia total de viaje, congestión por zona, throughput y distribución de carga de trabajo (coeficiente Gini)."
+          - alert [ref=e532]:
+            - generic [ref=e535]:
+              - generic [ref=e538]: 🟢
+              - paragraph [ref=e540]: "Simulación completada. Mejora estimada: 88.7%."
+          - generic [ref=e542]:
+            - generic [ref=e547]:
+              - generic [ref=e548]:
+                - paragraph [ref=e550]: 📉 Mejora distancia
+                - button "Help for 📉 Mejora distancia" [ref=e554] [cursor=pointer]:
+                  - img [ref=e555]
+              - paragraph [ref=e560]: 88.7%
+            - generic [ref=e565]:
+              - generic [ref=e566]:
+                - paragraph [ref=e568]: ⚖️ Gini
+                - button "Help for ⚖️ Gini" [ref=e572] [cursor=pointer]:
+                  - img [ref=e573]
+              - paragraph [ref=e578]: —
+            - generic [ref=e583]:
+              - generic [ref=e584]:
+                - paragraph [ref=e586]: 📏 Distancia ahorrada
+                - button "Help for 📏 Distancia ahorrada" [ref=e590] [cursor=pointer]:
+                  - img [ref=e591]
+              - paragraph [ref=e596]: 381,120 m
+            - generic [ref=e601]:
+              - generic [ref=e602]:
+                - paragraph [ref=e604]: 🚚 Throughput
+                - button "Help for 🚚 Throughput" [ref=e608] [cursor=pointer]:
+                  - img [ref=e609]
+              - paragraph [ref=e614]: —
+          - separator [ref=e619]
+          - generic [ref=e621]:
+            - heading "▶️ Ejecutar simulación" [level=3] [ref=e628]:
+              - text: ▶️ Ejecutar simulación
+              - generic [ref=e629]:
+                - link "Link to heading":
+                  - /url: "#ejecutar-simulacion"
+                  - img
+            - paragraph [ref=e636]: ⓘ
+          - button "▶️ Ejecutar simulación ahora" [ref=e642] [cursor=pointer]:
+            - paragraph [ref=e646]: ▶️ Ejecutar simulación ahora
+          - separator [ref=e651]
+          - generic [ref=e653]:
+            - heading "📖 ¿Qué mide la simulación?" [level=3] [ref=e660]:
+              - text: 📖 ¿Qué mide la simulación?
+              - generic [ref=e661]:
+                - link "Link to heading":
+                  - /url: "#que-mide-la-simulacion"
+                  - img
+            - paragraph [ref=e668]: ⓘ
+          - group [ref=e671]:
+            - generic "keyboard_arrow_right Ver explicación de métricas" [ref=e672] [cursor=pointer]:
+              - generic [ref=e673]:
+                - generic [ref=e675]: keyboard_arrow_right
+                - paragraph [ref=e678]: Ver explicación de métricas
+          - separator [ref=e683]
+          - generic [ref=e685]:
+            - heading "🎯 Recomendaciones" [level=3] [ref=e692]:
+              - text: 🎯 Recomendaciones
+              - generic [ref=e693]:
+                - link "Link to heading":
+                  - /url: "#recomendaciones"
+                  - img
+            - paragraph [ref=e700]: ⓘ
+          - list [ref=e705]:
+            - listitem [ref=e706]: "📉 Mejora distancia promedio: 88.7%"
+          - list [ref=e711]:
+            - listitem [ref=e712]: "📏 Distancia total ahorrada: 381,120 m"
+          - list [ref=e717]:
+            - listitem [ref=e718]: "⚖️ Coeficiente Gini (después): <NA>"
+          - list [ref=e723]:
+            - listitem [ref=e724]: "🚚 Ganancia de throughput: <NA>"
+          - list [ref=e729]:
+            - listitem [ref=e730]: "📏 Distancia promedio actual: 208 m"
+          - list [ref=e735]:
+            - listitem [ref=e736]: "📏 Distancia promedio optimizada: 18 m"
+          - list [ref=e741]:
+            - listitem [ref=e742]: "⏱️ Tiempo total ahorrado: 495,456 s"
+          - separator [ref=e747]
+          - generic [ref=e749]:
+            - heading "📋 Tablas de detalle" [level=3] [ref=e756]:
+              - text: 📋 Tablas de detalle
+              - generic [ref=e757]:
+                - link "Link to heading":
+                  - /url: "#tablas-de-detalle"
+                  - img
+            - paragraph [ref=e764]: ⓘ
+          - group [ref=e767]:
+            - generic "keyboard_arrow_right Resumen de simulación" [ref=e768] [cursor=pointer]:
+              - generic [ref=e769]:
+                - generic [ref=e771]: keyboard_arrow_right
+                - paragraph [ref=e774]: Resumen de simulación
+          - group [ref=e777]:
+            - generic "keyboard_arrow_right Travel aggregate" [ref=e778] [cursor=pointer]:
+              - generic [ref=e779]:
+                - generic [ref=e781]: keyboard_arrow_right
+                - paragraph [ref=e784]: Travel aggregate
+          - group [ref=e787]:
+            - generic "keyboard_arrow_right Zone impact" [ref=e788] [cursor=pointer]:
+              - generic [ref=e789]:
+                - generic [ref=e791]: keyboard_arrow_right
+                - paragraph [ref=e794]: Zone impact
+          - group [ref=e797]:
+            - generic "keyboard_arrow_right Throughput scenarios" [ref=e798] [cursor=pointer]:
+              - generic [ref=e799]:
+                - generic [ref=e801]: keyboard_arrow_right
+                - paragraph [ref=e804]: Throughput scenarios
+          - group [ref=e807]:
+            - generic "keyboard_arrow_right Order detail" [ref=e808] [cursor=pointer]:
+              - generic [ref=e809]:
+                - generic [ref=e811]: keyboard_arrow_right
+                - paragraph [ref=e814]: Order detail

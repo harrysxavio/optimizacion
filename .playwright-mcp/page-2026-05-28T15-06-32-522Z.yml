@@ -1,0 +1,96 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - heading "📦 Slotting Control Panel" [level=1] [ref=e24]:
+      - text: 📦 Slotting Control Panel
+      - generic [ref=e25]:
+        - link "Link to heading":
+          - /url: "#slotting-control-panel"
+          - img
+    - paragraph [ref=e30]: Panel de control del pipeline completo de slotting — Fases 1 a 6. Vista descriptiva y analítica, no genera recomendaciones operativas.
+    - alert [ref=e33]:
+      - generic [ref=e36]:
+        - generic [ref=e39]: 🔴
+        - paragraph [ref=e41]: Se detectaron 168 ubicaciones sobrecapacidad.
+    - generic [ref=e43]:
+      - tablist [ref=e45]:
+        - tab "📊 Overview" [ref=e46] [cursor=pointer]:
+          - paragraph [ref=e48]: 📊 Overview
+        - tab "🔬 Diagnóstico" [ref=e49] [cursor=pointer]:
+          - paragraph [ref=e51]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [active] [selected] [ref=e52] [cursor=pointer]:
+          - paragraph [ref=e54]: 📈 Scoring
+        - tab "🔄 Escenarios" [ref=e55] [cursor=pointer]:
+          - paragraph [ref=e57]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [ref=e58] [cursor=pointer]:
+          - paragraph [ref=e60]: ⚙️ Optimización
+        - tab "🎲 Simulación" [ref=e61] [cursor=pointer]:
+          - paragraph [ref=e63]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [ref=e64] [cursor=pointer]:
+          - paragraph [ref=e66]: 📋 Templates & Upload
+      - tabpanel "📈 Scoring" [ref=e552]:
+        - generic [ref=e553]:
+          - paragraph [ref=e558]:
+            - strong [ref=e559]: "Fase 3: Scoring de oportunidades."
+            - text: Cada SKU recibe un puntaje de oportunidad basado en demanda, distancia al despacho, rotación y restricciones de capacidad. La cola de prioridad ordena los SKUs por impacto potencial.
+          - generic [ref=e561]:
+            - generic [ref=e563]:
+              - heading "Cola de prioridad" [level=3] [ref=e568]:
+                - text: Cola de prioridad
+                - generic [ref=e569]:
+                  - link "Link to heading":
+                    - /url: "#cola-de-prioridad"
+                    - img
+              - generic [ref=e574]:
+                - button "Show/hide columns" [ref=e578] [cursor=pointer]:
+                  - img [ref=e579]
+                - button "Download as CSV" [ref=e584] [cursor=pointer]:
+                  - img [ref=e585]
+                - button "Search" [ref=e590] [cursor=pointer]:
+                  - img [ref=e591]
+                - button "Fullscreen" [ref=e596] [cursor=pointer]:
+                  - img [ref=e597]
+            - generic [ref=e609]:
+              - heading "Resumen de scoring" [level=3] [ref=e614]:
+                - text: Resumen de scoring
+                - generic [ref=e615]:
+                  - link "Link to heading":
+                    - /url: "#resumen-de-scoring"
+                    - img
+              - generic [ref=e620]:
+                - button "Show/hide columns" [ref=e624] [cursor=pointer]:
+                  - img [ref=e625]
+                - button "Download as CSV" [ref=e630] [cursor=pointer]:
+                  - img [ref=e631]
+                - button "Search" [ref=e636] [cursor=pointer]:
+                  - img [ref=e637]
+                - button "Fullscreen" [ref=e642] [cursor=pointer]:
+                  - img [ref=e643]
+          - heading "Opportunity scores" [level=3] [ref=e658]:
+            - text: Opportunity scores
+            - generic [ref=e659]:
+              - link "Link to heading":
+                - /url: "#opportunity-scores"
+                - img
+          - generic [ref=e664]:
+            - button "Show/hide columns" [ref=e668] [cursor=pointer]:
+              - img [ref=e669]
+            - button "Download as CSV" [ref=e674] [cursor=pointer]:
+              - img [ref=e675]
+            - button "Search" [ref=e680] [cursor=pointer]:
+              - img [ref=e681]
+            - button "Fullscreen" [ref=e686] [cursor=pointer]:
+              - img [ref=e687]
+          - heading "Recomendaciones" [level=3] [ref=e702]:
+            - text: Recomendaciones
+            - generic [ref=e703]:
+              - link "Link to heading":
+                - /url: "#recomendaciones"
+                - img
+          - list [ref=e708]:
+            - listitem [ref=e709]: 🥇 La prioridad más alta es 'SKU-00045' con score 100.0. Revisá este caso primero.

@@ -1,0 +1,207 @@
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - generic [ref=e9]:
+      - button "Deploy" [ref=e11] [cursor=pointer]:
+        - generic [ref=e13]: Deploy
+      - button "Main menu" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+  - generic [ref=e19]:
+    - generic [ref=e21]:
+      - generic [ref=e23]:
+        - heading "📦 Slotting Control Panel" [level=1] [ref=e28]:
+          - text: 📦 Slotting Control Panel
+          - generic [ref=e29]:
+            - link "Link to heading":
+              - /url: "#slotting-control-panel"
+              - img
+        - paragraph [ref=e34]: Pipeline completo de slotting — Fases 1 a 6. Panel ejecutivo con indicadores, diagnósticos y análisis.
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - paragraph [ref=e42]: Estado general
+          - button "Help for Estado general" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+        - paragraph [ref=e52]: 🔴
+    - generic [ref=e54]:
+      - tablist [ref=e56]:
+        - tab "📊 Panel Global" [selected] [ref=e57] [cursor=pointer]:
+          - paragraph [ref=e59]: 📊 Panel Global
+        - tab "🔬 Diagnóstico" [ref=e60] [cursor=pointer]:
+          - paragraph [ref=e62]: 🔬 Diagnóstico
+        - tab "📈 Scoring" [ref=e63] [cursor=pointer]:
+          - paragraph [ref=e65]: 📈 Scoring
+        - tab "🔄 Escenarios" [ref=e66] [cursor=pointer]:
+          - paragraph [ref=e68]: 🔄 Escenarios
+        - tab "⚙️ Optimización" [ref=e69] [cursor=pointer]:
+          - paragraph [ref=e71]: ⚙️ Optimización
+        - tab "🎲 Simulación" [ref=e72] [cursor=pointer]:
+          - paragraph [ref=e74]: 🎲 Simulación
+        - tab "📋 Templates & Upload" [ref=e75] [cursor=pointer]:
+          - paragraph [ref=e77]: 📋 Templates & Upload
+      - tabpanel "📊 Panel Global" [ref=e80]:
+        - generic [ref=e81]:
+          - paragraph [ref=e86]:
+            - strong [ref=e87]: Panel de control global.
+            - text: Indicadores clave de todas las fases del pipeline de slotting. Cada fase muestra su estado actual (✅ completo, ⚠️ alerta, ❌ pendiente), métricas principales y recomendaciones accionables.
+          - alert [ref=e90]:
+            - generic [ref=e93]:
+              - generic [ref=e96]: 🚨
+              - paragraph [ref=e98]: Se detectaron 168 ubicaciones sobrecapacidad.
+          - generic [ref=e100]:
+            - generic [ref=e105]:
+              - paragraph [ref=e108]: SKUs
+              - paragraph [ref=e111]: "500"
+            - generic [ref=e116]:
+              - generic [ref=e117]:
+                - paragraph [ref=e119]: Zonas
+                - button "Help for Zonas" [ref=e123] [cursor=pointer]:
+                  - img [ref=e124]
+              - paragraph [ref=e129]: "10"
+            - generic [ref=e134]:
+              - generic [ref=e135]:
+                - paragraph [ref=e137]: Ubicaciones
+                - button "Help for Ubicaciones" [ref=e141] [cursor=pointer]:
+                  - img [ref=e142]
+              - paragraph [ref=e147]: "200"
+            - generic [ref=e152]:
+              - generic [ref=e153]:
+                - paragraph [ref=e155]: Utilización prom.
+                - button "Help for Utilización prom." [ref=e159] [cursor=pointer]:
+                  - img [ref=e160]
+              - paragraph [ref=e165]: 82.5%
+            - generic [ref=e170]:
+              - generic [ref=e171]:
+                - paragraph [ref=e173]: Sobre capacidad
+                - button "Help for Sobre capacidad" [ref=e177] [cursor=pointer]:
+                  - img [ref=e178]
+              - paragraph [ref=e183]: "168"
+          - separator [ref=e188]
+          - generic [ref=e190]:
+            - heading "Estado por fase" [level=3] [ref=e197]:
+              - text: Estado por fase
+              - generic [ref=e198]:
+                - link "Link to heading":
+                  - /url: "#estado-por-fase"
+                  - img
+            - paragraph [ref=e205]: ⓘ
+          - generic [ref=e207]:
+            - generic [ref=e211]:
+              - generic [ref=e213]:
+                - heading "🟢" [level=2] [ref=e221]:
+                  - text: 🟢
+                  - generic [ref=e222]:
+                    - link "Link to heading":
+                      - /url: "#2bdcece"
+                      - img
+                - generic [ref=e224]:
+                  - paragraph [ref=e229]:
+                    - strong [ref=e230]: Features (Fase 1)
+                  - paragraph [ref=e235]:
+                    - text: "SKUs procesados:"
+                    - strong [ref=e236]: "500"
+                - paragraph [ref=e243]: OK
+              - paragraph [ref=e248]: Datos base cargados correctamente.
+            - generic [ref=e252]:
+              - generic [ref=e254]:
+                - heading "🟢" [level=2] [ref=e262]:
+                  - text: 🟢
+                  - generic [ref=e263]:
+                    - link "Link to heading":
+                      - /url: "#2bdcece"
+                      - img
+                - generic [ref=e265]:
+                  - paragraph [ref=e270]:
+                    - strong [ref=e271]: Diagnóstico (Fase 2)
+                  - paragraph [ref=e276]:
+                    - text: "Flags detectados:"
+                    - strong [ref=e277]: "0"
+                - paragraph [ref=e284]: OK
+              - paragraph [ref=e289]: Diagnóstico completo. 0 flag(s) de oportunidad.
+              - list [ref=e294]:
+                - listitem [ref=e295]: "⚠️ Zonas con sobrecapacidad: Z-01, Z-02, Z-03, Z-04, Z-05, Z-06, Z-07, Z-08, Z-09. Considerá redistribuir carga."
+            - generic [ref=e299]:
+              - generic [ref=e301]:
+                - heading "🟢" [level=2] [ref=e309]:
+                  - text: 🟢
+                  - generic [ref=e310]:
+                    - link "Link to heading":
+                      - /url: "#2bdcece"
+                      - img
+                - generic [ref=e312]:
+                  - paragraph [ref=e317]:
+                    - strong [ref=e318]: Scoring (Fase 3)
+                  - paragraph [ref=e323]:
+                    - text: "Top score:"
+                    - strong [ref=e324]: "100.0"
+                    - text: "· Top SKU:"
+                    - strong [ref=e325]: SKU-00045
+                - paragraph [ref=e332]: OK
+              - paragraph [ref=e337]: "Scoring completado. Prioridad máxima: SKU-00045 (score 100.0)."
+              - list [ref=e342]:
+                - listitem [ref=e343]: 🥇 La prioridad más alta es 'SKU-00045' con score 100.0. Revisá este caso primero.
+              - list [ref=e348]:
+                - listitem [ref=e349]: 🎯 48 SKU(s) tienen score ≥ 80. Son candidatos prioritarios para reubicación inmediata.
+          - generic [ref=e351]:
+            - generic [ref=e355]:
+              - generic [ref=e357]:
+                - heading "🟢" [level=2] [ref=e365]:
+                  - text: 🟢
+                  - generic [ref=e366]:
+                    - link "Link to heading":
+                      - /url: "#2bdcece"
+                      - img
+                - generic [ref=e368]:
+                  - paragraph [ref=e373]:
+                    - strong [ref=e374]: Escenarios (Fase 4)
+                  - paragraph [ref=e379]:
+                    - text: "Escenarios evaluados:"
+                    - strong [ref=e380]: "4"
+                - paragraph [ref=e387]: OK
+              - paragraph [ref=e392]: 4 escenario(s) comparados.
+              - list [ref=e397]:
+                - listitem [ref=e398]: "🔄 4 escenarios comparados: baseline, demand_first, capacity_first, balanced_review."
+            - generic [ref=e402]:
+              - generic [ref=e404]:
+                - heading "🟢" [level=2] [ref=e412]:
+                  - text: 🟢
+                  - generic [ref=e413]:
+                    - link "Link to heading":
+                      - /url: "#2bdcece"
+                      - img
+                - generic [ref=e415]:
+                  - paragraph [ref=e420]:
+                    - strong [ref=e421]: Optimización (Fase 5)
+                  - paragraph [ref=e426]:
+                    - text: "Método:"
+                    - strong [ref=e427]: greedy_fallback
+                    - text: "· SKUs asignados:"
+                    - strong [ref=e428]: "12"
+                - paragraph [ref=e435]: OK
+              - paragraph [ref=e440]: Optimización ejecutada con método 'greedy_fallback' para 12 SKU(s).
+              - list [ref=e445]:
+                - listitem [ref=e446]: "⚙️ Optimización ejecutada con método 'greedy_fallback' para 12 SKU(s). Costo total: 3.53."
+              - list [ref=e451]:
+                - listitem [ref=e452]: 📍 3 SKU(s) asignados a Z-10.
+            - generic [ref=e456]:
+              - generic [ref=e458]:
+                - heading "🟢" [level=2] [ref=e466]:
+                  - text: 🟢
+                  - generic [ref=e467]:
+                    - link "Link to heading":
+                      - /url: "#2bdcece"
+                      - img
+                - generic [ref=e469]:
+                  - paragraph [ref=e474]:
+                    - strong [ref=e475]: Simulación (Fase 6)
+                  - paragraph [ref=e480]:
+                    - text: "Mejora viaje:"
+                    - strong [ref=e481]: —
+                - paragraph [ref=e488]: OK
+              - paragraph [ref=e493]: Simulación disponible.
+              - list [ref=e498]:
+                - listitem [ref=e499]: ℹ️ Ejecutá Phase 6 (run_simulation.py) para generar la simulación operativa.
+          - separator [ref=e504]
+          - group [ref=e507]:
+            - generic "keyboard_arrow_right 📊 Ver gráficos de utilización" [ref=e508] [cursor=pointer]:
+              - generic [ref=e509]:
+                - generic [ref=e511]: keyboard_arrow_right
+                - paragraph [ref=e514]: 📊 Ver gráficos de utilización

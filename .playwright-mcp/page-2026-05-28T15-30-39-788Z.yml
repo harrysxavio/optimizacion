@@ -1,0 +1,143 @@
+- generic:
+  - generic:
+    - generic [ref=e3]:
+      - banner [ref=e6]:
+        - generic [ref=e9]:
+          - button "Deploy" [ref=e11] [cursor=pointer]:
+            - generic [ref=e13]: Deploy
+          - button "Main menu" [ref=e15] [cursor=pointer]:
+            - img [ref=e16]
+      - generic [ref=e19]:
+        - generic [ref=e21]:
+          - generic [ref=e23]:
+            - heading "📦 Slotting Control Panel" [level=1] [ref=e28]:
+              - text: 📦 Slotting Control Panel
+              - generic [ref=e29]:
+                - link "Link to heading":
+                  - /url: "#slotting-control-panel"
+                  - img
+            - paragraph [ref=e34]: Pipeline completo de slotting — Fases 1 a 6. Panel ejecutivo con indicadores, diagnósticos y análisis.
+          - generic [ref=e39]:
+            - generic [ref=e40]:
+              - paragraph [ref=e42]: Estado general
+              - button "Help for Estado general" [ref=e46] [cursor=pointer]:
+                - img [ref=e47]
+            - paragraph [ref=e52]: 🔴
+        - generic [ref=e54]:
+          - tablist [ref=e56]:
+            - tab "📊 Panel Global" [ref=e57] [cursor=pointer]:
+              - paragraph [ref=e59]: 📊 Panel Global
+            - tab "🔬 Diagnóstico" [ref=e60] [cursor=pointer]:
+              - paragraph [ref=e62]: 🔬 Diagnóstico
+            - tab "📈 Scoring" [active] [selected] [ref=e63] [cursor=pointer]:
+              - paragraph [ref=e65]: 📈 Scoring
+            - tab "🔄 Escenarios" [ref=e66] [cursor=pointer]:
+              - paragraph [ref=e68]: 🔄 Escenarios
+            - tab "⚙️ Optimización" [ref=e69] [cursor=pointer]:
+              - paragraph [ref=e71]: ⚙️ Optimización
+            - tab "🎲 Simulación" [ref=e72] [cursor=pointer]:
+              - paragraph [ref=e74]: 🎲 Simulación
+            - tab "📋 Templates & Upload" [ref=e75] [cursor=pointer]:
+              - paragraph [ref=e77]: 📋 Templates & Upload
+          - tabpanel "📈 Scoring" [ref=e80]:
+            - generic [ref=e81]:
+              - paragraph [ref=e86]:
+                - strong [ref=e87]: Scoring de oportunidades (Fase 3).
+                - text: Cada SKU recibe un puntaje basado en demanda, distancia al despacho, rotación y restricciones de capacidad. La cola de prioridad ordena los SKUs por impacto potencial.
+                - strong [ref=e88]: A mayor score, mayor beneficio al reubicar.
+              - alert [ref=e91]:
+                - generic [ref=e94]:
+                  - generic [ref=e97]: 🟢
+                  - paragraph [ref=e99]: "Scoring completado. Prioridad máxima: SKU-00045 (score 100.0)."
+              - generic [ref=e101]:
+                - generic [ref=e106]:
+                  - generic [ref=e107]:
+                    - paragraph [ref=e109]: 🎯 SKUs evaluados
+                    - button "Help for 🎯 SKUs evaluados" [ref=e113] [cursor=pointer]:
+                      - img [ref=e114]
+                  - paragraph [ref=e119]: "955"
+                - generic [ref=e124]:
+                  - generic [ref=e125]:
+                    - paragraph [ref=e127]: 📊 Score promedio
+                    - button "Help for 📊 Score promedio" [ref=e131] [cursor=pointer]:
+                      - img [ref=e132]
+                  - paragraph [ref=e137]: "37.2"
+                - generic [ref=e142]:
+                  - generic [ref=e143]:
+                    - paragraph [ref=e145]: 🥇 Score máximo
+                    - button "Help for 🥇 Score máximo" [ref=e149] [cursor=pointer]:
+                      - img [ref=e150]
+                  - paragraph [ref=e155]: "100.0"
+                - generic [ref=e160]:
+                  - generic [ref=e161]:
+                    - paragraph [ref=e163]: 🔝 Top SKU
+                    - button "Help for 🔝 Top SKU" [ref=e167] [cursor=pointer]:
+                      - img [ref=e168]
+                  - paragraph [ref=e173]: SKU-00045
+              - separator [ref=e178]
+              - generic [ref=e180]:
+                - heading "📖 Cómo interpretar el scoring" [level=3] [ref=e187]:
+                  - text: 📖 Cómo interpretar el scoring
+                  - generic [ref=e188]:
+                    - link "Link to heading":
+                      - /url: "#como-interpretar-el-scoring"
+                      - img
+                - paragraph [ref=e195]: ⓘ
+              - group [ref=e198]:
+                - generic "keyboard_arrow_right ¿Cómo se calcula el score?" [ref=e199] [cursor=pointer]:
+                  - generic [ref=e200]:
+                    - generic [ref=e202]: keyboard_arrow_right
+                    - paragraph [ref=e205]: ¿Cómo se calcula el score?
+              - separator [ref=e210]
+              - generic [ref=e212]:
+                - heading "🎯 Puntos de acción" [level=3] [ref=e219]:
+                  - text: 🎯 Puntos de acción
+                  - generic [ref=e220]:
+                    - link "Link to heading":
+                      - /url: "#puntos-de-accion"
+                      - img
+                - paragraph [ref=e227]: ⓘ
+              - list [ref=e232]:
+                - listitem [ref=e233]: 🥇 La prioridad más alta es 'SKU-00045' con score 100.0. Revisá este caso primero.
+              - list [ref=e238]:
+                - listitem [ref=e239]: 🎯 48 SKU(s) tienen score ≥ 80. Son candidatos prioritarios para reubicación inmediata.
+              - separator [ref=e244]
+              - generic [ref=e246]:
+                - heading "📋 Tablas de detalle" [level=3] [ref=e253]:
+                  - text: 📋 Tablas de detalle
+                  - generic [ref=e254]:
+                    - link "Link to heading":
+                      - /url: "#tablas-de-detalle"
+                      - img
+                - paragraph [ref=e261]: ⓘ
+              - group [ref=e264]:
+                - generic "keyboard_arrow_right Priority queue — cola de prioridad" [ref=e265] [cursor=pointer]:
+                  - generic [ref=e266]:
+                    - generic [ref=e268]: keyboard_arrow_right
+                    - paragraph [ref=e271]: Priority queue — cola de prioridad
+              - group [ref=e274]:
+                - generic "keyboard_arrow_right Scoring summary — resumen de scoring" [ref=e275] [cursor=pointer]:
+                  - generic [ref=e276]:
+                    - generic [ref=e278]: keyboard_arrow_right
+                    - paragraph [ref=e281]: Scoring summary — resumen de scoring
+              - group [ref=e284]:
+                - generic "keyboard_arrow_right Opportunity scores — scores completos" [ref=e285] [cursor=pointer]:
+                  - generic [ref=e286]:
+                    - generic [ref=e288]: keyboard_arrow_right
+                    - paragraph [ref=e291]: Opportunity scores — scores completos
+        - alert [ref=e294]:
+          - generic [ref=e297]:
+            - generic [ref=e298]: "TypeError: float() argument must be a string or a real number, not 'NAType'"
+            - generic [ref=e299]:
+              - generic [ref=e300]: "Traceback:"
+              - code [ref=e303]:
+                - generic [ref=e304]: File "C:\Users\harry\OneDrive\Documentos\GitHub\optimizacion\src\slotting_optimization_engine\app\streamlit_app.py", line 777, in <module> main() ~~~~^^
+                - generic [ref=e305]: "File \"C:\\Users\\harry\\OneDrive\\Documentos\\GitHub\\optimizacion\\src\\slotting_optimization_engine\\app\\streamlit_app.py\", line 571, in main sim_cols[3].metric(\"🚚 Throughput\", f\"{float(throughput):.1f}%\" if throughput is not None else \"—\", help=\"Ganancia de throughput estimada\") ~~~~~^^^^^^^^^^^^"
+            - generic [ref=e306]:
+              - button "Copy" [ref=e307] [cursor=pointer]
+              - link "Ask Google" [ref=e308] [cursor=pointer]:
+                - /url: https://www.google.com/search?q=TypeError%3A%20float()%20argument%20must%20be%20a%20string%20or%20a%20real%20number%2C%20not%20'NAType'
+              - link "Ask ChatGPT" [ref=e309] [cursor=pointer]:
+                - /url: https://chatgpt.com/?q=TypeError%3A%20float()%20argument%20must%20be%20a%20string%20or%20a%20real%20number%2C%20not%20'NAType'%0A%0AFile%20%22C%3A%5CUsers%5Charry%5COneDrive%5CDocumentos%5CGitHub%5Coptimizacion%5Csrc%5Cslotting_optimization_engine%5Capp%5Cstreamlit_app.py%22%2C%20line%20777%2C%20in%20%3Cmodule%3E%0A%20%20%20%20main()%0A%20%20%20%20~~~~%5E%5E%0AFile%20%22C%3A%5CUsers%5Charry%5COneDrive%5CDocumentos%5CGitHub%5Coptimizacion%5Csrc%5Cslotting_optimization_engine%5Capp%5Cstreamlit_app.py%22%2C%20line%20571%2C%20in%20main%0A%20%20%20%20sim_cols%5B3%5D.metric(%22%F0%9F%9A%9A%20Throughput%22%2C%20f%22%7Bfloat(throughput)%3A.1f%7D%25%22%20if%20throughput%20is%20not%20None%20else%20%22%E2%80%94%22%2C%20help%3D%22Ganancia%20de%20throughput%20estimada%22)%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20~~~~~%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E%5E
+    - tooltip "Puntaje de oportunidad promedio en todos los SKUs" [ref=e310]:
+      - paragraph [ref=e314]: Puntaje de oportunidad promedio en todos los SKUs
